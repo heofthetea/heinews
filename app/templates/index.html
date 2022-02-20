@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}homepage{% endblock %}
+
+{% block content %}
+<!--get link to static file-->
+<!--solve article issue with for loop-->
+    <a href="{{ url_for('articles.find_article', path='test.html') }}">
+        test.html
+    </a>
+{% endblock %}
