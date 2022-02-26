@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}article overview{% endblock %}
+
+{% block content %}
+    {% for article in articles %}
+        <a href="{{ url_for('articles.find_article', path='{0}.html'.format(article.id)) }}">
+            {{ article.id }}
+            <br>
+        </a>
+    {% endfor %}
+{% endblock %}

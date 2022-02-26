@@ -3,7 +3,12 @@
 <!--{% block title %}homepage{% endblock %}-->
 
 {% block content %}
-    <a href="{{ url_for('articles.find_article', path='test.html') }}">
+    <!--a href="{{ url_for('articles.find_article', path='test.html') }}">
         test.html
+    </a-->
+    <a href="{{ url_for('articles.all') }}">
+        All articles
     </a>
+    <br>
+    <a href="{{ url_for('admin.upload') }}">upload</a>
 {% endblock %}
