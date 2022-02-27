@@ -1,5 +1,6 @@
 from flask import Blueprint, redirect
-from .models import Article
+from flask_login import logout_user, current_user
+from .models import Article, User
 from . import db
 from os import remove
 from glob import glob
@@ -10,7 +11,7 @@ dev = Blueprint("dev", __name__)
 #TODO:  1. secure this section with password(s)
 #       2. do all these options in the form of a GUI
 #       3. get rid of eval(inp) as soon as possible to not risk losing everything
-@dev.route('/delete')
+@dev.route('/')
 def delete() -> None:
     #yes this is a terrible weakness that cannot go into release like that
     inp = input("> ")
@@ -32,4 +33,11 @@ def delete(all=False, *ids) -> None:
             remove(article)
         Article.query.delete()
         db.session.commit()
+
+
+def remove_user(all=False):
+    if all:
+        if current_user:
+            logout_user()
+        User.query.delete()
     

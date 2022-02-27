@@ -5,7 +5,7 @@ articles = Blueprint("articles", __name__)
 
 #render requested article as template
 @articles.route('/<path:path>')
-def find_article(path) -> None:
+def find_article(path : str) -> None:
     return render_template(f"articles/{path}")
 
 @articles.route("/all")

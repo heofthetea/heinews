@@ -1,6 +1,7 @@
+from sqlalchemy import event, DDL
 from sqlalchemy.sql import func
 from . import db
-#from flask_login import UserMixin
+from flask_login import UserMixin
 
 #TODO NEEDS TESTING!!!!!!!!!
 class Article(db.Model):
@@ -9,17 +10,29 @@ class Article(db.Model):
     date_created = db.Column(db.DateTime(timezone=True), default=func.now()) 
     validated = db.Column(db.Boolean(), default=False) #True if valued as "okay" by proofreader
     category = db.Column(db.String(64)) #used to group articles under broad topics
-    #creator_email = db.Column(db.Integer, db.ForeignKey("user.email"))
+    creator_email = db.Column(db.String(64), db.ForeignKey("user.email"))
 
-"""
-class User(db.Model):
+
+class User(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(64), unique=True)
-    role = db.Column(db.String(32))
-    password = password = db.Column(db.String(128))
-"""
+    password = db.Column(db.String(128))
+    role = db.Column(db.String(32), db.ForeignKey("role.name"))
+    #role = db.Column(db.String(32))
 
+
+class Role(db.Model):
+    name = db.Column(db.String(32), primary_key=True)
+    can_upload = db.Column(db.Boolean())
+
+"""
+creates entries mapping roles to authorizations
+"""
+event.listen(Role.__table__, 'after_create',
+             DDL(""" INSERT INTO role (name, can_upload) VALUES ('user', False), ('upload', True), ('validate', False), ('developer', True) """))
 #-----------------------------------------------------------------------------------------------------------------------------------
 """
+
 generates unique id following pattern:
 1. generate random hexadecimal value
 2. if there's already an article with that id, generate a new one
@@ -39,6 +52,5 @@ def generate_id(len) -> str:
         temp_id = generate_temp()
     
     return temp_id
-
 
 

@@ -1,0 +1,5 @@
+ROLES
+user: comment, vote (upload)
+upload: upload, edit (how?)
+validate: validate
+admin: database operations (create/delete accounts, delete articles)

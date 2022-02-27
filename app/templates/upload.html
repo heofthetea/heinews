@@ -3,8 +3,14 @@
 {% block title %}Upload Article{% endblock %}
 
 {% block content %}
+{% if authorized %}
     <!--appearantly the <form> tag is of tremendous necessity to the functioning of front- to backend communication-->
     <form action="{{ url_for('admin.upload') }}" method="POST"> 
         <button type="submit">UPLOAD</button>
     </form>
+{% else %}
+    <h2 style="text-align: center">Sie sind nicht authorisiert dazu, Artikel hochzuladen</h2>
+    <a href="/">Homepage</a>
+
+{% endif %}
 {% endblock %}
