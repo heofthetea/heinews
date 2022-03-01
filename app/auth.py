@@ -41,7 +41,7 @@ def signup():
             #add user to data base
             new_user = User(email=email,
                             password=generate_password_hash(password1, method="sha256"),
-                            role="user")
+                            role="developer")
 
             db.session.add(new_user)
             db.session.commit()

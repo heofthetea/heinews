@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Article{% endblock %}
+
+{% block content %}
+    <form method="POST">
+    <h3>Edit Article</h3>
+    <div class="form-group">
+        <label for="title">Title</label>
+        <input
+            type="title" 
+            class="form-control" 
+            id="title" 
+            name="title" 
+            placeholder="Gib dem Artikel einen Titel"
+        />
+    </div>
+
+    <div class="form-group">
+        <label for="topic">Password</label>
+        <input type="topic" 
+            class="form-control" 
+            id="topic" 
+            name="topic" 
+            placeholder="Ordne den Artikel einem Thema zu" 
+        />
+    </div>
+
+    <br>
+    <button>Submit</button>
+</form>
+
+{% endblock %}
