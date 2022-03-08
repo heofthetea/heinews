@@ -22,7 +22,7 @@ def delete() -> None:
 """
 deletes articles according to parameters. Will be combined with a (secure) user interface and is necessary, because there is no phpMyAdmin :(
 """
-def delete(all=False, *ids) -> None:
+def delete_article(all=False, *ids) -> None:
     if not all:
         for id in ids:
             remove(f"app/templates/articles/{id}.html")

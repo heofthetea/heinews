@@ -47,6 +47,5 @@ def signup():
             db.session.commit()
 
             login_user(new_user, remember=False)
-            #return redirect(url_for("index.html"))
             return redirect("/")
     return render_template("auth/signup.html", user=current_user)

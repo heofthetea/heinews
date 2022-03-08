@@ -9,7 +9,7 @@ class Article(db.Model):
     title = db.Column(db.String(128)) #both for identification and search in database and the title tag in html file
     date_created = db.Column(db.DateTime(timezone=True), default=func.now()) 
     validated = db.Column(db.Boolean(), default=False) #True if valued as "okay" by proofreader
-    category = db.Column(db.String(64)) #used to group articles under broad topics
+    category = db.Column(db.String(64), db.ForeignKey("category.name")) #used to group articles under broad topics
     creator_email = db.Column(db.String(64), db.ForeignKey("user.email"))
 
 
@@ -18,18 +18,28 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(64), unique=True)
     password = db.Column(db.String(128))
     role = db.Column(db.String(32), db.ForeignKey("role.name"))
-    #role = db.Column(db.String(32))
 
 
 class Role(db.Model):
     name = db.Column(db.String(32), primary_key=True)
     can_upload = db.Column(db.Boolean())
 
+
+class Category(db.Model):
+    name = db.Column(db.String(32), primary_key=True)
+
+
+class Tag(db.Model):
+    tag = db.Column(db.String(32), primary_key=True)
+
 """
-creates entries mapping roles to authorizations
+creates default entries into database when database is created
 """
-event.listen(Role.__table__, 'after_create',
-             DDL(""" INSERT INTO role (name, can_upload) VALUES ('user', False), ('upload', True), ('validate', False), ('developer', True) """))
+event.listen(Category.__table__, "after_create", 
+        DDL("INSERT INTO category (name) VALUES ('Aktuelles'), ('Wissen'), ('Schulleben'), ('Lifestyle'), ('Unterhaltung'), ('Kreatives')"))
+
+event.listen(Role.__table__, "after_create",
+        DDL("INSERT INTO role (name, can_upload) VALUES ('user', False), ('upload', True), ('validate', False), ('developer', True)"))
 #-----------------------------------------------------------------------------------------------------------------------------------
 """
 

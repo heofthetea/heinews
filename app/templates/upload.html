@@ -8,9 +8,12 @@
     <form action="" method="POST"> 
         <button type="submit">UPLOAD</button>
     </form>-->
-    <button>
-        <a href="{{ url_for('admin.upload', phase='edit') }}">upload panel</a>
-    </button>
+    <form method="POST">
+        <button name="upload">
+            <!--a href="{{ url_for('admin.upload', phase='edit') }}">upload panel</a-->
+            upload panel
+        </button>
+    </form>
 {% else %}
     <h2 style="text-align: center">Sie sind nicht authorisiert dazu, Artikel hochzuladen</h2>
     <a href="/">Homepage</a>
