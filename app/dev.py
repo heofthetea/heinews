@@ -8,12 +8,12 @@ from glob import glob
 
 dev = Blueprint("dev", __name__)
 
-#TODO:  1. secure this section with password(s)
-#       2. do all these options in the form of a GUI
-#       3. get rid of eval(inp) as soon as possible to not risk losing everything
+# TODO:  1. secure this section with password(s)
+#        2. do all these options in the form of a GUI
+#        3. get rid of eval(inp) as soon as possible to not risk losing everything
 @dev.route('/')
 def delete() -> None:
-    #yes this is a terrible weakness that cannot go into release like that
+    # yes this is a terrible weakness that cannot go into release like that
     inp = input("> ")
     eval(inp)
     return redirect('/')

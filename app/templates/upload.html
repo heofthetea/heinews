@@ -8,10 +8,12 @@
     <form action="" method="POST"> 
         <button type="submit">UPLOAD</button>
     </form>-->
-    <form method="POST">
+    <form method="POST" enctype="multipart/form-data">
+        <input type="file" name="file">
+        <br>
         <button name="upload">
             <!--a href="{{ url_for('admin.upload', phase='edit') }}">upload panel</a-->
-            upload panel
+            upload
         </button>
     </form>
 {% else %}

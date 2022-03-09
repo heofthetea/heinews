@@ -3,7 +3,7 @@ from .models import Article
 
 articles = Blueprint("articles", __name__)
 
-#render requested article as template
+# render requested article as template
 @articles.route('/<path:path>')
 def find_article(path : str) -> None:
     return render_template(f"articles/{path}")

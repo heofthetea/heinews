@@ -3,9 +3,11 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from os import path
 
-#declare database for usage
+# declare database for usage
 db = SQLAlchemy()
-DB_NAME = "test.db" #TODO rename this to something cool on production
+DB_NAME = "test.db" # TODO rename this to something cool on production
+
+UPLOAD_FOLDER = "/test_upload"
 
 """
 initializes application as Flask object
@@ -14,8 +16,9 @@ initializes application as Flask object
 def create_app() -> Flask:
     app = Flask(__name__)
     app.config["SECRET_KEY"] = generate_key()
+    app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-    #create blueprints and set up urls
+    # create blueprints and set up urls
     from .views import views
     app.register_blueprint(views, url_prefix='/')
 
@@ -42,7 +45,7 @@ def create_app() -> Flask:
     def load_user(id):
         return models.User.query.get(int(id))
 
-    #initialize database
+    # initialize database
     app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{DB_NAME}"
     db.init_app(app)
     create_database(app)
@@ -64,7 +67,7 @@ def generate_key() -> str:
         key += chr(choice(chars))
     return key
 
-#watch out for issue on empty creation
+# creates database if it does not exist
 def create_database(app : Flask) -> None:
     if not path.exists("app/" + DB_NAME):
         db.create_all(app=app)
