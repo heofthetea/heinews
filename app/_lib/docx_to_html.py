@@ -19,7 +19,7 @@ DEFAULT = {
 # these variables store how the html file surrounding its content looks like. (#TODO not hardcode placeholders)
 __BEGINFILE__ = """
 {% extends "article.html" %}
-{% block title %}__title__{% endblock %}
+{% block title %}{{ db_entry.title }}{% endblock %}
 {% block article %}
 """
 __ENDFILE__ = """
@@ -178,14 +178,10 @@ class Tag:
 @return: text alignment formatted as CSS
 """
 def get_textalign(alignment: WD_ALIGN_PARAGRAPH, default=DEFAULT["align"], handleNone=False) -> str:
-    if alignment == WD_ALIGN_PARAGRAPH.CENTER:
-        return "center"
-    if alignment == WD_ALIGN_PARAGRAPH.LEFT:
-        return "left"
-    if alignment == WD_ALIGN_PARAGRAPH.RIGHT:
-        return "right"
-    if handleNone:
-        return default
+    if alignment == WD_ALIGN_PARAGRAPH.CENTER: return "center"
+    if alignment == WD_ALIGN_PARAGRAPH.LEFT: return "left"
+    if alignment == WD_ALIGN_PARAGRAPH.RIGHT: return "right"
+    if handleNone: return default
     return None
 
 
