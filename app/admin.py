@@ -1,16 +1,17 @@
 from flask import Blueprint, render_template, url_for, redirect, request, session
+from ._lib.docx_to_html import convert
 from .models import Article, User, Role, Category, generate_id
 from flask_login import current_user, login_required
 from . import db
 from datetime import datetime
 # from os import path
-# from werkzeug.utils import secure_filename
+from werkzeug.utils import secure_filename
 
 PLACEHOLDER = {
     "title": "__title__",
     "category": "__category__"
 }
-ALLOWED_EXTENSIONS = {"txt"} # TODO support txt files because I like them
+ALLOWED_EXTENSIONS = {"txt", "docx"} # TODO support txt files because I like them
 
 admin_panel = Blueprint("admin", __name__)
 
@@ -32,16 +33,20 @@ def upload(phase) -> None:
             file = request.files['file']
             # If the user does not select a file, the browser submits an empty file without a filename.
             if file.filename == '':
-                print('No selected file')
-                return redirect(request.url) # TODO replace with flash
+                print('No selected file') # TODO replace with flash
+                return redirect(request.url)
             if file and allowed_file(file.filename):
-                file_content = file.read().decode("utf-8") # file gets read as binary, thus needing to decode
-                # TODO: connect to docx converter here
+                if file.filename.rsplit('.', 1)[1].lower() == "docx":
+                    file_content = convert(file)
+                    print(file_content)
+                elif file.filename.rsplit('.', 1)[1].lower() == "txt":
+                    file_content = file.read().decode("utf-8") # file gets read as binary, thus needing to decode
+                    # TODO: connect to docx converter here
 
-                """
-                with open(f"app/test_upload/{filename}", "w+", encoding="utf-8") as nf:
-                    nf.write(content)
-                """
+                    """
+                    with open(f"app/test_upload/{filename}", "w+", encoding="utf-8") as nf:
+                        nf.write(content)
+                    """
                 session["uploaded_content"] = file_content  # caching content of file in order to work with it in next step
                 return redirect(url_for("admin.upload", phase="edit"))
                 
@@ -70,7 +75,7 @@ def upload(phase) -> None:
             db.session.commit()
             # storing html file (happens after db entry because db operations are more likely to go wrong 
             #                    -> avoids having a file without a corresponding db entry)
-            with open(f"app/templates/articles/{temp_id}.html", "w+") as new_article:
+            with open(f"app/templates/articles/{temp_id}.html", "w+", encoding="utf-8") as new_article:
                 new_article.write(content)
             
             session.pop("uploaded_content") # getting rid of unecessary cache

@@ -6,10 +6,7 @@
     <!--a href="{{ url_for('articles.find_article', path='test.html') }}">
         test.html
     </a-->
-    <a href="{{ url_for('articles.all') }}">
-        All articles
-    </a>
-    <br>
+    {% block homepage %}<!--overriding as empty to avoid link to homepage on homepage-->{% endblock %}
     <a href="{{ url_for('admin.upload', phase='new') }}">upload</a>
 
     <div style="display: block; float: right; margin-right: 20px">

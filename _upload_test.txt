@@ -1,0 +1,8 @@
+{% extends "article.html" %}
+{% block title %}__title__{% endblock %}
+{% block article %}
+<h1 style="text-align: center">__title__</h1>
+<a href="/">homepage</a>
+<br><a href="{{ url_for('articles.all') }}"> all articles </a>
+<br>created by: fyoug8gle@gmail.com
+{% endblock %}
