@@ -1,0 +1,13 @@
+TODO: ein wenig mehr Mühe
+
+.docx:
+Keine Bilder -> Dokumente aufgeteilt in paragraphen, mögl. Platzierungen für Bilder werden automatisch erkannt, und zwar: In Leerzeilen
+Links kennzeichnen durch <link(url)Hier kann Text stehen>, z.B. <link(http://teamnamenotfound.great-site.net)der beste Info-LK aller Zeiten>
+Keine Überschriften in Word - Diese werden nicht erkannt. Eine Textüberschrift kann und muss beim Upload festgelegt werden, gib dem Text also in Word keine Überschrift.
+
+Verschiedene Dekorationen (kursiv etc) werden erkannt, auch Farben, diese sind also nutzbar.
+
+.txt:
+Bilder werden wieder in Leerzeilen erkannt.
+Links funktionieren genauso.
+Textdekorationen existieren im .txt format nicht, auch für Überschriften gilt dasselbe.

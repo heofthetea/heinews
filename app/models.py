@@ -3,18 +3,30 @@ from sqlalchemy.sql import func
 from . import db
 from flask_login import UserMixin
 
+# is it necessary to give everything a power of 2 as a length? No. Do I do it anyway? Yes, why not.
 
 class Article(db.Model):
     id = db.Column(db.String(6), primary_key=True)
     title = db.Column(db.String(128))
     date_created = db.Column(db.DateTime(timezone=True), default=func.now())
     validated = db.Column(db.Boolean(), default=False)
+    tags = db.Column(db.String(256))
     category = db.Column(db.String(64), db.ForeignKey("category.name"))
     creator_email = db.Column(db.String(64), db.ForeignKey("user.email"))
 
 
+class Category(db.Model):
+    name = db.Column(db.String(32), primary_key=True)
+
+
+#TODO when new Tag are created and exceed length limit, flash message
+class Tag(db.Model):
+    tag = db.Column(db.String(32), primary_key=True)
+
+
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64))
     email = db.Column(db.String(64), unique=True)
     password = db.Column(db.String(128))
     role = db.Column(db.String(32), db.ForeignKey("role.name"))
@@ -23,14 +35,6 @@ class User(db.Model, UserMixin):
 class Role(db.Model):
     name = db.Column(db.String(32), primary_key=True)
     can_upload = db.Column(db.Boolean())
-
-
-class Category(db.Model):
-    name = db.Column(db.String(32), primary_key=True)
-
-
-class Tag(db.Model):
-    tag = db.Column(db.String(32), primary_key=True)
 
 """
 writes default entries into database when database is created
@@ -49,7 +53,7 @@ generates unique id following pattern:
 
 @return 6-digit unique hexadecimal id
 """
-def generate_id(len) -> str:
+def generate_id(len: int) -> str:
     from random import choice
 
     digits = [str(i) for i in range(10)]

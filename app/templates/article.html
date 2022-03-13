@@ -4,9 +4,20 @@
     - yes, this is not the aesthetically most beautiful way to handle these, but it works and that's what matters
 -->
 
-{% block title %}<!-- enter child file title here -->{% endblock %}
+{% block title %}{{ db_entry.title }}{% endblock %}
 
 {% block content%}
+    <h1 style="text-align: center">
+        <u>{{ db_entry.title }}</u>
+    </h1>
+    <div>
+        <i>Kategorie: {{ db_entry.category }}</i>
+        <i style="margin-left: 50px">Hochgeladen am {{ date_created }} von {{ db_entry.creator_email }}</i>
+        <i style="margin-left: 50px">tags: {{ db_entry.tags }}</i>
+        <!--TODO: make a link out of every tag to get to tag overview (see all articles with this tag)-->
+    </div>
+
+
     {% block article %}
     <!-- override this with child file -->
     {% endblock %}

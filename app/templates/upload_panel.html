@@ -17,7 +17,7 @@
     </div>
 
     <div class="form-group">
-        <label for="topic">Kategorie</label>
+        <label for="category">Kategorie</label>
         <!--input type="topic" 
             class="form-control" 
             id="topic" 
@@ -29,6 +29,17 @@
                 <option value="{{ category.name }}">{{ category.name }}</option>
             {% endfor %}
         </select>
+    </div>
+
+    <div class="form-group">
+        <label for="tags">Tags (getrennt durch Leerzeichen)</label>
+        <input
+            type="tags" 
+            class="form-control" 
+            id="tags" 
+            name="tags" 
+            placeholder="z.B. #superInteressant"
+        />    
     </div>
 
     <br>
