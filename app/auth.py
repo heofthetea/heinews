@@ -32,6 +32,7 @@ def signup():
     if request.method == "POST":
         email = request.form.get("email")
         password1 = request.form.get("password1")
+        name = request.form.get("name")
 
         user = User.query.filter_by(email=email).first()
 
@@ -40,6 +41,7 @@ def signup():
         else:
             # add user to data base
             new_user = User(email=email,
+                            name=name,
                             password=generate_password_hash(password1, method="sha256"),
                             role="developer")
 
