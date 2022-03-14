@@ -19,7 +19,7 @@ DEFAULT = {
     "color": "#000000"
 }
 
-# these variables store how the html file surrounding its content looks like.
+# these variables store how the generated html file surrounding its content looks like.
 __BEGINFILE__ = """
 {% extends "article.html" %}
 {% block title %}{{ db_entry.title }}{% endblock %}

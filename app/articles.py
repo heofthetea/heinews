@@ -1,7 +1,7 @@
-from flask import Blueprint, render_template, abort
+from flask import Blueprint, render_template, abort, redirect
 from jinja2.exceptions import TemplateNotFound
-from .models import Article, User
-from calendar import timegm
+from .models import Article, User, Tag
+from sqlalchemy import DDL
 
 articles = Blueprint("articles", __name__)
 
@@ -28,4 +28,17 @@ def find_article(path: str) -> None:
 
 @articles.route("/all")
 def all() -> None:
-    return render_template("overview.html", articles=Article.query.all())
+    return render_template("overview.html", articles=Article.query.all()) #TODO rename template
+
+@articles.route("/tag/<tag>")
+def sort_by_tag(tag: str):
+    tag = '#' + tag
+    if not Tag.query.get(tag):
+        abort(404)
+    articles_with_tag = Article.query.filter(Article.tags.like(f"%{tag}%")).all()
+    return render_template("overview.html", articles=articles_with_tag)
+
+@articles.route("tag/all")
+def all_tags():
+    return render_template("tag_overview.html", tags=Tag.query.all())
+    #return redirect('/')
