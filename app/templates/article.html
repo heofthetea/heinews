@@ -15,7 +15,7 @@
         <i style="margin-left: 50px">Hochgeladen am {{ date_created }} von {{ created_by }}</i>
         <i style="margin-left: 50px">tags: 
             {% for tag in tags %}
-                {{ tag.tag }}
+                <a href="{{ url_for('tag.articles_by_tag', tag=tag.tag.replace('#', '')) }}">{{ tag.tag }}</a>
             {% endfor %}
         </i>
         <!--TODO: make a link out of every tag to get to tag overview (see all articles with this tag)-->

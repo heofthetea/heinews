@@ -11,7 +11,7 @@ renders article as jinja2 template
 """
 @articles.route('/<path:path>')
 def find_article(path: str) -> None:
-    try:
+    #try:
         article_id = path.split('.')[0]
         db_entry = Article.query.get(article_id)
         if not db_entry:
@@ -23,8 +23,8 @@ def find_article(path: str) -> None:
         # that date_created query might be a little confusing, so to divide it up here:
         # 1. db_entry.date_created.date() gets ONLY the date of when the article was created
         # 2. strftime("%d.%m.%Y") formats it from yyyy-mm-dd to dd-mm-yyyy"""
-    except TemplateNotFound:
-        abort(404)
+    #except TemplateNotFound:
+        #abort(404)
 
 
 @articles.route("/all")
