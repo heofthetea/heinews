@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, abort, redirect
 from jinja2.exceptions import TemplateNotFound
-from .models import Article, User, Tag
-from sqlalchemy import DDL
+from .models import Article, User, Tag, get_tags, get_articles
+
 
 articles = Blueprint("articles", __name__)
 
@@ -18,7 +18,8 @@ def find_article(path: str) -> None:
             abort(404)
         return render_template(f"articles/{path}", db_entry=db_entry, 
                                                    date_created=db_entry.date_created.date().strftime("%d.%m.%Y"),
-                                                   created_by=User.query.filter_by(email=db_entry.creator_email).first().name)
+                                                   created_by=User.query.filter_by(email=db_entry.creator_email).first().name,
+                                                   tags=get_tags(db_entry))
         # that date_created query might be a little confusing, so to divide it up here:
         # 1. db_entry.date_created.date() gets ONLY the date of when the article was created
         # 2. strftime("%d.%m.%Y") formats it from yyyy-mm-dd to dd-mm-yyyy"""
@@ -27,18 +28,22 @@ def find_article(path: str) -> None:
 
 
 @articles.route("/all")
-def all() -> None:
-    return render_template("overview.html", articles=Article.query.all()) #TODO rename template
+def all_articles() -> None:
+    return render_template("overview.html", articles=Article.query.all(), type="article") #TODO rename template
 
-@articles.route("/tag/<tag>")
-def sort_by_tag(tag: str):
+#---------------------------------------------------------------------------------------------------------------------------------------------
+
+tag = Blueprint("tag", __name__)
+
+@tag.route("/<tag>")
+def articles_by_tag(tag: str):
     tag = '#' + tag
     if not Tag.query.get(tag):
         abort(404)
-    articles_with_tag = Article.query.filter(Article.tags.like(f"%{tag}%")).all()
-    return render_template("overview.html", articles=articles_with_tag)
+    articles_with_tag = get_articles(Tag.query.get(tag))
+    return render_template("overview.html", articles=articles_with_tag, type="article")
 
-@articles.route("tag/all")
+
+@tag.route("/")
 def all_tags():
-    return render_template("tag_overview.html", tags=Tag.query.all())
-    #return redirect('/')
+    return render_template("overview.html", tags=Tag.query.all(), type="tag")

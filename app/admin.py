@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, url_for, redirect, flash, request, session
 from ._lib.docx_to_html import Tag, convert, htmlify, replace_links
-from .models import Article, User, Role, Category, Tag, generate_id
+from .models import Article, Role, Category, Tag, Article_tag_connection, generate_id
 from flask_login import current_user, login_required
 from . import db
 from datetime import datetime
@@ -11,7 +11,7 @@ PLACEHOLDER = {
     "title": "__title__",
     "category": "__category__"
 }
-ALLOWED_EXTENSIONS = {"txt", "docx", "doc"} # TODO support txt files because I like them
+ALLOWED_EXTENSIONS = {"txt", "docx", "doc", "odt"} # TODO support txt files because I like them
 
 admin_panel = Blueprint("admin", __name__)
 
@@ -40,7 +40,7 @@ def upload(phase) -> None:
                 return redirect(request.url)
             if file and allowed_file(file.filename):
                 file_extension = file.filename.rsplit('.', 1)[1].lower()
-                if file_extension == "docx" or file_extension == "doc":
+                if file_extension == "docx" or file_extension == "doc" or file_extension == "odt":
                     file_content = convert(file)
                     
                 elif file_extension == "txt":
@@ -69,19 +69,21 @@ def upload(phase) -> None:
             content = content.replace(PLACEHOLDER["category"], category)
 
             tags = request.form.get("tags")
+
+            temp_article_id = generate_id(6)
             for tag in tags.split(" "):
                 if not Tag.query.get(tag): # if tag doesn't already exist
                     db.session.add(Tag(tag=tag))
+                db.session.add(Article_tag_connection(article_id=temp_article_id, tag=tag))
             db.session.commit()
 
             #TODO implement preview (including ability to insert images "into preview" etc.)
 
             # creating entry in database
-            temp_id = generate_id(6)
-            new_article = Article(id=temp_id, 
+            
+            new_article = Article(id=temp_article_id, 
                                   title=title,
                                   date_created=datetime.utcnow(),
-                                  tags=tags,
                                   category=category,
                                   creator_email=current_user.email)
                                   
@@ -89,11 +91,11 @@ def upload(phase) -> None:
             db.session.commit()
             # storing html file (happens after db entry because db operations are more likely to go wrong 
             #                    -> avoids having a file without a corresponding db entry)
-            with open(f"app/templates/articles/{temp_id}.html", "w+", encoding="utf-8") as new_article:
+            with open(f"app/templates/articles/{temp_article_id}.html", "w+", encoding="utf-8") as new_article:
                 new_article.write(htmlify(content))
             
             session.pop("uploaded_content") # getting rid of unecessary cache
-            return redirect(url_for("articles.find_article", path=f"{temp_id}.html"))
+            return redirect(url_for("articles.find_article", path=f"{temp_article_id}.html"))
 
         return render_template("upload_panel.html", categories = Category.query.all())
 

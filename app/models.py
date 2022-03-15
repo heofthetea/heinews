@@ -10,7 +10,6 @@ class Article(db.Model):
     title = db.Column(db.String(128))
     date_created = db.Column(db.DateTime(timezone=True), default=func.now())
     validated = db.Column(db.Boolean(), default=False)
-    tags = db.Column(db.String(256))
     category = db.Column(db.String(64), db.ForeignKey("category.name"))
     creator_email = db.Column(db.String(64), db.ForeignKey("user.email"))
 
@@ -22,6 +21,12 @@ class Category(db.Model):
 #TODO when new Tag are created and exceed length limit, flash message
 class Tag(db.Model):
     tag = db.Column(db.String(32), primary_key=True)
+
+class Article_tag_connection(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    article_id = db.Column(db.String(6), db.ForeignKey("article.id"))
+    tag = db.Column(db.String(32), db.ForeignKey("tag.tag"))
+
 
 
 class User(db.Model, UserMixin):
@@ -67,4 +72,13 @@ def generate_id(len: int) -> str:
     
     return temp_id
 
+#TODO documentation
+def get_articles(tag: Tag) -> list[Article]:
+    connections = Article_tag_connection.query.filter_by(tag=tag.tag).all()
+    return [Article.query.get(connection.article_id) for connection in connections]
+
+
+def get_tags(article: Article) -> list[Tag]:
+    connections = Article_tag_connection.query.filter_by(article_id=article.id).all()
+    return [Tag.query.get(connection.tag) for connection in connections]
 

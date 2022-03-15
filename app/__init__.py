@@ -23,7 +23,10 @@ def create_app() -> Flask:
     app.register_blueprint(views, url_prefix='/')
 
     from .articles import articles
-    app.register_blueprint(articles, url_prefix="/article/")
+    app.register_blueprint(articles, url_prefix="/article/") #TODO rename url routings ? (to "/articles/") and the overview to "/"
+
+    from .articles import tag
+    app.register_blueprint(tag, url_prefix="/tags/")
 
     from .admin import admin_panel
     app.register_blueprint(admin_panel, url_prefix="/admin/")

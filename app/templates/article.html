@@ -13,7 +13,11 @@
     <div>
         <i>Kategorie: {{ db_entry.category }}</i>
         <i style="margin-left: 50px">Hochgeladen am {{ date_created }} von {{ created_by }}</i>
-        <i style="margin-left: 50px">tags: {{ db_entry.tags }}</i>
+        <i style="margin-left: 50px">tags: 
+            {% for tag in tags %}
+                {{ tag.tag }}
+            {% endfor %}
+        </i>
         <!--TODO: make a link out of every tag to get to tag overview (see all articles with this tag)-->
     </div>
 

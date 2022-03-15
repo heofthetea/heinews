@@ -8,9 +8,10 @@
     </a-->
     {% block homepage %}<!--overriding as empty to avoid link to homepage on homepage-->{% endblock %}
     <a href="{{ url_for('admin.upload', phase='new') }}">upload</a>
+    <br>
+    <a href="{{ url_for('tag.all_tags') }}">view all tags</a>
 
     <div style="display: block; float: right; margin-right: 20px">
-
         <a href="{{ url_for('auth.login') }}">login</a>
         <br>
         <a href="{{ url_for('auth.signup') }}">sign up</a>
