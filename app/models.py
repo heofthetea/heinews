@@ -72,12 +72,25 @@ def generate_id(len: int) -> str:
     
     return temp_id
 
-#TODO documentation
+"""
+@param tag (as Tag instance): tag to look for articles having it 
+@return: list containing all articles (as Article instance) marked by the tag
+
+connections: Find all occurances where the given tag object is connected with an article
+query in return statement: for every of these connections, find the corresponding Article object through its id
+corresponding SQL query of this function: 
+    SELECT * FROM article, tag, article_tag_connection 
+    WHERE tag.tag = tag[function parameter]
+    AND article_tag_connection.tag = tag.tag
+    AND article_tag_connection.article_id = article.id;
+"""
 def get_articles(tag: Tag) -> list[Article]:
     connections = Article_tag_connection.query.filter_by(tag=tag.tag).all()
     return [Article.query.get(connection.article_id) for connection in connections]
 
-
+"""
+functions in the exact same way as `get_articles(tag: Tag)`, but the other way around
+"""
 def get_tags(article: Article) -> list[Tag]:
     connections = Article_tag_connection.query.filter_by(article_id=article.id).all()
     return [Tag.query.get(connection.tag) for connection in connections]

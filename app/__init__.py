@@ -52,6 +52,16 @@ def create_app() -> Flask:
     app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{DB_NAME}"
     db.init_app(app)
     create_database(app)
+
+    #---------------------------------------------------------------------------------------------
+    #these functions, used by the entire website, have to go here to access the Flask application
+    @app.context_processor
+    def inject_categories():
+        return dict(categories=models.Category.query.all())
+
+    @app.errorhandler(404)
+    def page_not_found(error):
+        return "<h1> this page does not exist</h1><br><a href='/'>homepage</a>"
     
     return app
 

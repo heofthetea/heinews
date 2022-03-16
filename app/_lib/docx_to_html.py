@@ -169,7 +169,6 @@ class Tag:
     def link(self, href: str, content: str) -> str:
         return "<a href='{0}'>{1}</a>".format(href, content)
 
-    #TODO instead of creating blank line, this function creates a line with only a ">" in it
     def linebreak(self) -> str:
         return "<br>"
 

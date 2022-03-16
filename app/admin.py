@@ -47,10 +47,6 @@ def upload(phase) -> None:
                     file_content = file.read().decode("utf-8") # file gets read as binary, thus needing to decode
                     file_content = file_content.replace("\n", "<br>")
 
-                    """
-                    with open(f"app/test_upload/{filename}", "w+", encoding="utf-8") as nf:
-                        nf.write(content)
-                    """
                 file_content = replace_links(file_content)
                 session["uploaded_content"] = file_content  # caching content of file in order to work with it in next step
                 return redirect(url_for("admin.upload", phase="edit"))
