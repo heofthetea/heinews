@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
+from flask_login import LoginManager,current_user
 from os import path
 
 # declare database for usage
@@ -11,6 +11,7 @@ UPLOAD_FOLDER = "/test_upload"
 
 """
 initializes application as Flask object
+registers all Blueprints for url routing and sets up functions accessed by the entire application (e.g. error handlers)
 @return flask application
 """
 def create_app() -> Flask:
@@ -55,13 +56,20 @@ def create_app() -> Flask:
 
     #---------------------------------------------------------------------------------------------
     #these functions, used by the entire website, have to go here to access the Flask application
+
+    #used to give every template access to the cateories (in order to display nav-bar)
     @app.context_processor
     def inject_categories():
         return dict(categories=models.Category.query.all())
 
+    @app.context_processor
+    def inject_user():
+        return dict(current_user=current_user, get_user_role=models.get_user_role)
+
     @app.errorhandler(404)
     def page_not_found(error):
         return "<h1> this page does not exist</h1><br><a href='/'>homepage</a>"
+    
     
     return app
 
@@ -72,10 +80,10 @@ def create_app() -> Flask:
 """
 generates random string used as a secure private key
 """
-def generate_key() -> str:
+def generate_key(len=256) -> str:
     from random import choice
 
-    chars, len, key = range(32, 126), 256, ""
+    chars, key = range(32, 126), ""
     for _ in range(len):
         key += chr(choice(chars))
     return key

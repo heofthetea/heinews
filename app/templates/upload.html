@@ -3,7 +3,7 @@
 {% block title %}Upload Article{% endblock %}
 
 {% block content %}
-{% if authorized %}
+{% if get_user_role(current_user).can_upload %}
     <!--appearantly the <form> tag is of tremendous necessity to the functioning of front- to backend communication--
     <form action="" method="POST"> 
         <button type="submit">UPLOAD</button>

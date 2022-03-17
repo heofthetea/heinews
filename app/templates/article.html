@@ -11,14 +11,19 @@
         <u>{{ db_entry.title }}</u>
     </h1>
     <div>
-        <i>Kategorie: {{ db_entry.category }}</i>
-        <i style="margin-left: 50px">Hochgeladen am {{ date_created }} von {{ created_by }}</i>
+        <i>Kategorie: 
+            <a href="{{ url_for('articles.by_category', category=db_entry.category) }}">{{ db_entry.category }}</a>
+        </i>
+        <i style="margin-left: 50px">Hochgeladen am {{ db_entry.date_created.date().strftime("%d.%m.%Y") }} von {{ created_by }}</i>
         <i style="margin-left: 50px">tags: 
             {% for tag in tags %}
                 <a href="{{ url_for('tag.articles_by_tag', tag=tag.tag.replace('#', '')) }}">{{ tag.tag }}</a>
             {% endfor %}
         </i>
-        <!--TODO: make a link out of every tag to get to tag overview (see all articles with this tag)-->
+        <!--TODO: remove once tested-->
+        <i style="margin-left: 50px">validated:
+            {{ db_entry.validated }}
+        </i>
     </div>
 
 

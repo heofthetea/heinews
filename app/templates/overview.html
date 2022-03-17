@@ -13,11 +13,13 @@
 
 {% elif type == "tag" %}
     {% for tag in tags %}
-        <a href="{{ url_for('tag.articles_by_tag', tag=tag.tag.replace('#', '')) }}">
-            {{ tag.tag }}
-            <br>
-        </a>
+    <!--TODO rework to not use this if statement-->
+        {% if tag != '' %}
+            <a href="{{ url_for('tag.articles_by_tag', tag=tag.tag.replace('#', '')) }}">
+                {{ tag.tag }}
+                <br>
+            </a>
+        {% endif %}
     {% endfor %}
-
 {% endif %}
 {% endblock %}

@@ -95,3 +95,6 @@ def get_tags(article: Article) -> list[Tag]:
     connections = Article_tag_connection.query.filter_by(article_id=article.id).all()
     return [Tag.query.get(connection.tag) for connection in connections]
 
+def get_user_role(user: User) -> Role:
+    return Role.query.get(user.role)
+

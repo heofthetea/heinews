@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, url_for, redirect, flash, request, session
+from flask import Blueprint, render_template, url_for, redirect, flash, abort, request, session
 from ._lib.docx_to_html import Tag, convert, htmlify, replace_links
 from .models import Article, Role, Category, Tag, Article_tag_connection, generate_id
 from flask_login import current_user, login_required
@@ -23,8 +23,8 @@ def redir_upload():
 @login_required
 def upload(phase) -> None:
     #prevents unauthorized users from reaching the upload section
-    if not Role.query.filter_by(name=current_user.role).first().can_upload:
-        return render_template("upload.html", authorized=False)
+    if not Role.query.get(current_user.role).can_upload:
+        abort(403)
 
     #handles file upload (including validation checks and docx to html conversion)
     if phase == "new":
@@ -51,7 +51,7 @@ def upload(phase) -> None:
                 session["uploaded_content"] = file_content  # caching content of file in order to work with it in next step
                 return redirect(url_for("admin.upload", phase="edit"))
                 
-        return render_template("upload.html", authorized=True)
+        return render_template("upload.html")
 
     elif phase == "edit":
         # contains all necessary operations when article is completely finished (all needed additional arguments are given)
@@ -93,7 +93,7 @@ def upload(phase) -> None:
             session.pop("uploaded_content") # getting rid of unecessary cache
             return redirect(url_for("articles.find_article", path=f"{temp_article_id}.html"))
 
-        return render_template("upload_panel.html", categories = Category.query.all())
+        return render_template("upload_panel.html", categories=Category.query.all())
 
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------
