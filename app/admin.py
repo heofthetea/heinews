@@ -19,6 +19,7 @@ admin_panel = Blueprint("admin", __name__)
 def redir_upload():
     return redirect(url_for("admin.upload", phase="new"))
 
+
 @admin_panel.route('/upload/<phase>', methods=["GET", "POST"])
 @login_required
 def upload(phase) -> None:
@@ -94,6 +95,7 @@ def upload(phase) -> None:
             return redirect(url_for("articles.find_article", path=f"{temp_article_id}.html"))
 
         return render_template("upload_panel.html", categories=Category.query.all())
+
 
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------

@@ -30,4 +30,22 @@
     {% block article %}
     <!-- override this with child file -->
     {% endblock %}
+
+    {% if current_user.role == "developer" %}
+    <!--TODO make those buttons do stuff-->
+    <div>
+        <!--action="{{ url_for('admin.validate_article') }}"-->
+        <form method="POST">
+            <div class="form-group">
+                <label for="cancel"></label>
+                <button style="background-color: #f00; float: left; margin-left: 50px;">Give Feedback</button>
+            </div>
+            
+            <div class="form-group">
+                <label for="approve"></label>
+                <button style="background-color: #0f0; float: right; margin-right: 50px;">Approve</button>
+            </div>
+        </form>
+    </div>
+    {% endif %}
 {% endblock %}
