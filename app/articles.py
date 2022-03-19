@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, abort, redirect
 from jinja2.exceptions import TemplateNotFound
 from .models import Article, User, Tag, get_tags, get_articles
+from . import db
 
 
 articles = Blueprint("articles", __name__)
@@ -37,7 +38,20 @@ def by_category(category: str):
     return render_template("overview.html", type="article", articles=Article.query.filter_by(category=category).all())
 
     
-    
+#---------------------------------------------------------------------------------------------------------------------------------------------
+
+@articles.route("/feedback/<id>")
+def feedback(id):
+    article = Article.query.get(id)
+    return redirect(f"mailto:{article.creator_email}")
+
+
+@articles.route("/approve/<id>")
+def approve(id):
+    article = Article.query.get(id)
+    article.validated = True
+    db.session.commit()
+    return redirect('/')
 
 
 #---------------------------------------------------------------------------------------------------------------------------------------------

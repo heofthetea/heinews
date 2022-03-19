@@ -4,8 +4,10 @@ from .models import Article, Role, Category, Tag, Article_tag_connection, genera
 from flask_login import current_user, login_required
 from . import db
 from datetime import datetime
+from sqlalchemy import asc
 # from os import path
 # from werkzeug.utils import secure_filename
+
 
 PLACEHOLDER = {
     "title": "__title__",
@@ -14,6 +16,18 @@ PLACEHOLDER = {
 ALLOWED_EXTENSIONS = {"txt", "docx", "doc", "odt"} # TODO support txt files because I like them
 
 admin_panel = Blueprint("admin", __name__)
+
+
+@login_required
+@admin_panel.route("/")
+def admin_index():
+    try:
+        if current_user.role != "validate" and current_user.role != "developer":
+            abort(403)
+    except AttributeError:
+        abort(403)
+    invalidated_articles = Article.query.filter_by(validated=False)
+    return render_template("admin.html", invalidated_articles=invalidated_articles.order_by(asc(Article.date_created)))
 
 @admin_panel.route("/upload")
 def redir_upload():

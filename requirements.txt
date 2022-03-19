@@ -1,4 +1,4 @@
 flask
-Flask-SQLAlchemy
+Flask-sqlalchemy
 flask-login
 python-docx
