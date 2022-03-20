@@ -1,0 +1,22 @@
+{
+  "name": "hhg-times",
+  "version": "1.0.0",
+  "description": "* * *\r Before running locally for the first time, do the following steps: <br>\r ##### I. activate virtual environment with the following terminal commands (for windows):<br>\r >1.`cd venv/Scripts`<br>\r 2.`activate.bat`<br>\r (3.`cd ../../` to get back to original location)<br>",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ERROR-Emil-Not-Found/hhg-times.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ERROR-Emil-Not-Found/hhg-times/issues"
+  },
+  "homepage": "https://github.com/ERROR-Emil-Not-Found/hhg-times#readme",
+  "dependencies": {
+    "bootstrap": "^5.1.3"
+  }
+}

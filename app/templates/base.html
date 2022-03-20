@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/main.min.css">
     <title>
         {% block title %}{% endblock %}
     </title>
 </head>
+
 <body>
     <a href="/">Homepage</a>
     <!--yeah this does not lead anywhere 
@@ -15,12 +18,14 @@
     On page x, there should not be a link to page x (or if there is, make it look good, through showing that this is the page one is currently on)-->
     <a href="{{ url_for('articles.all_articles') }}">all articles</a>
     {% for category in categories %}
-        <a href="{{ url_for('articles.by_category', category=category.name) }}">{{ category.name }}</a>
+    <a href="{{ url_for('articles.by_category', category=category.name) }}">{{ category.name }}</a>
     {% endfor %}
     <hr>
 
-    {% block content%}
-
-    {% endblock %}
+    {% block content%} {% endblock %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
 </body>
+
 </html>
