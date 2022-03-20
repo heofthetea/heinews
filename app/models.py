@@ -5,6 +5,8 @@ from flask_login import UserMixin
 
 # is it necessary to give everything a power of 2 as a length? No. Do I do it anyway? Yes, why not.
 
+
+#TODO add something like Article.needs_modification for when an article is not approved by validation
 class Article(db.Model):
     id = db.Column(db.String(6), primary_key=True)
     title = db.Column(db.String(128))
@@ -28,7 +30,7 @@ class Article_tag_connection(db.Model):
     tag = db.Column(db.String(32), db.ForeignKey("tag.tag"))
 
 
-
+#TODO rework: add Role.can_validate
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64))

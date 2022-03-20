@@ -9,10 +9,8 @@ views = Blueprint("views", __name__)
 def index() -> str:
     return render_template("index.html")
 
-@login_required
-@views.route("/admin")
-def admin_index():
-    if current_user.role != "validate" and current_user.role != "developer":
-        abort(403)
-    invalidated_articles = Article.query.filter_by(validated=False)
-    return render_template("admin.html", invalidated_articles=invalidated_articles.order_by(desc(Article.date_created)))
+
+class ErrorPages:
+    def __404__():
+        return render_template("error/404.html")
+

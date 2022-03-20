@@ -20,7 +20,7 @@ def create_app() -> Flask:
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
     # create blueprints and set up urls
-    from .views import views
+    from .views import views, ErrorPages
     app.register_blueprint(views, url_prefix='/')
 
     from .articles import articles
@@ -35,7 +35,7 @@ def create_app() -> Flask:
     from .auth import auth
     app.register_blueprint(auth, url_prefix='/')
 
-    from.dev import dev
+    from .dev import dev
     app.register_blueprint(dev, url_prefix="/dev/")
 
 
@@ -68,8 +68,8 @@ def create_app() -> Flask:
 
     @app.errorhandler(404)
     def page_not_found(error):
-        return "<h1> this page does not exist</h1><br><a href='/'>homepage</a>"
-    
+        return ErrorPages.__404__()
+
     
     return app
 
