@@ -1,0 +1,14 @@
+{% extends "overview.html" %}
+
+{% block title %}Tags{% endblock %}
+
+{% block content %}
+    {% for tag in tags %}
+        {% if tag != '' %}
+            <a href="{{ url_for('tag.articles_by_tag', tag=tag.tag.replace('#', '')) }}">
+                {{ tag.tag }}
+                <br>
+            </a>
+        {% endif %}
+    {% endfor %}
+{% endblock %}

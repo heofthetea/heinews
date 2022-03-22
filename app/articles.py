@@ -30,12 +30,12 @@ def find_article(path: str) -> None:
 
 @articles.route("/all")
 def all_articles() -> None:
-    return render_template("overview.html", type="article", category="all", articles=Article.query.all())
+    return render_template("overview/all.html", articles=Article.query.all())
 
 
 @articles.route("/category/<category>")
 def by_category(category: str):
-    return render_template("overview.html", type="article", category=category, articles=Article.query.filter_by(category=category).all())
+    return render_template(f"overview/{category.lower()}.html", articles=Article.query.filter_by(category=category).all())
 
     
 #---------------------------------------------------------------------------------------------------------------------------------------------
@@ -64,9 +64,9 @@ def articles_by_tag(tag: str):
     if not Tag.query.get(tag):
         abort(404)
     articles_with_tag = get_articles(Tag.query.get(tag))
-    return render_template("overview.html", type="article", articles=articles_with_tag)
+    return render_template("overview/all.html", articles=articles_with_tag)
 
 
 @tag.route("/")
 def all_tags():
-    return render_template("overview.html", type="tag", tags=Tag.query.all())
+    return render_template("overview/tags.html", tags=Tag.query.all())

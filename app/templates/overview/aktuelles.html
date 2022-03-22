@@ -1,0 +1,9 @@
+{% extends "overview.html" %}
+
+{% block title %}Aktuelles{% endblock %}
+
+{% block aktuelles %}
+        <li class="nav-item">
+            <a href="{{ url_for('articles.by_category', category='Aktuelles') }}" class="nav-link active">Aktuelles</a>
+        </li>
+{% endblock %}

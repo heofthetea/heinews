@@ -18,7 +18,7 @@
     <nav class="navbar navbar-expand-md navbar-dark bg-dark">
         <div class="container-xxl">
             <a href="/" class="navbar-brand active">
-                <img src="../rescource/Logo.png" alt="HEINEWS" width="146" height="40" class="d-inline-block">
+                <img src="/static/img/Logo.png" alt="HEINEWS" width="146" height="40" class="d-inline-block">
                 <span class="mx-2">HEINEWS</span>
             </a>
             <!-- toggle button for mobile nav -->
@@ -31,30 +31,46 @@
             <div class="collapse navbar-collapse justify-content-start" id="main-nav">
                 <ul class="navbar-nav">
                     {% block all_articles %}
-                    <li class="nav-item">
-                        <a href="{{ url_for('articles.all_articles') }}" class="nav-link">Alle Artikel</a>
-                    </li>
+                        <li class="nav-item">
+                            <a href="{{ url_for('articles.all_articles') }}" class="nav-link">Alle Artikel</a>
+                        </li>
                     {% endblock %}
                     
-                    
-                    <li class="nav-item">
-                        <a href="/article/category/Aktuelles" class="nav-link">Aktuelles</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/article/category/Wissen" class="nav-link">Wissen</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/article/category/Schulleben" class="nav-link">Schulleben</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/article/category/Lifestyle" class="nav-link">Lifestyle</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/article/category/Unterhaltung" class="nav-link">Unterhaltung</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/article/category/Kreatives" class="nav-link">Kreatives</a>
-                    </li>
+                    {% block aktuelles %}
+                        <li class="nav-item">
+                            <a href="/article/category/Aktuelles" class="nav-link">Aktuelles</a>
+                        </li>
+                    {% endblock %}
+
+                    {% block wissen %}
+                        <li class="nav-item">
+                            <a href="/article/category/Wissen" class="nav-link">Wissen</a>
+                        </li>
+                    {% endblock %}
+
+                    {% block schulleben %}
+                        <li class="nav-item">
+                            <a href="/article/category/Schulleben" class="nav-link">Schulleben</a>
+                        </li>
+                    {% endblock %}
+
+                    {% block lifestyle %}
+                        <li class="nav-item">
+                            <a href="/article/category/Lifestyle" class="nav-link">Lifestyle</a>
+                        </li>
+                    {% endblock %}
+
+                    {% block unterhaltung %}
+                        <li class="nav-item">
+                            <a href="/article/category/Unterhaltung" class="nav-link">Unterhaltung</a>
+                        </li>
+                    {% endblock %}
+
+                    {% block kreatives %}
+                        <li class="nav-item">
+                            <a href="/article/category/Kreatives" class="nav-link">Kreatives</a>
+                        </li>
+                    {% endblock %}
                 </ul>
             </div>
         </div>

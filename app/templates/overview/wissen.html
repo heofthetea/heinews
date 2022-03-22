@@ -1,0 +1,9 @@
+{% extends "overview.html" %}
+
+{% block title %}Wissen{% endblock %}
+
+{% block wissen %}
+    <li class="nav-item">
+        <a href="{{ url_for('articles.by_category', category='Wissen') }}" class="nav-link active">Wissen</a>
+    </li>
+{% endblock %}
