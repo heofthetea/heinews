@@ -30,12 +30,12 @@ def find_article(path: str) -> None:
 
 @articles.route("/all")
 def all_articles() -> None:
-    return render_template("overview.html", type="article", articles=Article.query.all())
+    return render_template("overview.html", type="article", category="all", articles=Article.query.all())
 
 
 @articles.route("/category/<category>")
 def by_category(category: str):
-    return render_template("overview.html", type="article", articles=Article.query.filter_by(category=category).all())
+    return render_template("overview.html", type="article", category=category, articles=Article.query.filter_by(category=category).all())
 
     
 #---------------------------------------------------------------------------------------------------------------------------------------------
