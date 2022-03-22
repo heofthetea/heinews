@@ -14,6 +14,11 @@
         <i>Kategorie: 
             <a href="{{ url_for('articles.by_category', category=db_entry.category) }}">{{ db_entry.category }}</a>
         </i>
+        <!--
+            That date_created query might be a little confusing, so to divide it up here:
+            1. db_entry.date_created.date() gets ONLY the date of when the article was created
+            2. strftime("%d.%m.%Y") formats it from yyyy-mm-dd to dd-mm-yyyy
+        -->
         <i style="margin-left: 50px">Hochgeladen am {{ db_entry.date_created.date().strftime("%d.%m.%Y") }} von {{ created_by }}</i>
         <i style="margin-left: 50px">tags: 
             {% for tag in tags %}

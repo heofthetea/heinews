@@ -13,7 +13,7 @@ PLACEHOLDER = {
     "title": "__title__",
     "category": "__category__"
 }
-ALLOWED_EXTENSIONS = {"txt", "docx", "doc", "odt"} # TODO support txt files because I like them
+ALLOWED_EXTENSIONS = {"txt", "docx", "doc"} # TODO support txt files because I like them
 
 admin_panel = Blueprint("admin", __name__)
 
@@ -55,7 +55,7 @@ def upload(phase) -> None:
                 return redirect(request.url)
             if file and allowed_file(file.filename):
                 file_extension = file.filename.rsplit('.', 1)[1].lower()
-                if file_extension == "docx" or file_extension == "doc" or file_extension == "odt":
+                if file_extension == "docx" or file_extension == "doc":
                     file_content = convert(file)
                     
                 elif file_extension == "txt":

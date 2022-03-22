@@ -17,13 +17,9 @@ def find_article(path: str) -> None:
         db_entry = Article.query.get(article_id)
         if not db_entry:
             abort(404)
-        return render_template(f"articles/{path}", db_entry=db_entry, 
-                                                   date_created=db_entry.date_created,
+        return render_template(f"articles/{path}", db_entry=db_entry,
                                                    created_by=User.query.filter_by(email=db_entry.creator_email).first().name,
                                                    tags=get_tags(db_entry))
-        # that date_created query might be a little confusing, so to divide it up here:
-        # 1. db_entry.date_created.date() gets ONLY the date of when the article was created
-        # 2. strftime("%d.%m.%Y") formats it from yyyy-mm-dd to dd-mm-yyyy"""
     except TemplateNotFound:
         abort(404)
 

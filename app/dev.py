@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect
+from flask import Blueprint, redirect, abort
 from flask_login import logout_user, current_user
 from .models import Article, User
 from . import db
@@ -13,6 +13,8 @@ dev = Blueprint("dev", __name__)
 #        3. get rid of eval(inp) as soon as possible to not risk losing everything
 @dev.route('/')
 def delete() -> None:
+    if current_user.role != "dev":
+        abort(418)
     # yes this is a terrible weakness that cannot go into release like that
     inp = input("> ")
     eval(inp)
