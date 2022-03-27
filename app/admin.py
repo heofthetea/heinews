@@ -46,13 +46,15 @@ def upload(phase) -> None:
         if request.method == 'POST':
             # check if the post request has the file part
             if 'file' not in request.files:
-                print('No file part') # TODO replace with flash
+                flash("Bitte wähle eine Datei aus", category="error") # TODO replace with flash
                 return redirect(request.url)
             file = request.files['file']
             # If the user does not select a file, the browser submits an empty file without a filename.
             if file.filename == '':
-                print('No selected file') # TODO replace with flash
+                flash("Bitte wähle eine Datei aus", category="error") # TODO replace with flash
                 return redirect(request.url)
+            if not allowed_file(file.filename):
+                flash("Dateityp nicht unterstützt (Unterstützt wird: .txt, .doc, .docx)")
             if file and allowed_file(file.filename):
                 file_extension = file.filename.rsplit('.', 1)[1].lower()
                 if file_extension == "docx" or file_extension == "doc":
@@ -104,7 +106,8 @@ def upload(phase) -> None:
             #                    -> avoids having a file without a corresponding db entry)
             with open(f"app/templates/articles/{temp_article_id}.html", "w+", encoding="utf-8") as new_article:
                 new_article.write(htmlify(content))
-            
+
+            flash("Artikel wurde erfolgreich hochgeladen!", category="success")
             session.pop("uploaded_content") # getting rid of unecessary cache
             return redirect(url_for("articles.find_article", path=f"{temp_article_id}.html"))
 
