@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, url_for, redirect, flash, abort, request, session
 from ._lib.docx_to_html import Tag, convert, htmlify, replace_links
-from .models import Article, Role, Category, Tag, Article_tag_connection, generate_id
+from .models import Article, Role, Category, Tag, Article_Tag, generate_id
 from flask_login import current_user, login_required
 from . import db
 from datetime import datetime
@@ -87,7 +87,7 @@ def upload(phase) -> None:
             for tag in tags.split(" "):
                 if not Tag.query.get(tag): # if tag doesn't already exist
                     db.session.add(Tag(tag=tag))
-                db.session.add(Article_tag_connection(article_id=temp_article_id, tag=tag))
+                db.session.add(Article_Tag(article_id=temp_article_id, tag=tag))
             db.session.commit()
 
             #TODO implement preview (including ability to insert images "into preview" etc.)

@@ -1,6 +1,7 @@
-from flask import Blueprint, render_template, abort, redirect
+from flask import Blueprint, render_template, abort, redirect, url_for, flash
 from jinja2.exceptions import TemplateNotFound
-from .models import Article, User, Tag, get_tags, get_articles
+from flask_login import current_user, AnonymousUserMixin
+from .models import Article, User, Tag, UserUpvote, get_tags, get_articles, get_UserUpvote
 from . import db
 
 
@@ -9,6 +10,8 @@ articles = Blueprint("articles", __name__)
 """
 check if article existes as a template (try-catch) and as a database entry, if so:
 renders article as jinja2 template
+
+@param path: name of html file article is stored at
 """
 @articles.route('/<path:path>')
 def find_article(path: str) -> None:
@@ -17,9 +20,19 @@ def find_article(path: str) -> None:
         db_entry = Article.query.get(article_id)
         if not db_entry:
             abort(404)
+        try:
+            if  get_UserUpvote(current_user.id, article_id).first():
+                user_upvoted = True
+            else:
+                user_upvoted = False
+        except AttributeError:
+            user_upvoted = False
+
+
         return render_template(f"articles/{path}", db_entry=db_entry,
                                                    created_by=User.query.filter_by(email=db_entry.creator_email).first().name,
-                                                   tags=get_tags(db_entry))
+                                                   tags=get_tags(db_entry),
+                                                   upvoted=user_upvoted)
     except TemplateNotFound:
         abort(404)
 
@@ -32,6 +45,33 @@ def all_articles() -> None:
 @articles.route("/category/<category>")
 def by_category(category: str):
     return render_template(f"overview/{category.lower()}.html", articles=Article.query.filter_by(category=category).all())
+
+
+@articles.route("/upvote/<id>", methods=["POST"])
+def upvote(id):
+    try:
+        db.session.add(UserUpvote(user_id=current_user.id,
+                        article_id=id))
+        Article.query.get(id).upvotes += 1
+        db.session.commit()
+    except AttributeError:
+        flash("Schön, dass Dir der Artikel gefällt! Nur musst Du dich anmelden, um das zu zeigen :)", category="error")
+    return redirect(url_for("articles.find_article", path=id+".html")) # redirects back to article
+
+
+# yep that's supposed to be funny
+# nope it stays that way
+@articles.route("/yeet/<id>")
+def remove_upvote(id):
+    db.session.delete(get_UserUpvote(current_user.id, id).first())
+    Article.query.get(id).upvotes -= 1
+    db.session.commit()
+    return redirect(url_for("articles.find_article", path=id+".html"))
+
+#TODO send delete request
+#TODO check if user is logged in
+
+
 
     
 #---------------------------------------------------------------------------------------------------------------------------------------------
@@ -47,7 +87,8 @@ def approve(id):
     article = Article.query.get(id)
     article.validated = True
     db.session.commit()
-    return redirect('/')
+    flash("Artikel wurde erfolgreich validiert!", category="success")
+    return redirect(url_for("articles.find_article", path=id+".html"))
 
 
 #---------------------------------------------------------------------------------------------------------------------------------------------

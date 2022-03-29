@@ -10,11 +10,18 @@ from flask_login import UserMixin
 class Article(db.Model):
     id = db.Column(db.String(6), primary_key=True)
     title = db.Column(db.String(128))
+    description = db.Column(db.String(256))
     date_created = db.Column(db.DateTime(timezone=True), default=func.now())
     validated = db.Column(db.Boolean(), default=False)
+    upvotes = db.Column(db.Integer, nullable=False, default=0)
     category = db.Column(db.String(64), db.ForeignKey("category.name"))
     creator_email = db.Column(db.String(64), db.ForeignKey("user.email"))
 
+
+class Article_Images(db.Model):
+    id = db.Column(db.String(6), primary_key=True)
+    location = db.Column(db.String(12), unique=True, nullable=False)
+    
 
 class Category(db.Model):
     name = db.Column(db.String(32), primary_key=True)
@@ -24,13 +31,12 @@ class Category(db.Model):
 class Tag(db.Model):
     tag = db.Column(db.String(32), primary_key=True)
 
-class Article_tag_connection(db.Model):
+class Article_Tag(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     article_id = db.Column(db.String(6), db.ForeignKey("article.id"))
     tag = db.Column(db.String(32), db.ForeignKey("tag.tag"))
 
 
-#TODO rework: add Role.can_validate
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64))
@@ -38,10 +44,22 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(128))
     role = db.Column(db.String(32), db.ForeignKey("role.name"))
 
+"""
+if user upvotes an article, an entry is created
+if that upvote gets removed, the entry is deleted again
+in case an article gets deleted (for whatever reason), all entries involving this article should be deleted as well
+"""
+class UserUpvote(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    article_id = db.Column(db.String(6), db.ForeignKey("article.id"))
+
 
 class Role(db.Model):
     name = db.Column(db.String(32), primary_key=True)
     can_upload = db.Column(db.Boolean())
+    can_validate = db.Column(db.Boolean())
+
 
 """
 writes default entries into database when database is created
@@ -51,7 +69,8 @@ event.listen(Category.__table__, "after_create",
         DDL("INSERT INTO category (name) VALUES ('Aktuelles'), ('Wissen'), ('Schulleben'), ('Lifestyle'), ('Unterhaltung'), ('Kreatives')"))
 
 event.listen(Role.__table__, "after_create",
-        DDL("INSERT INTO role (name, can_upload) VALUES ('user', False), ('upload', True), ('validate', False), ('developer', True)"))
+        DDL("INSERT INTO role (name, can_upload, can_validate) "
+        "VALUES ('user', False, False), ('upload', True, False), ('validate', False, True), ('developer', True, True)"))
 #-----------------------------------------------------------------------------------------------------------------------------------
 """
 generates unique id following pattern:
@@ -87,16 +106,23 @@ corresponding SQL query of this function:
     AND article_tag_connection.article_id = article.id;
 """
 def get_articles(tag: Tag) -> list[Article]:
-    connections = Article_tag_connection.query.filter_by(tag=tag.tag).all()
+    connections = Article_Tag.query.filter_by(tag=tag.tag).all()
     return [Article.query.get(connection.article_id) for connection in connections]
 
 """
 functions in the exact same way as `get_articles(tag: Tag)`, but the other way around
 """
 def get_tags(article: Article) -> list[Tag]:
-    connections = Article_tag_connection.query.filter_by(article_id=article.id).all()
+    connections = Article_Tag.query.filter_by(article_id=article.id).all()
     return [Tag.query.get(connection.tag) for connection in connections]
 
 def get_user_role(user: User) -> Role:
     return Role.query.get(user.role)
+
+
+"""
+@return: DDL returns an sqlite query -> to effectively work with the dataset, functions like `.all()` have to be called on return
+"""
+def get_UserUpvote(user_id, article_id) -> DDL:
+    return UserUpvote.query.filter_by(user_id=user_id).filter_by(article_id=article_id)
 
