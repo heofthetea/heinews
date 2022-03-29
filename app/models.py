@@ -49,9 +49,10 @@ if user upvotes an article, an entry is created
 if that upvote gets removed, the entry is deleted again
 in case an article gets deleted (for whatever reason), all entries involving this article should be deleted as well
 """
-class User_Upvotes(db.Model):
+class UserUpvote(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    article = db.Column(db.String(6), db.ForeignKey("article.id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    article_id = db.Column(db.String(6), db.ForeignKey("article.id"))
 
 
 class Role(db.Model):
@@ -117,4 +118,11 @@ def get_tags(article: Article) -> list[Tag]:
 
 def get_user_role(user: User) -> Role:
     return Role.query.get(user.role)
+
+
+"""
+@return: DDL returns an sqlite query -> to effectively work with the dataset, functions like `.all()` have to be called on return
+"""
+def get_UserUpvote(user_id, article_id) -> DDL:
+    return UserUpvote.query.filter_by(user_id=user_id).filter_by(article_id=article_id)
 

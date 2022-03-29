@@ -4,6 +4,9 @@
     - yes, this is not the aesthetically most beautiful way to handle these, but it works and that's what matters
 -->
 
+{% block css %}
+<link rel="stylesheet" href="/static/css/article.css">
+{% endblock %}
 {% block title %}{{ db_entry.title }}{% endblock %}
 
 {% block content%}
@@ -35,8 +38,19 @@
     {% block article %}
     <!-- override this with child file -->
     {% endblock %}
+    {% if upvoted %}
+        <form action="{{ url_for('articles.remove_upvote', id=db_entry.id) }}">
+            <button id="upvoted">upvoted!</button>
+        </form>
+    {% else%}
+        <form action="{{ url_for('articles.upvote', id=db_entry.id) }}", method="POST">
+            <button>upvote</button>
+        </form>
+    {% endif %}
 
-    {% if current_user.role == "developer" %}
+    upvotes: {{db_entry.upvotes}}
+
+    {% if current_user.role == "developer" and not db_entry.validated%}
     <!--TODO make those buttons do stuff-->
     <div>
         <form action="{{ url_for('articles.feedback', id=db_entry.id) }}">
