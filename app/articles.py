@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, abort, redirect, url_for, flash
 from jinja2.exceptions import TemplateNotFound
 from flask_login import current_user, AnonymousUserMixin
-from .models import Article, User, Tag, UserUpvote, get_tags, get_articles, get_UserUpvote
+from .models import Article, User, Tag, User_Upvote, get_tags, get_articles, get_User_Upvote
 from . import db
 
 
@@ -21,7 +21,7 @@ def find_article(path: str) -> None:
         if not db_entry:
             abort(404)
         try:
-            if  get_UserUpvote(current_user.id, article_id).first():
+            if  get_User_Upvote(current_user.id, article_id).first():
                 user_upvoted = True
             else:
                 user_upvoted = False
@@ -44,13 +44,13 @@ def all_articles() -> None:
 
 @articles.route("/category/<category>")
 def by_category(category: str):
-    return render_template(f"overview/{category.lower()}.html", articles=Article.query.filter_by(category=category).all())
+    return render_template(f"overview/{category}.html", articles=Article.query.filter_by(category=category).all())
 
 
 @articles.route("/upvote/<id>", methods=["POST"])
 def upvote(id):
     try:
-        db.session.add(UserUpvote(user_id=current_user.id,
+        db.session.add(User_Upvote(user_id=current_user.id,
                         article_id=id))
         Article.query.get(id).upvotes += 1
         db.session.commit()
@@ -63,16 +63,10 @@ def upvote(id):
 # nope it stays that way
 @articles.route("/yeet/<id>")
 def remove_upvote(id):
-    db.session.delete(get_UserUpvote(current_user.id, id).first())
+    db.session.delete(get_User_Upvote(current_user.id, id).first())
     Article.query.get(id).upvotes -= 1
     db.session.commit()
     return redirect(url_for("articles.find_article", path=id+".html"))
-
-#TODO send delete request
-#TODO check if user is logged in
-
-
-
     
 #---------------------------------------------------------------------------------------------------------------------------------------------
 
