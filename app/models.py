@@ -49,7 +49,7 @@ if user upvotes an article, an entry is created
 if that upvote gets removed, the entry is deleted again
 in case an article gets deleted (for whatever reason), all entries involving this article should be deleted as well
 """
-class UserUpvote(db.Model):
+class User_Upvote(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     article_id = db.Column(db.String(6), db.ForeignKey("article.id"))
@@ -66,7 +66,7 @@ writes default entries into database when database is created
 -> those values should never change
 """
 event.listen(Category.__table__, "after_create", 
-        DDL("INSERT INTO category (name) VALUES ('Aktuelles'), ('Wissen'), ('Schulleben'), ('Lifestyle'), ('Unterhaltung'), ('Kreatives')"))
+        DDL("INSERT INTO category (name) VALUES ('aktuelles'), ('wissen'), ('schulleben'), ('lifestyle'), ('unterhaltung'), ('kreatives')"))
 
 event.listen(Role.__table__, "after_create",
         DDL("INSERT INTO role (name, can_upload, can_validate) "
@@ -123,6 +123,6 @@ def get_user_role(user: User) -> Role:
 """
 @return: DDL returns an sqlite query -> to effectively work with the dataset, functions like `.all()` have to be called on return
 """
-def get_UserUpvote(user_id, article_id) -> DDL:
-    return UserUpvote.query.filter_by(user_id=user_id).filter_by(article_id=article_id)
+def get_User_Upvote(user_id, article_id) -> DDL:
+    return User_Upvote.query.filter_by(user_id=user_id).filter_by(article_id=article_id)
 
