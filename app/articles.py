@@ -56,6 +56,7 @@ def upvote(id):
         db.session.commit()
     except AttributeError:
         flash("Schön, dass Dir der Artikel gefällt! Nur musst Du dich anmelden, um das zu zeigen :)", category="error")
+        return redirect(url_for("auth.login"))
     return redirect(url_for("articles.find_article", path=id+".html")) # redirects back to article
 
 

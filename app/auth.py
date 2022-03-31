@@ -7,6 +7,7 @@ from flask_login import login_user, login_required, logout_user, current_user
 
 
 auth = Blueprint("auth", __name__)
+get_checkbutton = lambda val : val == "on"
 
 
 @auth.route("/login", methods=["GET", "POST"])
@@ -14,11 +15,13 @@ def login():
     if request.method == "POST":
         email = request.form.get("email")
         password = request.form.get("password")
+        loggedin = request.form.get("loggedin")
+        print(loggedin)
 
         user = User.query.filter_by(email=email).first()
         if user:
             if check_password_hash(user.password, password):
-                login_user(user, remember=False)
+                login_user(user, remember=get_checkbutton(loggedin))
                 flash("Anmeldung erfolgreich", category="success")
                 return redirect('/')
             else:
@@ -39,6 +42,7 @@ def signup():
         password1 = request.form.get("password1")
         password2 = request.form.get("password2")
         name = request.form.get("name")
+        notifications = request.form.get("notifications")
 
         user = User.query.filter_by(email=email).first()
 
@@ -54,11 +58,18 @@ def signup():
             new_user = User(email=email,
                             name=name,
                             password=generate_password_hash(password1, method="sha256"),
+                            notifications=get_checkbutton(notifications),
                             role="developer")
-
+            print(new_user.notifications)
             db.session.add(new_user)
             db.session.commit()
 
             login_user(new_user, remember=False)
             return redirect("/")
     return render_template("auth/signup.html", user=current_user)
+
+
+@auth.route("/logout")
+def logout():
+    logout_user()
+    return redirect(url_for("auth.login"))
