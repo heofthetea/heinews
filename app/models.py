@@ -49,7 +49,7 @@ class User(db.Model, UserMixin):
 """
 if user upvotes an article, an entry is created
 if that upvote gets removed, the entry is deleted again
-in case an article gets deleted (for whatever reason), all entries involving this article should be deleted as well
+in case an article gets deleted (for whatever reason), all entries involving this article should be deleted as well to save space
 """
 class User_Upvote(db.Model):
     id = db.Column(db.Integer, primary_key=True)

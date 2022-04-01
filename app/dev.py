@@ -13,7 +13,7 @@ dev = Blueprint("dev", __name__)
 #        3. get rid of eval(inp) as soon as possible to not risk losing everything
 @dev.route('/')
 def delete() -> None:
-    if current_user.role != "dev":
+    if current_user.role != "developer":
         abort(418)
     # yes this is a terrible weakness that cannot go into release like that
     inp = input("> ")

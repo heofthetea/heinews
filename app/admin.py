@@ -28,6 +28,7 @@ def admin_index():
         abort(403)
     invalidated_articles = Article.query.filter_by(validated=False)
     return render_template("admin.html", invalidated_articles=invalidated_articles.order_by(asc(Article.date_created)))
+    
 
 @admin_panel.route("/upload")
 def redir_upload():

@@ -11,3 +11,6 @@ Verschiedene Dekorationen (kursiv etc) werden erkannt, auch Farben, diese sind a
 Bilder werden wieder in Leerzeilen erkannt.
 Links funktionieren genauso.
 Textdekorationen existieren im .txt format nicht, auch für Überschriften gilt dasselbe.
+
+NOTE:
+Für Dokumente, die mit Google Docs erstellt wurden, gibt es zwar eine Funktion, die einem erlaubt, seine Datei als .docx zu exportieren - Allerdings führt dies dazu, dass beim Hochladen eines solchen Artikels lediglich der Text erkannt wird - Dinge wie Unterstreichen gehören da nicht dazu. Demnach ist es besser, sollte mit Google Docs geschrieben worden sein, diesen gleich als .txt zu exportieren, weil es dann schöner aussieht.

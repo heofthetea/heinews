@@ -16,8 +16,7 @@ def login():
         email = request.form.get("email")
         password = request.form.get("password")
         loggedin = request.form.get("loggedin")
-        print(loggedin)
-
+        
         user = User.query.filter_by(email=email).first()
         if user:
             if check_password_hash(user.password, password):
@@ -42,6 +41,7 @@ def signup():
         password1 = request.form.get("password1")
         password2 = request.form.get("password2")
         name = request.form.get("name")
+        loggedin = request.form.get("loggedin")
         notifications = request.form.get("notifications")
 
         user = User.query.filter_by(email=email).first()
@@ -60,11 +60,10 @@ def signup():
                             password=generate_password_hash(password1, method="sha256"),
                             notifications=get_checkbutton(notifications),
                             role="developer")
-            print(new_user.notifications)
             db.session.add(new_user)
             db.session.commit()
 
-            login_user(new_user, remember=False)
+            login_user(new_user, remember=get_checkbutton(loggedin))
             return redirect("/")
     return render_template("auth/signup.html", user=current_user)
 
@@ -72,4 +71,5 @@ def signup():
 @auth.route("/logout")
 def logout():
     logout_user()
+    flash("Erfolgreich abgemeldet! Hier kannst Du dich neu anmelden: ", category="success")
     return redirect(url_for("auth.login"))

@@ -100,12 +100,26 @@
                       Profile
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                      <li><a class="dropdown-item" href="{{ url_for('auth.login') }}">Login</a></li>
-                      <li><a class="dropdown-item" href="{{ url_for('auth.signup') }}">Sign Up</a></li>
-                      <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Logout</a></li>
-                      <li><hr class="dropdown-divider"></li>
-                      <li><a class="dropdown-item" href="{{ url_for('admin.upload', phase='new') }}">Upload</a></li>
-                      <li><a class="dropdown-item" href="{{ url_for('tag.all_tags') }}">View All Tags</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('views.profile') }}">Profil</a></li>
+                        
+                        {% if not loggedin(current_user) %}
+                            <li><a class="dropdown-item" href="{{ url_for('auth.login') }}">Login</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('auth.signup') }}">Sign Up</a></li>
+                        {% endif %}
+                        {% if loggedin(current_user) %}
+                            <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Logout</a></li>
+                        {% endif %}
+                        <li><hr class="dropdown-divider"></li>
+                            
+                        {% if loggedin(current_user) %}
+                            {% if get_user_role(current_user).can_validate %}
+                                <li><a class="dropdown-item" href="{{ url_for('admin.admin_index') }}">Admin-Panel</a></li>
+                            {% endif %}
+                            {% if get_user_role(current_user).can_upload %}
+                                <li><a class="dropdown-item" href="{{ url_for('admin.upload', phase='new') }}">Upload</a></li>
+                            {% endif %}
+                        {% endif %}
+                        <li><a class="dropdown-item" href="{{ url_for('tag.all_tags') }}">View All Tags</a></li>
                     </ul>
                   </li>
             </div>

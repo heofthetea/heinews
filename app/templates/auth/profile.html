@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+    <h4>name: {{ current_user.name }}</h4>
+    <h4>email: {{ current_user.email }}</h4>
+    <h4>role: {{ current_user.role }}</h4>
+    <!--TODO ake this actually do sth-->
+    <h4>change password: yeah fuck no you can't do that yet</h4> 
+    <h4>receive email notifications: {{ current_user.notifications }}</h4>
+
+    <hr>
+    <h3>Analysis tools or sth</h3>
+
+    <h4>Articles upvoted: {{ upvoted|length }}</h4>
+    {% for article in upvoted %}
+        <a href="{{ url_for('articles.find_article', path='{0}.html'.format(article.id)) }}">
+            {{ article.title }}
+        </a>
+        <br>
+    {% endfor %}
+    
+    <h4>Articles uploaded: {{ uploaded|length }}</h4>
+    {% for article in uploaded %}
+        <a href="{{ url_for('articles.find_article', path='{0}.html'.format(article.id)) }}">
+            {{ article.title }}
+        </a>
+        <br>
+    {% endfor %}
+
+    <!--TODO: move logout here?-->
+{% endblock %}

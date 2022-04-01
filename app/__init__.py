@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager,current_user
+from flask_login import LoginManager, current_user, AnonymousUserMixin
 from os import path
 
 # declare database for usage
@@ -64,7 +64,7 @@ def create_app() -> Flask:
 
     @app.context_processor
     def inject_user():
-        return dict(current_user=current_user, get_user_role=models.get_user_role)
+        return dict(current_user=current_user, get_user_role=models.get_user_role, loggedin=user_loggedin)
 
     @app.errorhandler(404)
     def page_not_found(error):
@@ -93,3 +93,6 @@ def create_database(app : Flask) -> None:
     if not path.exists("app/" + DB_NAME):
         db.create_all(app=app)
         print("Created Database!")
+
+def user_loggedin(current_user):
+    return not isinstance(current_user, AnonymousUserMixin)
