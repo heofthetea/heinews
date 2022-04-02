@@ -25,6 +25,7 @@
 
     
 
+    {% block navbar %}
     <!-- navbar -->
     <nav class="navbar navbar-expand-md navbar-dark bg-dark">
         <div class="container-fluid">
@@ -112,6 +113,9 @@
                         <li><hr class="dropdown-divider"></li>
                             
                         {% if loggedin(current_user) %}
+                            {% if current_user.role == "developer" %}
+                                <li><a class="dropdown-item" href="{{ url_for('dev.dev_panel') }}">Dev-Panel</a></li>
+                            {% endif %}
                             {% if get_user_role(current_user).can_validate %}
                                 <li><a class="dropdown-item" href="{{ url_for('admin.admin_index') }}">Admin-Panel</a></li>
                             {% endif %}
@@ -125,6 +129,8 @@
             </div>
         </div>
     </nav>
+
+    {% endblock %}
 
     <!--flash messages-->
     <!--
