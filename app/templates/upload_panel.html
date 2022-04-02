@@ -18,12 +18,6 @@
 
     <div class="form-group">
         <label for="category">Kategorie</label>
-        <!--input type="topic" 
-            class="form-control" 
-            id="topic" 
-            name="topic" 
-            placeholder="Ordne den Artikel einem Thema zu" 
-        /-->
         <select name="category" id="category">
             {% for category in categories %}
                 <option value="{{ category.name }}">{{ category.name }}</option>

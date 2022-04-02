@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+
+{% block css %}
+<style>
+    table, tr, td, th {
+        border: 1px solid #000; 
+        border-collapse: collapse;
+    }
+</style>
+{% endblock %}
+{% block title %}Developer Panel{% endblock %}
+
+{% block content %}
+
+<h1>Currently Existing Users</h1>
+<table>
+    <tr>
+        <th>id</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>yeet</th>
+    </tr>
+    {% for user in users %}
+    <tr>
+        <td>{{ user.id }}</td>
+        <td>{{ user.name }}</td>
+        <td>{{ user.email }}</td>
+        <td>
+            <form action="{{ url_for('dev.change_role', user=user.id) }}" method="POST">
+                <select name="role" id="role" onchange="this.form.submit()">
+                    {% for role in roles %}
+                    {% if role.name == user.role %}
+                        <option value="{{ role.name }}" selected="selected">
+                                {{ role.name }}
+                        </option>
+                    {% else %}
+                        <option value="{{ role.name }}">
+                                {{ role.name }}
+                        </option>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+            </form>
+        </td>
+        <td>
+            <form action="{{ url_for('dev.delete_user', id=user.id) }}">
+                <button>&times;</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+
+</table>
+
+{% endblock %}
+

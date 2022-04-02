@@ -1,5 +1,6 @@
 from sqlalchemy import event, DDL
 from sqlalchemy.sql import func
+from sqlalchemy import asc, desc
 from . import db
 from flask_login import UserMixin
 
@@ -32,6 +33,13 @@ class Tag(db.Model):
     tag = db.Column(db.String(32), primary_key=True)
 
 
+class Role(db.Model):
+    name = db.Column(db.String(32), primary_key=True)
+    # low -> high = lower hierarchy -> higher hierarchy (check default db pupulation DDLs for further clarification)
+    hierarchy = db.Column(db.Integer, nullable=False)
+    can_upload = db.Column(db.Boolean())
+    can_validate = db.Column(db.Boolean())
+
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -42,13 +50,25 @@ class User(db.Model, UserMixin):
     notifications = db.Column(db.Boolean())
     role = db.Column(db.String(32), db.ForeignKey("role.name"))
 
+    # no this is not necessary I'm just too lazy to learn joins
+    def __order_by_role__(self, *, ascend=False, descend=False) -> list:
+        role_hierarchy = []
+        if ascend:
+            roles = Role.query.order_by(asc(Role.hierarchy))
+        elif descend:
+            roles = Role.query.order_by(desc(Role.hierarchy))
+        else:
+            roles = Role.query.order_by(asc(Role.hierarchy))
 
+        for role in roles:
+            role_hierarchy.append(role.name)
 
-class Role(db.Model):
-    name = db.Column(db.String(32), primary_key=True)
-    can_upload = db.Column(db.Boolean())
-    can_validate = db.Column(db.Boolean())
+        users_sorted = []
+        for role in role_hierarchy:
+            users_sorted.extend(self.query.filter_by(role=role))
+        return users_sorted
 
+            
 
 #-----------------------------------------------------------------------------------------------------------------------------------
 # @REGION connections
@@ -79,8 +99,8 @@ event.listen(Category.__table__, "after_create",
         DDL("INSERT INTO category (name) VALUES ('aktuelles'), ('wissen'), ('schulleben'), ('lifestyle'), ('unterhaltung'), ('kreatives')"))
 
 event.listen(Role.__table__, "after_create",
-        DDL("INSERT INTO role (name, can_upload, can_validate) "
-        "VALUES ('user', False, False), ('upload', True, False), ('validate', False, True), ('developer', True, True)"))
+        DDL("INSERT INTO role (name, hierarchy, can_upload, can_validate) "
+        "VALUES ('user', 0, False, False), ('upload', 1, True, False), ('validate', 2, False, True), ('developer', 69, True, True)"))
 
 
 """
