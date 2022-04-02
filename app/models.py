@@ -31,10 +31,6 @@ class Category(db.Model):
 class Tag(db.Model):
     tag = db.Column(db.String(32), primary_key=True)
 
-class Article_Tag(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    article_id = db.Column(db.String(6), db.ForeignKey("article.id"))
-    tag = db.Column(db.String(32), db.ForeignKey("tag.tag"))
 
 
 class User(db.Model, UserMixin):
@@ -45,6 +41,23 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(128))
     notifications = db.Column(db.Boolean())
     role = db.Column(db.String(32), db.ForeignKey("role.name"))
+
+
+
+class Role(db.Model):
+    name = db.Column(db.String(32), primary_key=True)
+    can_upload = db.Column(db.Boolean())
+    can_validate = db.Column(db.Boolean())
+
+
+#-----------------------------------------------------------------------------------------------------------------------------------
+# @REGION connections
+
+class Article_Tag(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    article_id = db.Column(db.String(6), db.ForeignKey("article.id"))
+    tag = db.Column(db.String(32), db.ForeignKey("tag.tag"))
+
 
 """
 if user upvotes an article, an entry is created
@@ -57,12 +70,7 @@ class User_Upvote(db.Model):
     article_id = db.Column(db.String(6), db.ForeignKey("article.id"))
 
 
-class Role(db.Model):
-    name = db.Column(db.String(32), primary_key=True)
-    can_upload = db.Column(db.Boolean())
-    can_validate = db.Column(db.Boolean())
-
-
+#-----------------------------------------------------------------------------------------------------------------------------------
 """
 writes default entries into database when database is created
 -> those values should never change
@@ -73,7 +81,8 @@ event.listen(Category.__table__, "after_create",
 event.listen(Role.__table__, "after_create",
         DDL("INSERT INTO role (name, can_upload, can_validate) "
         "VALUES ('user', False, False), ('upload', True, False), ('validate', False, True), ('developer', True, True)"))
-#-----------------------------------------------------------------------------------------------------------------------------------
+
+
 """
 generates unique id following pattern:
 1. generate random hexadecimal value

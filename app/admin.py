@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, url_for, redirect, flash, abort, request, session
+from flask_login import current_user, login_required
 from ._lib.docx_to_html import Tag, convert, htmlify, replace_links
 from .models import Article, Role, Category, Tag, Article_Tag, generate_id
-from flask_login import current_user, login_required
 from . import db
 from datetime import datetime
 from sqlalchemy import asc
@@ -14,6 +14,9 @@ PLACEHOLDER = {
     "category": "__category__"
 }
 ALLOWED_EXTENSIONS = {"txt", "docx", "doc"} # TODO support txt files because I like them
+
+# I don't like putting this explicitly into my code, but using the built-in `session` dictionary failed handling big enough texts for some reason
+cache : dict = {}
 
 admin_panel = Blueprint("admin", __name__)
 
@@ -66,7 +69,7 @@ def upload(phase) -> None:
                     file_content = file_content.replace("\n", "<br>")
 
                 file_content = replace_links(file_content)
-                session["uploaded_content"] = file_content  # caching content of file in order to work with it in next step
+                cache["uploaded_content"] = file_content  # caching content of file in order to work with it in next step
                 return redirect(url_for("admin.upload", phase="edit"))
                 
         return render_template("upload.html")
@@ -75,9 +78,9 @@ def upload(phase) -> None:
         # contains all necessary operations when article is completely finished (all needed additional arguments are given)
         if request.method == "POST":
             # replacing placeholders created in conversion with values entered manually in panel form
-            content = session["uploaded_content"]
+            content = cache["uploaded_content"]
             title = request.form.get("title")
-            #content = content.replace(PLACEHOLDER["title"], title)
+            content = content.replace(PLACEHOLDER["title"], title)
 
             category = request.form.get("category")
             content = content.replace(PLACEHOLDER["category"], category)
@@ -109,7 +112,7 @@ def upload(phase) -> None:
                 new_article.write(htmlify(content))
 
             flash("Artikel wurde erfolgreich hochgeladen!", category="success")
-            session.pop("uploaded_content") # getting rid of unecessary cache
+            cache.pop("uploaded_content") # getting rid of unecessary cache
             return redirect(url_for("articles.find_article", path=f"{temp_article_id}.html"))
 
         return render_template("upload_panel.html", categories=Category.query.all())
