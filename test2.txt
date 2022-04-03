@@ -1,4 +1,0 @@
-<h1>is this a headline?</h1>
-<script>
-console.log("Hello");
-</script>

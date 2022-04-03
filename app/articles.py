@@ -7,6 +7,9 @@ from . import db
 
 articles = Blueprint("articles", __name__)
 
+def get_article_location(id):
+    return f"app/templates/articles/{id}.html"
+
 """
 check if article existes as a template (try-catch) and as a database entry, if so:
 renders article as jinja2 template

@@ -49,9 +49,9 @@
     {% endif %}
 
     upvotes: {{db_entry.upvotes}}
-
+    
     {% if current_user.role == "developer" and not db_entry.validated%}
-    <!--TODO make those buttons do stuff-->
+    <!--TODO change that if statement to something that makes sense-->
     <div>
         <form action="{{ url_for('articles.feedback', id=db_entry.id) }}">
             <div class="form-group">

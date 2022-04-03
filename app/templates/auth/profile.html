@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Login{% endblock %}
+{% block title %}{{ current_user.name }}{% endblock %}
 
 {% block content %}
     <h4>name: {{ current_user.name }}</h4>
