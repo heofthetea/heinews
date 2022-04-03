@@ -12,7 +12,7 @@
 {% block title %}Developer Panel{% endblock %}
 
 {% block content %}
-<p style="text-align: center; font-size: larger;">
+<!--p style="text-align: center; font-size: larger;">
     This is the Dev-Panel. Some might rather call it a scuffed version of PHPMyAdmin, but I prefer to ignore the fact that I was to lazy to run a MySQL
     database with this app and call this fancy. In here you have full power - From promoting users to admins and admins to developers all the way to
     making the entire database go bye-bye with just a couple clicks and entering your password. <i>(I'd highly advise against doing so tho, since that 
@@ -34,15 +34,28 @@
             some more fancy stuff I currently can't think of
         </li>
     </ul>
-</p>
+</p-->
 <h1>Currently Existing Users</h1>
 <table>
     <tr>
-        <th>id</th>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Role</th>
-        <th>yeet</th>
+        <form method="POST">
+            <th>
+                id
+                <input type="text" name="id" id="id" class="form-control" placeholder="find">
+            </th>
+            <th>
+                Name
+                <input type="text" name="name" id="name" class="form-control" placeholder="find">
+            </th>
+            <th>
+                Email
+                <input type="email" name="email" id="email" class="form-control" placeholder="find">
+            </th>
+            <th>Role</th>
+            <th>yeet</th>
+            <button type="submit" style="display: none;"></button>
+            <input type="button" name="reset" id="reset" value="Reset" onclick="this.form.submit()">
+        </form>
     </tr>
     {% for user in users %}
     <tr>

@@ -51,7 +51,9 @@ class User(db.Model, UserMixin):
     role = db.Column(db.String(32), db.ForeignKey("role.name"))
 
     # no this is not necessary I'm just too lazy to learn joins
-    def __order_by_role__(self, *, ascend=False, descend=False) -> list:
+    def __order_by_role__(self, *, ascend=False, descend=False, order_by=None) -> list:
+        if order_by is None:
+            order_by = User.name
         role_hierarchy = []
         if ascend:
             roles = Role.query.order_by(asc(Role.hierarchy))
@@ -65,7 +67,7 @@ class User(db.Model, UserMixin):
 
         users_sorted = []
         for role in role_hierarchy:
-            users_sorted.extend(self.query.filter_by(role=role))
+            users_sorted.extend(self.query.filter_by(role=role).order_by(order_by))
         return users_sorted
 
             

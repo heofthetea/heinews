@@ -12,10 +12,8 @@ dev = Blueprint("dev", __name__)
 #TODO implement counter for wrong passwords (use url parameter overloading?)
 authorized = False # used to control if user is allowed to view the panel
 
-# TODO:  1. secure this section with password(s)
-#        2. do all these options in the form of a GUI
-#        3. get rid of eval(inp) as soon as possible to not risk losing everything
-@dev.route('/')
+
+@dev.route('/', methods=["GET", "POST"])
 @login_required
 def dev_panel() -> None:
     if current_user.role != "developer":
@@ -23,13 +21,29 @@ def dev_panel() -> None:
     if not authorized:
         # stored current url as session variable before prompting authorization to be redirected correctly 
         return authorize_dev()
+
+    users = User.__order_by_role__(User, descend=True)
+    articles = Article.query.order_by(Article.validated).order_by(Article.title)
+    filtered = False
+    if request.method == "POST":
+        print(request.form.get("reset") == "Reset")
+        if request.form.get("id"):
+            users = User.query.filter_by(id=int(request.form.get("id")))
+            filtered = True
+        elif request.form.get("name"):
+            users = User.query.filter_by(name=request.form.get("name"))
+            filtered = True
+        elif request.form.get("email"):
+            users = User.query.filter_by(email=request.form.get("email")) 
+            filtered = True
     return render_template(
         "auth/dev.html",
-        users=User.__order_by_role__(User, descend=True),
+        users=users,
         #users=User.query.all(),
-        articles=Article.query.order_by(Article.validated),
+        articles=articles,
         tags=Tag.query.all(),
-        roles=Role.query.order_by(Role.hierarchy)
+        roles=Role.query.order_by(Role.hierarchy),
+        users_filtered=filtered
     )
 
 

@@ -1,13 +1,19 @@
 from flask import Blueprint, render_template, redirect, request
 from flask_login import login_required, current_user
 from .models import Article, User_Upvote, get_user_role
+from sqlalchemy import desc
+from random import choice
 
 views = Blueprint("views", __name__)
 
 @views.route('/')
 def index() -> str:
-    #print(current_user.email)
-    return render_template("index.html")
+    return render_template(
+        "index.html",
+        most_upvoted_article=Article.query.order_by(desc(Article.upvotes)).first(),
+        most_recent_article=Article.query.order_by(desc(Article.date_created)).first(),
+        rabdom_article=choice(Article.query.all())
+    )
 
 
 @views.route("/search", methods=["POST"])
