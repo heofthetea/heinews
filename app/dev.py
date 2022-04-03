@@ -1,9 +1,10 @@
 from flask import Blueprint, render_template, render_template_string,  redirect, abort, url_for, flash, request, session
 from flask_login import login_required, current_user
-from sqlalchemy import desc
 from werkzeug.security import check_password_hash
 from .models import Article, User, Tag, Role
+from .articles import get_article_location
 from . import db
+from os import remove
 
 
 dev = Blueprint("dev", __name__)
@@ -26,7 +27,7 @@ def dev_panel() -> None:
         "auth/dev.html",
         users=User.__order_by_role__(User, descend=True),
         #users=User.query.all(),
-        articles=Article.query.all(),
+        articles=Article.query.order_by(Article.validated),
         tags=Tag.query.all(),
         roles=Role.query.order_by(Role.hierarchy)
     )
@@ -101,6 +102,17 @@ def change_role(user):
     return redirect("/dev")
 
 
+@dev.route("/delete_article/<id>")
+def delete_article(id):
+    if session["needs_authorization"]:
+        return authorize_dev()
+    article_location = get_article_location(id)
+    Article.query.filter_by(id=id).delete()
+    remove(article_location)
+    db.session.commit()
+    flash("Article deleted successfully!", category="success")
+    return redirect("/dev")
+
 #-------------------------------------------------------------------------------------------------------------------------------------------
 # @REGION authorization redirects
 """
@@ -111,8 +123,6 @@ function redirecting to the password check.
 
 @dev.route("/change_role/<int:user>/authorize", methods=["POST"])
 def authorize_to_change_role(user):
-    global authorized
-
     session["needs_authorization"] = True # tells "follow-up" function that authorization is needed via cache
     session["new_user_role"] = request.form.get("role") # caching data necessary to "follow-up" function 
     return redirect(url_for("dev.change_role", user=user)) #authorization is handled by if-statement in "follow-up" function
@@ -120,10 +130,14 @@ def authorize_to_change_role(user):
 
 @dev.route("yeet_user/<int:id>/authorize")
 def authorize_to_delete_user(id):
-    global authorized
-
     session["needs_authorization"] = True
     return redirect(url_for("dev.delete_user", id=id))
+
+
+@dev.route("yeet_article/<id>/authorize")
+def authorize_to_delete_article(id):
+    session["needs_authorization"] = True
+    return redirect(url_for("dev.delete_article", id=id))
 
 
 def authorize_dev():

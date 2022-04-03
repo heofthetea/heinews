@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, url_for, redirect, flash, abort, r
 from flask_login import current_user, login_required
 from ._lib.docx_to_html import Tag, convert, htmlify, replace_links
 from .models import Article, Role, Category, Tag, Article_Tag, generate_id
+from .articles import get_article_location
 from . import db
 from datetime import datetime
 from sqlalchemy import asc
@@ -108,7 +109,7 @@ def upload(phase) -> None:
             db.session.commit()
             # storing html file (happens after db entry because db operations are more likely to go wrong 
             #                    -> avoids having a file without a corresponding db entry)
-            with open(f"app/templates/articles/{temp_article_id}.html", "w+", encoding="utf-8") as new_article:
+            with open(get_article_location(temp_article_id), "w+", encoding="utf-8") as new_article:
                 new_article.write(htmlify(content))
 
             flash("Artikel wurde erfolgreich hochgeladen!", category="success")
