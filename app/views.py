@@ -12,7 +12,7 @@ def index() -> str:
         "index.html",
         most_upvoted_article=Article.query.order_by(desc(Article.upvotes)).first(),
         most_recent_article=Article.query.order_by(desc(Article.date_created)).first(),
-        rabdom_article=choice(Article.query.all())
+        random_article=choice(Article.query.all())
     )
 
 

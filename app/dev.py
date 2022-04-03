@@ -26,8 +26,9 @@ def dev_panel() -> None:
     articles = Article.query.order_by(Article.validated).order_by(Article.title)
     filtered = False
     if request.method == "POST":
-        print(request.form.get("reset") == "Reset")
-        if request.form.get("id"):
+        if request.form.get("reset_user"):
+            filtered = False
+        elif request.form.get("id"):
             users = User.query.filter_by(id=int(request.form.get("id")))
             filtered = True
         elif request.form.get("name"):
@@ -58,7 +59,6 @@ prompts the user to confirm his password to verify he is the developer.
 @login_required
 def check_password():
     global authorized
-    print(request.url)
 
     if request.method == "POST":
         password = request.form.get("password")
@@ -157,3 +157,4 @@ def authorize_to_delete_article(id):
 def authorize_dev():
     session["request_url"] = request.url
     return redirect(url_for("dev.check_password"))
+    
