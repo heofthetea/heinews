@@ -18,6 +18,8 @@ class Article(db.Model):
     category = db.Column(db.String(64), db.ForeignKey("category.name"))
     creator_email = db.Column(db.String(64), db.ForeignKey("user.email"))
 
+    def __validated_articles__(self):
+        return self.query.filter_by(validated=True)
 
 class Article_Images(db.Model):
     id = db.Column(db.String(6), primary_key=True)
@@ -48,7 +50,7 @@ class User(db.Model, UserMixin):
     email_confirmed = db.Column(db.Boolean(), default=False)
     password = db.Column(db.String(128))
     notifications = db.Column(db.Boolean())
-    role = db.Column(db.String(32), db.ForeignKey("role.name"))
+    role = db.Column(db.String(32), db.ForeignKey("role.name"), default="user")
 
     # no this is not necessary I'm just too lazy to learn joins
     def __order_by_role__(self, *, ascend=False, descend=False, order_by=None) -> list:

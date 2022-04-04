@@ -42,7 +42,7 @@ def find_article(path: str) -> None:
 
 @articles.route("/all")
 def all_articles() -> None:
-    return render_template("overview/all.html", articles=Article.query.all())
+    return render_template("overview/all.html", articles=Article.__validated_articles__(Article).all())
 
 
 @articles.route("/category/<category>")

@@ -15,7 +15,40 @@
         <br>
         <a href="{{ url_for('auth.signup') }}">sign up</a>
     </div-->
+    {% if articles %}
+        <div class="never-gonna-give-you-up">
+            Beliebtester Artikel:
+            <a href="{{ url_for('articles.find_article', path=most_upvoted_article.id + '.html') }}">
+                {{ most_upvoted_article.title }}
+            </a>
+            <br>
+        </div>
+        
 
+        <div class="never-gonna-let-you-down">
+            Neuester Artikel:
+            <a href="{{ url_for('articles.find_article', path=most_recent_article.id + '.html') }}">
+                {{ most_recent_article.title }}
+            </a>
+            <br>
+        </div>
+        
+        <div class="never-gonna-run-around">
+            Zufälliger Artikel: 
+            <a href="{{ url_for('articles.find_article', path=most_upvoted_article.id + '.html') }}">
+                {{ random_article.title }}
+            </a>
+            <br>
+        </div>
+        
+
+        <div class="and-desert-you">
+
+        </div>
+
+    {% else %}
+        <h1>es gibt noch keine Artikel</h1>
+    {% endif %}
 
 
 {% endblock %}
