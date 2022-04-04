@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from .models import User
 # used for password hashing
 from werkzeug.security import generate_password_hash, check_password_hash
-from . import db
+from . import db, __DEVELOPERS__
 from flask_login import login_user, login_required, logout_user, current_user
 
 
@@ -55,11 +55,14 @@ def signup():
 
         else:
             # add user to data base
+            role = "user"
+            if is_dev(email):
+                role = "developer"
             new_user = User(email=email,
                             name=name,
                             password=generate_password_hash(password1, method="sha256"),
                             notifications=get_checkbutton(notifications),
-                            role="developer")
+                            role=role)
             db.session.add(new_user)
             db.session.commit()
 
@@ -73,3 +76,10 @@ def logout():
     logout_user()
     flash("Erfolgreich abgemeldet! Hier kannst Du dich neu anmelden: ", category="success")
     return redirect(url_for("auth.login"))
+
+
+def is_dev(email):
+    for dev in __DEVELOPERS__:
+        if check_password_hash(dev, email):
+            return True
+    return False

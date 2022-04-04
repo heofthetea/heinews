@@ -2,12 +2,20 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, current_user, AnonymousUserMixin
 from os import path
+from werkzeug.security import generate_password_hash as hash
 
 # declare database for usage
 db = SQLAlchemy()
 DB_NAME = "test.db" # TODO rename this to something cool on production
 
 UPLOAD_FOLDER = "/test_upload"
+
+"""
+These are the "super-developers". On signup, only these email addresses get immediate developer status, which cannot be revoked.
+Why am I caring so much about keeping the addresses hashed and hidden? I don't know. It's fun.
+"""
+# TODO store these (already hashed) in file (database would again need to be hardcoded into code)
+__DEVELOPERS__ = (hash("fyoug8gle@gmail.com"), hash("egruemer@gmail.com"))
 
 """
 initializes application as Flask object

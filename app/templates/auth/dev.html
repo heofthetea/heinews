@@ -53,8 +53,14 @@
             </th>
             <th>Role</th>
             <th>yeet</th>
+            <!--rendering the actual submit button first makes pressing enter execute with corresponding filtering-->
+            <!-- -> resetting form only when the button actually is pressed-->
             <button type="submit" style="display: none;"></button>
-            <input type="button" name="reset" id="reset" value="Reset" onclick="this.form.submit()">
+            {% if users_filtered %}
+                <input type="submit" name="reset_user" value="Reset Filters">
+            {% endif %}
+            
+            
         </form>
     </tr>
     {% for user in users %}
