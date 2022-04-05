@@ -8,11 +8,17 @@ views = Blueprint("views", __name__)
 
 @views.route('/')
 def index() -> str:
+    most_upvoted = Article.__validated_articles__(Article).order_by(desc(Article.upvotes)).first()
+    most_recent = Article.__validated_articles__(Article).order_by(desc(Article.date_created)).first()
+    try:
+        random_article = choice(Article.__validated_articles__(Article).all())
+    except IndexError:
+        random_article = []
     return render_template(
         "index.html",
-        most_upvoted_article=Article.__validated_articles__(Article).order_by(desc(Article.upvotes)).first(),
-        most_recent_article=Article.__validated_articles__(Article).order_by(desc(Article.date_created)).first(),
-        random_article=choice(Article.__validated_articles__(Article).all()),
+        most_upvoted_article=most_upvoted,
+        most_recent_article=most_recent,
+        random_article=random_article,
         articles=len(Article.__validated_articles__(Article).all()) > 0
     )
 
