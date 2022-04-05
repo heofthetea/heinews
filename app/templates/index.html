@@ -3,52 +3,114 @@
 {% block title %}heiNEws{% endblock %}
 
 {% block content %}
-    <!--a href="{{ url_for('articles.find_article', path='test.html') }}">
-        test.html
-    </a>
-    <a href="{{ url_for('admin.upload', phase='new') }}">upload</a>
-    <br>
-    <a href="{{ url_for('tag.all_tags') }}">view all tags</a>
 
-    <div style="display: block; float: right; margin-right: 20px">
-        <a href="{{ url_for('auth.login') }}">login</a>
-        <br>
-        <a href="{{ url_for('auth.signup') }}">sign up</a>
-    </div-->
-    {% if articles %}
-        <div class="never-gonna-give-you-up">
-            Beliebtester Artikel:
-            <a href="{{ url_for('articles.find_article', path=most_upvoted_article.id + '.html') }}">
-                {{ most_upvoted_article.title }}
-            </a>
-            <br>
-        </div>
-        
-
-        <div class="never-gonna-let-you-down">
-            Neuester Artikel:
-            <a href="{{ url_for('articles.find_article', path=most_recent_article.id + '.html') }}">
-                {{ most_recent_article.title }}
-            </a>
-            <br>
-        </div>
-        
-        <div class="never-gonna-run-around">
-            Zufälliger Artikel: 
-            <a href="{{ url_for('articles.find_article', path=most_upvoted_article.id + '.html') }}">
-                {{ random_article.title }}
-            </a>
-            <br>
-        </div>
-        
-
-        <div class="and-desert-you">
-
-        </div>
-
-    {% else %}
-        <h1>es gibt noch keine Artikel</h1>
-    {% endif %}
-
+    <!--Grid-->
+    <div class="container mt-5 mb-5">
+        <div class="row">
+            <div class="col-8">
+                <div class="container">
+                    <div class="row">
+                        <div class="col">
+                            <div class="card" style="width: 15rem;">
+                                <img src="../static/img/placeholder.png" class="card-img-top" alt="Img" width="320" height="180">
+                                <div class="card-body">
+                                  <h5 class="card-title">{{ most_upvoted_article.title }}</h5>
+                                  <!--p class="card-text">{{ most_upvoted_article.description }}</p-->
+                                  <a href="{{ url_for('articles.find_article', path=most_upvoted_article.id + '.html') }}" class="stretched-link"></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card" style="width: 15rem;">
+                                <img src="../static/img/placeholder.png" class="card-img-top" alt="Img" width="320" height="180">
+                                <div class="card-body">
+                                  <h5 class="card-title">{{ most_recent_article.title }}</h5>
+                                  <!--p class="card-text">{{ most_recent_article.description }}</p-->
+                                  <a href="{{ url_for('articles.find_article', path=most_recent_article.id + '.html') }}" class="stretched-link"></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card" style="width: 15rem;">
+                                <img src="../static/img/placeholder.png" class="card-img-top" alt="Img" width="320" height="180">
+                                <div class="card-body">
+                                  <h5 class="card-title">{{ most_upvoted_article.title }}</h5>
+                                  <!--p class="card-text">{{ most_upvoted_article.description }}</p-->
+                                  <a href="{{ url_for('articles.find_article', path=most_upvoted_article.id + '.html') }}" class="stretched-link"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="card" style="width: 15rem;">
+                                <img src="../static/img/placeholder.png" class="card-img-top" alt="Img" width="320" height="180">
+                                <div class="card-body">
+                                  <h5 class="card-title">{{ most_upvoted_article.title }}</h5>
+                                  <!--p class="card-text">{{ most_upvoted_article.description }}</p-->
+                                  <a href="{{ url_for('articles.find_article', path=most_upvoted_article.id + '.html') }}" class="stretched-link"></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card" style="width: 15rem;">
+                                <img src="../static/img/placeholder.png" class="card-img-top" alt="Img" width="320" height="180">
+                                <div class="card-body">
+                                  <h5 class="card-title">{{ most_upvoted_article.title }}</h5>
+                                  <!--p class="card-text">{{ most_upvoted_article.description }}</p-->
+                                  <a href="{{ url_for('articles.find_article', path=most_upvoted_article.id + '.html') }}" class="stretched-link"></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card" style="width: 15rem;">
+                                <img src="../static/img/placeholder.png" class="card-img-top" alt="Img" width="320" height="180">
+                                <div class="card-body">
+                                  <h5 class="card-title">{{ most_upvoted_article.title }}</h5>
+                                  <!--p class="card-text">{{ most_upvoted_article.description }}</p-->
+                                  <a href="{{ url_for('articles.find_article', path=most_upvoted_article.id + '.html') }}" class="stretched-link"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="card" style="width: 15rem;">
+                                <img src="../static/img/placeholder.png" class="card-img-top" alt="Img" width="320" height="180">
+                                <div class="card-body">
+                                  <h5 class="card-title">{{ most_upvoted_article.title }}</h5>
+                                  <!--p class="card-text">{{ most_upvoted_article.description }}</p-->
+                                  <a href="{{ url_for('articles.find_article', path=most_upvoted_article.id + '.html') }}" class="stretched-link"></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card" style="width: 15rem;">
+                                <img src="../static/img/placeholder.png" class="card-img-top" alt="Img" width="320" height="180">
+                                <div class="card-body">
+                                  <h5 class="card-title">{{ most_upvoted_article.title }}</h5>
+                                  <!--p class="card-text">{{ most_upvoted_article.description }}</p-->
+                                  <a href="{{ url_for('articles.find_article', path=most_upvoted_article.id + '.html') }}" class="stretched-link"></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card" style="width: 15rem;">
+                                <img src="../static/img/placeholder.png" class="card-img-top" alt="Img" width="320" height="180">
+                                <div class="card-body">
+                                  <h5 class="card-title">{{ most_upvoted_article.title }}</h5>
+                                  <!--p class="card-text">{{ most_upvoted_article.description }}</p-->
+                                  <a href="{{ url_for('articles.find_article', path=most_upvoted_article.id + '.html') }}" class="stretched-link"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col border">
+              der rest
+            </div>
+      </div>
+    </div>
 
 {% endblock %}
