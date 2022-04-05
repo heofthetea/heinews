@@ -7,7 +7,7 @@ from flask_login import UserMixin
 # is it necessary to give everything a power of 2 as a length? No. Do I do it anyway? Yes, why not.
 
 
-#TODO add something like Article.needs_modification for when an article is not approved by validation
+#TODO connect Article with Article_Images
 class Article(db.Model):
     id = db.Column(db.String(6), primary_key=True)
     title = db.Column(db.String(128))
@@ -21,6 +21,7 @@ class Article(db.Model):
     def __validated_articles__(self):
         return self.query.filter_by(validated=True)
 
+#TODO add image hierarchy
 class Article_Images(db.Model):
     id = db.Column(db.String(6), primary_key=True)
     location = db.Column(db.String(12), unique=True, nullable=False)

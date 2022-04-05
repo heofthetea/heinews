@@ -3,12 +3,14 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, current_user, AnonymousUserMixin
 from os import path
 from werkzeug.security import generate_password_hash as hash
+from os import getcwd
 
 # declare database for usage
 db = SQLAlchemy()
 DB_NAME = "test.db" # TODO rename this to something cool on production
 
-UPLOAD_FOLDER = "/test_upload"
+WORKING_DIR = getcwd()
+IMAGE_FOLDER = "/static/img/articles"
 
 """
 These are the "super-developers". On signup, only these email addresses get immediate developer status, which cannot be revoked.
@@ -25,7 +27,7 @@ registers all Blueprints for url routing and sets up functions accessed by the e
 def create_app() -> Flask:
     app = Flask(__name__)
     app.config["SECRET_KEY"] = generate_key()
-    app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+    app.config['IMAGE_FOLDER'] = IMAGE_FOLDER
 
     # create blueprints and set up urls
     from .views import views, ErrorPages
@@ -37,8 +39,8 @@ def create_app() -> Flask:
     from .articles import tag
     app.register_blueprint(tag, url_prefix="/tags/")
 
-    from .admin import admin_panel
-    app.register_blueprint(admin_panel, url_prefix="/admin/")
+    from .admin import admin
+    app.register_blueprint(admin, url_prefix="/admin/")
 
     from .auth import auth
     app.register_blueprint(auth, url_prefix='/')

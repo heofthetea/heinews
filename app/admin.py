@@ -1,13 +1,15 @@
-from flask import Blueprint, render_template, url_for, redirect, flash, abort, request, session
+from flask import Blueprint, render_template, url_for, redirect, flash, abort, request
 from flask_login import current_user, login_required
 from ._lib.docx_to_html import Tag, convert, htmlify, replace_links
 from .models import Article, Role, Category, Tag, Article_Tag, generate_id
 from .articles import get_article_location
-from . import db
+from . import db, IMAGE_FOLDER, WORKING_DIR
 from datetime import datetime
 from sqlalchemy import asc
-# from os import path
-# from werkzeug.utils import secure_filename
+from os import path, mkdir, getcwd
+from werkzeug.utils import secure_filename
+
+print(getcwd())
 
 
 PLACEHOLDER = {
@@ -15,15 +17,16 @@ PLACEHOLDER = {
     "category": "__category__"
 }
 ALLOWED_EXTENSIONS = {"txt", "docx", "doc"} # TODO support txt files because I like them
+ALLOWED_IMAGES = {"png", "jpg"}
 
 # I don't like putting this explicitly into my code, but using the built-in `session` dictionary failed handling big enough texts for some reason
 cache : dict = {}
 
-admin_panel = Blueprint("admin", __name__)
+admin = Blueprint("admin", __name__)
 
 
 @login_required
-@admin_panel.route("/")
+@admin.route("/")
 def admin_index():
     try:
         if current_user.role != "validate" and current_user.role != "developer":
@@ -34,12 +37,12 @@ def admin_index():
     return render_template("admin.html", invalidated_articles=invalidated_articles.order_by(asc(Article.date_created)))
     
 
-@admin_panel.route("/upload")
+@admin.route("/upload")
 def redir_upload():
     return redirect(url_for("admin.upload", phase="new"))
 
 
-@admin_panel.route('/upload/<phase>', methods=["GET", "POST"])
+@admin.route('/upload/<phase>', methods=["GET", "POST"])
 @login_required
 def upload(phase) -> None:
     #prevents unauthorized users from reaching the upload section
@@ -51,12 +54,12 @@ def upload(phase) -> None:
         if request.method == 'POST':
             # check if the post request has the file part
             if 'file' not in request.files:
-                flash("Bitte wähle eine Datei aus", category="error") # TODO replace with flash
+                flash("Bitte wähle eine Datei aus", category="error")
                 return redirect(request.url)
             file = request.files['file']
             # If the user does not select a file, the browser submits an empty file without a filename.
             if file.filename == '':
-                flash("Bitte wähle eine Datei aus", category="error") # TODO replace with flash
+                flash("Bitte wähle eine Datei aus", category="error")
                 return redirect(request.url)
             if not allowed_file(file.filename):
                 flash("Dateityp nicht unterstützt (Unterstützt wird: .txt, .doc, .docx)")
@@ -65,30 +68,43 @@ def upload(phase) -> None:
                 if file_extension == "docx" or file_extension == "doc":
                     file_content = convert(file)
                     
+                #TODO something
                 elif file_extension == "txt":
                     file_content = file.read().decode("utf-8") # file gets read as binary, thus needing to decode
                     file_content = file_content.replace("\n", "<br>")
 
-                file_content = replace_links(file_content)
-                cache["uploaded_content"] = file_content  # caching content of file in order to work with it in next step
+
+                file_content : str = replace_links(file_content)
+                # caching all data necessary to use in next step (and setting up image cache)
+                cache["uploaded_content"] = file_content
+                cache["article_id"] = generate_id(6)
+                cache["images"] = []
                 return redirect(url_for("admin.upload", phase="edit"))
                 
         return render_template("upload.html")
 
     elif phase == "edit":
+        # TODO integrate images with database and article html files
         # contains all necessary operations when article is completely finished (all needed additional arguments are given)
+        temp_article_id = cache["article_id"]
         if request.method == "POST":
-            # replacing placeholders created in conversion with values entered manually in panel form
+            # receiving data cached in "new" phase
             content = cache["uploaded_content"]
+
+
+            # replacing placeholders created in conversion with values entered manually in panel form
             title = request.form.get("title")
             content = content.replace(PLACEHOLDER["title"], title)
 
             category = request.form.get("category")
             content = content.replace(PLACEHOLDER["category"], category)
 
+            #TODO rework to actually display in right place
+            for href in cache["images"]:
+                content += (f"<img src='{href}' alt='some image lul u stupid'>\n")
+
             tags = request.form.get("tags")
 
-            temp_article_id = generate_id(6)
             for tag in tags.split(" "):
                 if not Tag.query.get(tag): # if tag doesn't already exist
                     db.session.add(Tag(tag=tag))
@@ -113,15 +129,51 @@ def upload(phase) -> None:
                 new_article.write(htmlify(content))
 
             flash("Artikel wurde erfolgreich hochgeladen!", category="success")
-            cache.pop("uploaded_content") # getting rid of unecessary cache
+
+            # removing now unecessary cache
+            cache.pop("uploaded_content")
+            cache.pop("article_id")
+            cache.pop("images")
             return redirect(url_for("articles.find_article", path=f"{temp_article_id}.html"))
 
-        return render_template("upload_panel.html", categories=Category.query.all())
+        return render_template("upload_panel.html", categories=Category.query.all(), article_id=temp_article_id)
+
+
+"""
+TODO do this as extra step before entering all further information OR integrate it entirely into the primary form (if even possible)
+
+
+"""
+
+@admin.route("/addimage/<article_id>", methods=["GET","POST"])
+def add_image(article_id):
+
+    if 'image' not in request.files:
+        flash("Bitte wähle eine Bild aus", category="error") 
+        return redirect(request.url)
+    image = request.files['image']
+    # If the user does not select a file, the browser submits an empty file without a filename.
+    if image.filename == '':
+        flash("Bitte wähle eine Datei aus", category="error")
+        return redirect(request.url)
+    if not allowed_file(image.filename, ext_dict=ALLOWED_IMAGES):
+        flash("Dateityp nicht unterstützt (Unterstützt wird: .png, .jpg)")
+    if image and allowed_file(image.filename, ext_dict=ALLOWED_IMAGES):
+        img_folder = path.join(IMAGE_FOLDER, article_id)
+
+        if not path.isdir(path.join(WORKING_DIR, "app" + img_folder)):
+            mkdir("app" + img_folder)
+        filename = secure_filename(image.filename)
+        img_location = path.join(img_folder, filename)
+        image.save("app" + img_location)
+        cache["images"].append(img_location)
+    #return redirect(url_for("admin.upload", phase="edit"))
+    return redirect(url_for("admin.upload", phase="edit"))
 
 
 
-#-------------------------------------------------------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------------------------------------------
 # I have no idea what this does but it's copied straight from flask documentation and works
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+def allowed_file(filename, ext_dict : dict=ALLOWED_EXTENSIONS):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ext_dict
 
