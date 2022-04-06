@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Article{% endblock %}
+<!--
+    HILFE
+
+    EMIL
+
+    MACH DAS SCHÖN
+-->
+{% block css %}
+<style>
+#preview {
+    width: 288px;
+    height: 162px;
+}
+
+
+table {
+    margin-top: -150px;
+    width: 50%;
+    height: 300px;
+    vertical-align: left;
+}
+
+td {
+    width: 400px;
+    height: 300px;
+}
+
+input {
+    width: 300px;
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+    <form method="POST">
+    <h3>Edit Article</h3>
+    <div class="form-group">
+        <label for="title">Titel *</label>
+        <input
+            type="title" 
+            class="form-control" 
+            id="title" 
+            name="title" 
+            placeholder="supertoller Artikel"
+            required
+        />
+    </div>
+
+    <div class="form-group">
+        <label for="description">Beschreibung/Kurzübersicht</label>
+        <input
+            type="description" 
+            class="form-control" 
+            id="description" 
+            name="description" 
+            placeholder="Deshalb solltet Ihr diesen Artikel  u n b e d i n g t  lesen"
+        />
+    </div>
+
+    <div class="form-group">
+        <label for="category">Kategorie</label>
+        <select name="category" id="category">
+            {% for category in categories %}
+                <option value="{{ category.name }}">{{ category.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="tags">Tags (getrennt durch Leerzeichen)</label>
+        <input
+            type="tags" 
+            class="form-control" 
+            id="tags" 
+            name="tags" 
+            placeholder="z.B. #superInteressant"
+        />    
+    </div>
+
+    <br><br><br><br><br>
+    {% for image in images %}
+    <div class="form-group" name="{{ image }}">
+        <table>
+            <tr>
+                <td style="width: 100px; height: 100px; margin-right: 500px">
+                    <img src="{{ image }}" alt="i messed up" id="preview">
+                </td>
+                <td>
+                    <label for="description">Beschreibung</label>
+                    <input type="text" class="form-control" name="{{ image }}_description" placeholder="Das ist ein wunderschönes Bild">
+                    <label for="source">Quelle *</label>
+                    <input type="source" class="form-control" name="{{ image }}_source" placeholder="Hab' ich selbst gemalt" required>
+                </td>
+            </tr>
+            <br>
+        </table>
+    </div>
+        
+    {% endfor %}
+
+    <br>
+    <button>Submit</button>
+</form>
+
+{% endblock %}

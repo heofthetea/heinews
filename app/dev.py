@@ -5,6 +5,8 @@ from .models import Article, User, Tag, Role
 from .articles import get_article_location
 from . import db
 from os import remove
+from os.path import exists, isdir
+from shutil import rmtree
 
 
 dev = Blueprint("dev", __name__)
@@ -121,8 +123,12 @@ def delete_article(id):
     if session["needs_authorization"]:
         return authorize_dev()
     article_location = get_article_location(id)
+    article_image_location = f"app/static/img/articles/{id}"
     Article.query.filter_by(id=id).delete()
-    remove(article_location)
+    if exists(article_location):
+        remove(article_location)
+    if isdir(article_image_location):
+        rmtree(article_image_location)
     db.session.commit()
     flash("Article deleted successfully!", category="success")
     return redirect("/dev")

@@ -3,7 +3,7 @@
 {% block title %}heiNEws{% endblock %}
 
 {% block content %}
-
+{% if articles %}
     <!--Grid-->
     <div class="container mt-5 mb-5">
         <div class="row">
@@ -112,5 +112,9 @@
             </div>
       </div>
     </div>
+
+{% else %}
+<h1>there's no articles... yet</h1>
+{% endif %}
 
 {% endblock %}

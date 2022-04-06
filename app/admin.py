@@ -6,11 +6,12 @@ from .articles import get_article_location
 from . import db, IMAGE_FOLDER, WORKING_DIR
 from datetime import datetime
 from sqlalchemy import asc
-from os import path, mkdir, getcwd
+from os import path, mkdir
 from werkzeug.utils import secure_filename
 
-print(getcwd())
 
+#TODO for friday:
+# TODO find places in articles for images
 
 PLACEHOLDER = {
     "title": "__title__",
@@ -79,14 +80,16 @@ def upload(phase) -> None:
                 cache["uploaded_content"] = file_content
                 cache["article_id"] = generate_id(6)
                 cache["images"] = []
-                return redirect(url_for("admin.upload", phase="edit"))
+                return redirect(url_for("admin.add_images", article_id=cache["article_id"]))
                 
-        return render_template("upload.html")
+        return render_template("upload/upload.html")
 
     elif phase == "edit":
         # TODO integrate images with database and article html files
         # contains all necessary operations when article is completely finished (all needed additional arguments are given)
         temp_article_id = cache["article_id"]
+        #images = cache["images"]
+
         if request.method == "POST":
             # receiving data cached in "new" phase
             content = cache["uploaded_content"]
@@ -100,8 +103,12 @@ def upload(phase) -> None:
             content = content.replace(PLACEHOLDER["category"], category)
 
             #TODO rework to actually display in right place
-            for href in cache["images"]:
-                content += (f"<img src='{href}' alt='some image lul u stupid'>\n")
+            for src in cache["images"]:
+                image_sauce = request.form.get(f"{src}_source")
+                image_description = request.form.get(f"{src}_description")
+
+                content += f"<figure>\n<img src='{src}' alt='some image lul u stupid' id='article_img'>\n"
+                content += f"<figcaption>{image_sauce}: {image_description}</figcaption>\n</figcaption>\n"
 
             tags = request.form.get("tags")
 
@@ -111,7 +118,7 @@ def upload(phase) -> None:
                 db.session.add(Article_Tag(article_id=temp_article_id, tag=tag))
             db.session.commit()
 
-            #TODO implement preview (including ability to insert images "into preview" etc.)
+            #TODO implement preview ?
 
             # creating entry in database
             
@@ -136,39 +143,46 @@ def upload(phase) -> None:
             cache.pop("images")
             return redirect(url_for("articles.find_article", path=f"{temp_article_id}.html"))
 
-        return render_template("upload_panel.html", categories=Category.query.all(), article_id=temp_article_id)
+        return render_template(
+            "upload/upload_panel.html", 
+            categories=Category.query.all(), 
+            article_id=temp_article_id,
+            images=cache["images"]
+        )
 
 
 """
 TODO do this as extra step before entering all further information OR integrate it entirely into the primary form (if even possible)
 
-
 """
 
 @admin.route("/addimage/<article_id>", methods=["GET","POST"])
-def add_image(article_id):
+def add_images(article_id):
+    if request.method == "POST":
+        if 'image' not in request.files:
+            flash("Bitte wähle eine Bild aus", category="error") 
+            return redirect(request.url)
+        images = request.files.getlist('image')
 
-    if 'image' not in request.files:
-        flash("Bitte wähle eine Bild aus", category="error") 
-        return redirect(request.url)
-    image = request.files['image']
-    # If the user does not select a file, the browser submits an empty file without a filename.
-    if image.filename == '':
-        flash("Bitte wähle eine Datei aus", category="error")
-        return redirect(request.url)
-    if not allowed_file(image.filename, ext_dict=ALLOWED_IMAGES):
-        flash("Dateityp nicht unterstützt (Unterstützt wird: .png, .jpg)")
-    if image and allowed_file(image.filename, ext_dict=ALLOWED_IMAGES):
+        # If the user does not select a file, the browser submits an empty file without a filename.
+        if images[0].filename == '':
+            flash("Bitte wähle eine Datei aus", category="error")
+            return redirect(request.url)
+        
         img_folder = path.join(IMAGE_FOLDER, article_id)
-
-        if not path.isdir(path.join(WORKING_DIR, "app" + img_folder)):
-            mkdir("app" + img_folder)
-        filename = secure_filename(image.filename)
-        img_location = path.join(img_folder, filename)
-        image.save("app" + img_location)
-        cache["images"].append(img_location)
-    #return redirect(url_for("admin.upload", phase="edit"))
-    return redirect(url_for("admin.upload", phase="edit"))
+        for image in images:
+            if not allowed_file(image.filename, ext_dict=ALLOWED_IMAGES):
+                flash("Dateityp nicht unterstützt (Unterstützt wird: .png, .jpg)")
+            if image and allowed_file(image.filename, ext_dict=ALLOWED_IMAGES):
+                if not path.isdir(path.join(WORKING_DIR, "app" + img_folder)):
+                    mkdir("app" + img_folder)
+                    
+                filename = secure_filename(image.filename)
+                img_location = path.join(img_folder, filename)
+                image.save("app" + img_location)
+                cache["images"].append(img_location)
+        return redirect(url_for("admin.upload", phase="edit"))
+    return render_template("upload/image_upload.html")
 
 
 

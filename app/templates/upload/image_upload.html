@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Article{% endblock %}
+
+{% block content %}
+{% if get_user_role(current_user).can_upload %}
+    <h1>Gib deinem Artikel Bilder</h1>
+    <form method="POST" enctype="multipart/form-data">
+        <input type="file" name="image" multiple>
+        <br>
+        <button name="upload">upload</button>
+    </form>
+{% else %}
+    <h2 style="text-align: center">Du darfst keine Artikel hochladen - Komme in die Schülerzeitung oder warte, bis das feature auch für 
+        Nicht-Mitglieder eingebaut wird :)
+    </h2>
+    <a href="/">Homepage</a>
+
+{% endif %}
+{% endblock %}
