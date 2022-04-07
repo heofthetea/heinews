@@ -15,15 +15,21 @@
     height: 162px;
 }
 
+hr {
+    height: 3px;
+    fill: #000;
+}
+
 
 table {
-    margin-top: -150px;
+    margin-top: -75px;
     width: 50%;
     height: 300px;
     vertical-align: left;
 }
 
 td {
+    margin-top: -300px;
     width: 400px;
     height: 300px;
 }
@@ -81,13 +87,17 @@ input {
         />    
     </div>
 
-    <br><br><br><br><br>
+    <hr>
     {% for image in images %}
     <div class="form-group" name="{{ image }}">
         <table>
             <tr>
-                <td style="width: 100px; height: 100px; margin-right: 500px">
-                    <img src="{{ image }}" alt="i messed up" id="preview">
+                <td>
+                    als Titelbild festlegen
+                    <input type="radio" name="primary-img" id="{{ image }}" value="{{ image }}" required>
+                    <label for="primary_img">
+                        <img src="{{ image }}" alt="i messed up" id="preview">
+                    </label>
                 </td>
                 <td>
                     <label for="description">Beschreibung</label>

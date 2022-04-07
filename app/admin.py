@@ -43,6 +43,7 @@ def redir_upload():
     return redirect(url_for("admin.upload", phase="new"))
 
 
+#TODO split this up to 2 functions
 @admin.route('/upload/<phase>', methods=["GET", "POST"])
 @login_required
 def upload(phase) -> None:
@@ -102,13 +103,20 @@ def upload(phase) -> None:
             category = request.form.get("category")
             content = content.replace(PLACEHOLDER["category"], category)
 
-            #TODO rework to actually display in right place
+
+            primary_image = request.form.get("primary-img")
             for src in cache["images"]:
                 image_sauce = request.form.get(f"{src}_source")
-                image_description = request.form.get(f"{src}_description")
+                image_description = request.form.get(f"{src}_description") # TODO is None in article
 
-                content += f"<figure>\n<img src='{src}' alt='some image lul u stupid' id='article_img'>\n"
-                content += f"<figcaption>{image_sauce}: {image_description}</figcaption>\n</figcaption>\n"
+                # TODO make images childs of respective divs
+                if src == primary_image:
+                    content = f"<figcaption id='primary-image'>{image_sauce}: {image_description}</figcaption>\n</figcaption>\n" + content
+                    content = f"<figure>\n<img src='{src}' alt='some image lul u stupid' id='article_img'>\n" + content
+                else:
+                    #TODO rework to actually display in right place
+                    content += f"<figure>\n<img src='{src}' alt='some image lul u stupid' id='article_img'>\n"
+                    content += f"<figcaption>{image_sauce}: {image_description}</figcaption>\n</figcaption>\n"
 
             tags = request.form.get("tags")
 
