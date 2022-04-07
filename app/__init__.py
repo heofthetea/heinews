@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, abort
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, current_user, AnonymousUserMixin
 from os import path
@@ -67,14 +67,20 @@ def create_app() -> Flask:
     #---------------------------------------------------------------------------------------------
     #these functions, used by the entire website, have to go here to access the Flask application
 
-    #used to give every template access to the cateories (in order to display nav-bar)
+    # used to give every template access to the categories (in order to display nav-bar)
     @app.context_processor
     def inject_categories():
         return dict(categories=models.Category.query.all())
 
+    # user needs to be accessable throughout entire website
     @app.context_processor
     def inject_user():
         return dict(current_user=current_user, get_user_role=models.get_user_role, loggedin=user_loggedin)
+
+    # raising http errors in frontend might prove useful
+    @app.context_processor
+    def inject_httperror():
+        return dict(abort=abort)
 
     @app.errorhandler(404)
     def page_not_found(error):

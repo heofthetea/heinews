@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, url_for, redirect, flash, abort, request
 from flask_login import current_user, login_required
-from ._lib.docx_to_html import Tag, convert, htmlify, replace_links
+from ._lib.docx_to_html import Tag, convert, htmlify, replace_links, create_image_placeholders, fill_image_placeholders
 from .models import Article, Role, Category, Tag, Article_Tag, generate_id
 from .articles import get_article_location
 from . import db, IMAGE_FOLDER, WORKING_DIR
