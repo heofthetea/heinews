@@ -10,8 +10,7 @@ from os import path, mkdir
 from werkzeug.utils import secure_filename
 
 
-#TODO for friday:
-# TODO find places in articles for images
+#TODO find places in articles for images
 
 PLACEHOLDER = {
     "title": "__title__",
@@ -103,7 +102,7 @@ def upload(phase) -> None:
             category = request.form.get("category")
             content = content.replace(PLACEHOLDER["category"], category)
 
-
+            #TODO give images unique generated ids
             primary_image = request.form.get("primary-img")
             for src in cache["images"]:
                 image_sauce = request.form.get(f"{src}_source")
@@ -115,8 +114,8 @@ def upload(phase) -> None:
                     content = f"<figure>\n<img src='{src}' alt='some image lul u stupid' id='article_img'>\n" + content
                 else:
                     #TODO rework to actually display in right place
-                    content += f"<figure>\n<img src='{src}' alt='some image lul u stupid' id='article_img'>\n"
-                    content += f"<figcaption>{image_sauce}: {image_description}</figcaption>\n</figcaption>\n"
+                    content += f"<figure>\n<div class='article-image'>\n<img src='{src}' alt='some image lul u stupid' id='article_img'>\n"
+                    content += f"<figcaption>{image_sauce}: {image_description}</figcaption>\n</div>\n</figure>\n"
 
             tags = request.form.get("tags")
 
@@ -171,11 +170,6 @@ def add_images(article_id):
             flash("Bitte wähle eine Bild aus", category="error") 
             return redirect(request.url)
         images = request.files.getlist('image')
-
-        # If the user does not select a file, the browser submits an empty file without a filename.
-        if images[0].filename == '':
-            flash("Bitte wähle eine Datei aus", category="error")
-            return redirect(request.url)
         
         img_folder = path.join(IMAGE_FOLDER, article_id)
         for image in images:
