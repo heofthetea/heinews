@@ -5,6 +5,8 @@ from .models import Article, User, Tag, User_Upvote, get_tags, get_articles, get
 from . import db
 
 
+# TODO change phone number in footer
+
 articles = Blueprint("articles", __name__)
 
 def get_article_location(id):
