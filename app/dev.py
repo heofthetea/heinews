@@ -93,8 +93,6 @@ def check_password():
     )
 
 
-
-
 @dev.route("yeet_user/<int:id>")
 def delete_user(id):
     if session["needs_authorization"]:

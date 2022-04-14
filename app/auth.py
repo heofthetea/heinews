@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from .models import User
+from .models import User, Password_Reset, generate_id
 # used for password hashing
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db, __DEVELOPERS__
@@ -83,3 +83,44 @@ def is_dev(email):
         if check_password_hash(dev, email):
             return True
     return False
+
+#----------------------------------------------------------------------------------------------------------------------------
+
+@auth.route("/reset_link/<int:user_id>") # TODO rename
+def create_reset_token(user_id):
+    if Password_Reset.query.filter_by(user_id=user_id).first():
+        flash("Du hast bereits einen Link zum Zurücksetzen!!", category="error")
+    else:
+        db.session.add(
+            Password_Reset(
+                id=generate_id(128, table=Password_Reset),
+                user_id=int(user_id)
+            )
+        )
+        db.session.commit()
+    return redirect(url_for('views.profile'))
+
+
+
+@auth.route("/resetpw/<reset_id>", methods=["GET", "POST"])
+#@login_required # TODO keep this or not??
+def reset_password(reset_id):
+    if request.method == "POST":
+        user = User.query.get(Password_Reset.query.get(reset_id).user_id)
+
+        password1 = request.form.get("password1")
+        password2 = request.form.get("password2")
+
+        if password1 != password2:
+            flash("Passwörter stimmen nicht überein", category="error")
+        elif check_password_hash(user.password, password1):
+            flash("Herzlichen Glückwunsch, du hast dein altes Passwort erraten :)", category="error")
+        else:
+            user.password = generate_password_hash(password1, method="sha256")
+            Password_Reset.query.filter_by(id=reset_id).delete()
+            db.session.commit()
+            
+            flash("Passwort wurde erforlgreich geändert!", category="success")
+            return(redirect(url_for("views.profile")))
+    return render_template("auth/reset_password.html")
+
