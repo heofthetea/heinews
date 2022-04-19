@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, redirect, flash, url_for, request
 from flask_login import login_required, current_user
 from .models import Article, User_Upvote, Password_Reset, get_user_role
+from .auth import send_verification_email
 from . import db
 from sqlalchemy import desc
 from random import choice
@@ -50,11 +51,16 @@ def profile():
         "auth/profile.html", 
         upvoted=upvoted, 
         uploaded=uploaded,
-        reset=reset
+        reset=reset,
+        # TODO remove this when sending verification link by email
+        verification_link=send_verification_email(current_user.email) if not current_user.email_confirmed else "already verified"
     )
 
-
+# TODO new error for "email not verified?"
 class ErrorPages:
     def __404__():
         return render_template("error/404.html")
+
+    def __403__():
+        return render_template("error/403.html")
 

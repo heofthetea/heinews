@@ -35,7 +35,7 @@ class Tag(db.Model):
 
 class Role(db.Model):
     name = db.Column(db.String(32), primary_key=True)
-    # low -> high = lower hierarchy -> higher hierarchy (check default db pupulation DDLs for further clarification)
+    # low -> high = lower hierarchy -> higher hierarchy (check default db pupulation DDLs below for further clarification)
     hierarchy = db.Column(db.Integer, nullable=False)
     can_upload = db.Column(db.Boolean())
     can_validate = db.Column(db.Boolean())
@@ -72,9 +72,16 @@ class User(db.Model, UserMixin):
 
 
 class Password_Reset(db.Model):
-    id = db.Column(db.String(128), primary_key=True)
+    id = db.Column(db.String(256), primary_key=True)
     user_id = db.Column(db.Integer,db.ForeignKey("user.id"), unique=True)
-    #expiry_date = db.Column(db.DateTime(timezone=True), default=func.now() + timedelta(days=1)) #TODO test this column working
+    #expiry_date = db.Column(db.DateTime(timezone=True), default=func.now() + timedelta(days=1)) #TODO get this column working
+
+
+class Verify_Email(db.Model):
+    id = db.Column(db.String(256), primary_key=True)
+    user_id = db.Column(db.Integer,db.ForeignKey("user.id"), unique=True)
+    #expiry_date = db.Column(db.DateTime(timezone=True), default=func.now() + timedelta(days=1)) #TODO get this column working
+
             
 
 #-----------------------------------------------------------------------------------------------------------------------------------

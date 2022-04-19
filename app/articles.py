@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, abort, redirect, url_for, flash
+from flask import Blueprint, render_template, abort, redirect, url_for, flash, request
 from jinja2.exceptions import TemplateNotFound
 from flask_login import current_user, AnonymousUserMixin
 from .models import Article, User, Tag, User_Upvote, get_tags, get_articles, get_User_Upvote
@@ -55,6 +55,9 @@ def by_category(category: str):
 @articles.route("/upvote/<id>", methods=["POST"])
 def upvote(id):
     try:
+        if not current_user.email_confirmed:
+            flash("Hierfür musst du erst deine Email verifizieren! Schau mal in deinem Email-Postfach nach :)", category="error")
+            abort(403)
         db.session.add(User_Upvote(user_id=current_user.id,
                         article_id=id))
         Article.query.get(id).upvotes += 1
@@ -78,12 +81,18 @@ def remove_upvote(id):
 
 @articles.route("/feedback/<id>")
 def feedback(id):
+    if not current_user.email_confirmed:
+        flash("Hierfür musst du erst deine Email verifizieren! Schau mal in deinem Email-Postfach nach :)", category="error")
+        abort(403)
     article = Article.query.get(id)
     return redirect(f"mailto:{article.creator_email}")
 
 
 @articles.route("/approve/<id>")
 def approve(id):
+    if not current_user.email_confirmed:
+        flash("Hierfür musst du erst deine Email verifizieren! Schau mal in deinem Email-Postfach nach :)", category="error")
+        abort(403)
     article = Article.query.get(id)
     article.validated = True
     db.session.commit()

@@ -6,7 +6,7 @@
     <h4>name: {{ current_user.name }}</h4>
     <h4>email: {{ current_user.email }}</h4>
     <h4>role: {{ current_user.role }}</h4>
-    <!--TODO ake this actually do sth-->
+    <a href="{{ verification_link }}">{{ verification_link }}</a>
     {% if reset %}
         <a href="{{ url_for('auth.reset_password', reset_id=reset) }}">Passwort zurücksetzen (TODO send this per email)</a>
         
