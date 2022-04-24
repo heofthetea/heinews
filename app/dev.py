@@ -92,9 +92,7 @@ def check_password():
         """
     )
 
-
-
-
+# TODO also delete users db entries in Verify_Email and Reset_Password
 @dev.route("yeet_user/<int:id>")
 def delete_user(id):
     if session["needs_authorization"]:

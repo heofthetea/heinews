@@ -31,6 +31,9 @@ def admin_index():
     try:
         if current_user.role != "validate" and current_user.role != "developer":
             abort(403)
+        if not current_user.email_confirmed:
+            flash("Hierfür musst du erst deine Email verifizieren! Schau mal in deinem Email-Postfach nach :)", category="error")
+            return redirect('/')
     except AttributeError:
         abort(403)
     invalidated_articles = Article.query.filter_by(validated=False)
@@ -49,6 +52,9 @@ def upload(phase) -> None:
     #prevents unauthorized users from reaching the upload section
     if not Role.query.get(current_user.role).can_upload:
         abort(403)
+    if not current_user.email_confirmed:
+        flash("Hierfür musst du erst deine Email verifizieren! Schau mal in deinem Email-Postfach nach :)", category="error")
+        return redirect('/')
 
     #handles file upload (including validation checks and docx to html conversion)
     if phase == "new":
@@ -158,11 +164,6 @@ def upload(phase) -> None:
         )
 
 
-"""
-TODO do this as extra step before entering all further information OR integrate it entirely into the primary form (if even possible)
-
-"""
-
 @admin.route("/addimage/<article_id>", methods=["GET","POST"])
 def add_images(article_id):
     if request.method == "POST":
@@ -190,6 +191,6 @@ def add_images(article_id):
 
 #--------------------------------------------------------------------------------------------------------------------------------------------
 # I have no idea what this does but it's copied straight from flask documentation and works
-def allowed_file(filename, ext_dict : dict=ALLOWED_EXTENSIONS):
+def allowed_file(filename, ext_dict: dict=ALLOWED_EXTENSIONS):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ext_dict
 

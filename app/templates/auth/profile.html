@@ -6,8 +6,15 @@
     <h4>name: {{ current_user.name }}</h4>
     <h4>email: {{ current_user.email }}</h4>
     <h4>role: {{ current_user.role }}</h4>
-    <!--TODO ake this actually do sth-->
-    <h4>change password: yeah fuck no you can't do that yet</h4> 
+    <a href="{{ verification_link }}">{{ verification_link }}</a>
+    {% if reset %}
+        <a href="{{ url_for('auth.reset_password', reset_id=reset) }}">Passwort zurücksetzen (TODO send this per email)</a>
+        
+    {% else %}
+        <form action="{{ url_for('auth.create_reset_token', user_id=current_user.id) }}">
+            <button type="submit">Request password reset</button>
+        </form>
+    {% endif %}
     <h4>receive email notifications: {{ current_user.notifications }}</h4>
 
     <hr>

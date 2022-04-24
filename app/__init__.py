@@ -65,7 +65,7 @@ def create_app() -> Flask:
     create_database(app)
 
     #---------------------------------------------------------------------------------------------
-    #these functions, used by the entire website, have to go here to access the Flask application
+    # these functions, used by the entire website, have to go here to access the Flask application
 
     # used to give every template access to the categories (in order to display nav-bar)
     @app.context_processor
@@ -86,6 +86,9 @@ def create_app() -> Flask:
     def page_not_found(error):
         return ErrorPages.__404__()
 
+    @app.errorhandler(403)
+    def forbidden(error):
+        return ErrorPages.__403__()
     
     return app
 
@@ -104,11 +107,13 @@ def generate_key(len=256) -> str:
         key += chr(choice(chars))
     return key
 
+
 # creates database if it does not exist
 def create_database(app : Flask) -> None:
     if not path.exists("app/" + DB_NAME):
         db.create_all(app=app)
         print("Created Database!")
+
 
 def user_loggedin(current_user):
     return not isinstance(current_user, AnonymousUserMixin)

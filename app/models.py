@@ -3,6 +3,7 @@ from sqlalchemy.sql import func
 from sqlalchemy import asc, desc
 from . import db
 from flask_login import UserMixin
+from datetime import timedelta
 
 # is it necessary to give everything a power of 2 as a length? No. Do I do it anyway? Yes, why not.
 
@@ -15,16 +16,12 @@ class Article(db.Model):
     date_created = db.Column(db.DateTime(timezone=True), default=func.now())
     validated = db.Column(db.Boolean(), default=False)
     upvotes = db.Column(db.Integer, nullable=False, default=0)
+    primary_image = db.Column(db.String(128)) #TODO fill this table
     category = db.Column(db.String(64), db.ForeignKey("category.name"))
     creator_email = db.Column(db.String(64), db.ForeignKey("user.email"))
 
     def __validated_articles__(self):
         return self.query.filter_by(validated=True)
-
-#TODO add image hierarchy
-class Article_Images(db.Model):
-    id = db.Column(db.String(6), primary_key=True)
-    location = db.Column(db.String(12), unique=True, nullable=False)
     
 
 class Category(db.Model):
@@ -38,7 +35,7 @@ class Tag(db.Model):
 
 class Role(db.Model):
     name = db.Column(db.String(32), primary_key=True)
-    # low -> high = lower hierarchy -> higher hierarchy (check default db pupulation DDLs for further clarification)
+    # low -> high = lower hierarchy -> higher hierarchy (check default db pupulation DDLs below for further clarification)
     hierarchy = db.Column(db.Integer, nullable=False)
     can_upload = db.Column(db.Boolean())
     can_validate = db.Column(db.Boolean())
@@ -72,6 +69,18 @@ class User(db.Model, UserMixin):
         for role in role_hierarchy:
             users_sorted.extend(self.query.filter_by(role=role).order_by(order_by))
         return users_sorted
+
+
+class Password_Reset(db.Model):
+    id = db.Column(db.String(256), primary_key=True)
+    user_id = db.Column(db.Integer,db.ForeignKey("user.id"), unique=True)
+    #expiry_date = db.Column(db.DateTime(timezone=True), default=func.now() + timedelta(days=1)) #TODO get this column working
+
+
+class Verify_Email(db.Model):
+    id = db.Column(db.String(256), primary_key=True)
+    user_id = db.Column(db.Integer,db.ForeignKey("user.id"), unique=True)
+    #expiry_date = db.Column(db.DateTime(timezone=True), default=func.now() + timedelta(days=1)) #TODO get this column working
 
             
 
@@ -115,7 +124,7 @@ generates unique id following pattern:
 
 @return 6-digit unique hexadecimal id
 """
-def generate_id(len: int) -> str:
+def generate_id(len: int, table=Article) -> str:
     from random import choice
 
     digits = [str(i) for i in range(10)]
@@ -124,7 +133,7 @@ def generate_id(len: int) -> str:
     generate_temp = lambda : ''.join([choice(digits) for _ in range(len)])
 
     temp_id = generate_temp()
-    while Article.query.get(str(temp_id)):
+    while table.query.get(str(temp_id)):
         temp_id = generate_temp()
     
     return temp_id

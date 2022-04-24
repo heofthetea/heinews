@@ -52,6 +52,7 @@
                 <input type="email" name="email" id="email" class="form-control" placeholder="find">
             </th>
             <th>Role</th>
+            <th>Email verified</th>
             <th>yeet</th>
             <!--rendering the actual submit button first makes pressing enter execute with corresponding filtering-->
             <!-- -> resetting form only when the button actually is pressed-->
@@ -85,6 +86,7 @@
                 </select>
             </form>
         </td>
+        <td>{{ user.email_confirmed }}</td>
         <td>
             <form action="{{ url_for('dev.authorize_to_delete_user', id=user.id) }}">
                 <button>&times;</button>
