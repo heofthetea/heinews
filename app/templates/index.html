@@ -12,7 +12,8 @@
                     <div class="row">
                         <div class="col">
                             <div class="card" style="width: 15rem;">
-                                <img src="../static/img/placeholder.png" class="card-img-top" alt="Img" width="320" height="180">
+                                <!--@KRÜMLER get path to title image using this little function I wrote you-->
+                                <img src="{{ title_image_or_placeholder(most_upvoted_article) }}" class="card-img-top" alt="Img" width="320" height="180">
                                 <div class="card-body">
                                   <h5 class="card-title">{{ most_upvoted_article.title }}</h5>
                                   <!--p class="card-text">{{ most_upvoted_article.description }}</p-->
