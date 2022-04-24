@@ -13,6 +13,7 @@
     <h1 style="text-align: center">
         <u>{{ db_entry.title }}</u>
     </h1>
+    {{ db_entry.primary_image }}
     <div>
         <i>Kategorie: 
             <a href="{{ url_for('articles.by_category', category=db_entry.category) }}">{{ db_entry.category }}</a>
@@ -51,8 +52,7 @@
 
     upvotes: {{db_entry.upvotes}}
     
-    {% if current_user.role == "developer" and not db_entry.validated%}
-    <!--TODO change that if statement to something that makes sense-->
+    {% if get_user_role(current_user).can_validate and not db_entry.validated %}
     <div>
         <form action="{{ url_for('articles.feedback', id=db_entry.id) }}">
             <div class="form-group">

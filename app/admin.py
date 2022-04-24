@@ -12,10 +12,6 @@ from werkzeug.utils import secure_filename
 
 #TODO find places in articles for images
 
-PLACEHOLDER = {
-    "title": "__title__",
-    "category": "__category__"
-}
 ALLOWED_EXTENSIONS = {"txt", "docx", "doc"} # TODO support txt files because I like them
 ALLOWED_IMAGES = {"png", "jpg"}
 
@@ -33,7 +29,7 @@ def admin_index():
             abort(403)
         if not current_user.email_confirmed:
             flash("Hierfür musst du erst deine Email verifizieren! Schau mal in deinem Email-Postfach nach :)", category="error")
-            return redirect('/')
+            return redirect(redirect(request.url))
     except AttributeError:
         abort(403)
     invalidated_articles = Article.query.filter_by(validated=False)
@@ -54,7 +50,7 @@ def upload(phase) -> None:
         abort(403)
     if not current_user.email_confirmed:
         flash("Hierfür musst du erst deine Email verifizieren! Schau mal in deinem Email-Postfach nach :)", category="error")
-        return redirect('/')
+        return redirect("/admin")
 
     #handles file upload (including validation checks and docx to html conversion)
     if phase == "new":
@@ -91,7 +87,6 @@ def upload(phase) -> None:
         return render_template("upload/upload.html")
 
     elif phase == "edit":
-        # TODO integrate images with database and article html files
         # contains all necessary operations when article is completely finished (all needed additional arguments are given)
         temp_article_id = cache["article_id"]
         #images = cache["images"]
@@ -103,21 +98,20 @@ def upload(phase) -> None:
 
             # replacing placeholders created in conversion with values entered manually in panel form
             title = request.form.get("title")
-            content = content.replace(PLACEHOLDER["title"], title)
-
             category = request.form.get("category")
-            content = content.replace(PLACEHOLDER["category"], category)
+            description = request.form.get("description")
 
-            #TODO give images unique generated ids
             primary_image = request.form.get("primary-img")
+            title_image = None # declared as None so that if no primary image is given it will be None in the database
             for src in cache["images"]:
                 image_sauce = request.form.get(f"{src}_source")
-                image_description = request.form.get(f"{src}_description") # TODO is None in article
+                image_description = request.form.get(f"{src}_description")
 
-                # TODO make images childs of respective divs
+                # TODO make images children of respective divs
                 if src == primary_image:
                     content = f"<figcaption id='primary-image'>{image_sauce}: {image_description}</figcaption>\n</figcaption>\n" + content
                     content = f"<figure>\n<img src='{src}' alt='some image lul u stupid' id='article_img'>\n" + content
+                    title_image = src
                 else:
                     #TODO rework to actually display in right place
                     content += f"<figure>\n<div class='article-image'>\n<img src='{src}' alt='some image lul u stupid' id='article_img'>\n"
@@ -135,11 +129,15 @@ def upload(phase) -> None:
 
             # creating entry in database
             
-            new_article = Article(id=temp_article_id, 
-                                  title=title,
-                                  date_created=datetime.utcnow(),
-                                  category=category,
-                                  creator_email=current_user.email)
+            new_article = Article(
+                id=temp_article_id, 
+                title=title,
+                description=description,
+                date_created=datetime.utcnow(),
+                primary_image=title_image,
+                category=category,
+                creator_email=current_user.email,
+            )
                                   
             db.session.add(new_article)
             db.session.commit()
@@ -180,6 +178,7 @@ def add_images(article_id):
                 if not path.isdir(path.join(WORKING_DIR, "app" + img_folder)):
                     mkdir("app" + img_folder)
                     
+                image.filename = f"{generate_id(8)}.{image.filename.rsplit('.', 1)[1].lower()}"
                 filename = secure_filename(image.filename)
                 img_location = path.join(img_folder, filename)
                 image.save("app" + img_location)

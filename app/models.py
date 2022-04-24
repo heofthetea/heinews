@@ -1,7 +1,7 @@
 from sqlalchemy import event, DDL
 from sqlalchemy.sql import func
 from sqlalchemy import asc, desc
-from . import db
+from . import db, user_loggedin
 from flask_login import UserMixin
 from datetime import timedelta
 
@@ -161,8 +161,11 @@ def get_tags(article: Article) -> list[Tag]:
     connections = Article_Tag.query.filter_by(article_id=article.id).all()
     return [Tag.query.get(connection.tag) for connection in connections]
 
+"""
+@return: The Role object corresponding to the given user or, if the user is not loggedin, a new role which has no admin rights
+"""
 def get_user_role(user: User) -> Role:
-    return Role.query.get(user.role)
+    return Role.query.get(user.role) if user_loggedin(user) else Role(can_validate=False, can_upload=False)
 
 
 """

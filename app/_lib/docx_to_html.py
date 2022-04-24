@@ -152,7 +152,6 @@ def replace_links(file_content: str) -> str:
 
 
 """
-#TODO include placeholders etc. (-> reincarnate create_html()?)
 @param document: docx.document.Document
 @return content of document converted to html
 
@@ -231,7 +230,6 @@ class Tag:
         tag_open = "<p{}>".format(style)
         return "{0}{1}</p>".format(tag_open, content)
 
-    #TODO how much work is it to find out where image is located -> simply but images in between linebreaks?
     def image(self, source: str) -> str:
         return "<img src='source' alt=''>"
 
