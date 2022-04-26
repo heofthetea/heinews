@@ -11,20 +11,26 @@ DB_NAME = "test.db" # TODO rename this to something cool on production
 
 WORKING_DIR = getcwd()
 IMAGE_FOLDER = "/static/img/articles"
+__HOST__ = None
 
 """
 These are the "super-developers". On signup, only these email addresses get immediate developer status, which cannot be revoked.
 Why am I caring so much about keeping the addresses hashed and hidden? I don't know. It's fun.
 """
 # TODO store these (already hashed) in file (database would again need to be hardcoded into code)
-__DEVELOPERS__ = (hash("fyoug8gle@gmail.com"), hash("egruemer@gmail.com"))
+with open("__devs__.txt", "r") as f:
+    __DEVELOPERS__ = f.read().splitlines()
 
 """
 initializes application as Flask object
 registers all Blueprints for url routing and sets up functions accessed by the entire application (e.g. error handlers)
 @return flask application
 """
-def create_app() -> Flask:
+def create_app(host: tuple=None) -> Flask:
+    global __HOST__
+    __HOST__ = f"{host[0]}:{host[1]}"
+
+    print(__HOST__)
     app = Flask(__name__)
     app.config["SECRET_KEY"] = generate_key()
     app.config['IMAGE_FOLDER'] = IMAGE_FOLDER

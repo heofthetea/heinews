@@ -1,8 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from .models import User, Password_Reset, Verify_Email, generate_id
-# used for password hashing
 from werkzeug.security import generate_password_hash, check_password_hash
-from . import db, __DEVELOPERS__
+from . import db, __DEVELOPERS__, __HOST__
 from flask_login import login_user, login_required, logout_user, current_user
 
 
@@ -152,7 +151,7 @@ def verify_email(verify_id):
 def send_verification_email(email: str) -> str:
     user = User.query.filter_by(email=email).first()
     if Verify_Email.query.filter_by(user_id=user.id).first():
-        return url_for('auth.verify_email', verify_id=Verify_Email.query.filter_by(user_id=user.id).first().id)
+        return f"{__HOST__}/{url_for('auth.verify_email', verify_id=Verify_Email.query.filter_by(user_id=user.id).first().id)}"
     
     verification_token = Verify_Email(
         id=generate_id(256),
@@ -161,6 +160,7 @@ def send_verification_email(email: str) -> str:
     db.session.add(verification_token)
     db.session.commit()
     
-    link = url_for('auth.verify_email', verify_id=verification_token)
+    link = f"{__HOST__}{url_for('auth.verify_email', verify_id=verification_token)}"
+    print(link)
     return link
 

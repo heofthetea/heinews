@@ -15,6 +15,32 @@ from werkzeug.utils import secure_filename
 ALLOWED_EXTENSIONS = {"txt", "docx", "doc"} # TODO support txt files because I like them
 ALLOWED_IMAGES = {"png", "jpg"}
 
+"""
+source: https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html#xss-prevention-rules-summary
+&    &amp;
+<    &lt;
+>    &gt;
+"    &quot;
+'    &#x27;
+/    &#x2F;
+"""
+__DANGEROUS_CHARACTERS__ = {
+    "<": "&lt;",
+    ">": "&gt;",
+    "&": "&amp;",
+    '"': "&quot;",
+    "'": "&#x27;",
+    "/": "&#x2F;"
+}
+
+"""
+replaces every potentially dangerous character with its safe version as per the dictionary above
+"""
+def replace_dangerous_characters(text: str) -> str:
+    for char in __DANGEROUS_CHARACTERS__:
+        text = text.replace(char, __DANGEROUS_CHARACTERS__[char])
+    return text
+
 # I don't like putting this explicitly into my code, but using the built-in `session` dictionary failed handling big enough texts for some reason
 cache : dict = {}
 
