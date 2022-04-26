@@ -6,6 +6,9 @@
     <h4>name: {{ current_user.name }}</h4>
     <h4>email: {{ current_user.email }}</h4>
     <h4>role: {{ current_user.role }}</h4>
+    <h4>link is designed to work with manually entering it into browser -> clicking on this will lead to 404 error, in url remove the first 
+        127.0.0.1/
+    </h4>
     <a href="{{ verification_link }}">{{ verification_link }}</a>
     {% if reset %}
         <a href="{{ url_for('auth.reset_password', reset_id=reset) }}">Passwort zurücksetzen (TODO send this per email)</a>
