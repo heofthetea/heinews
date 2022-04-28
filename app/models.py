@@ -71,6 +71,31 @@ class User(db.Model, UserMixin):
         return users_sorted
 
 
+#-----------------------------------------------------------------------------------------------------------------------------------
+
+class Survey(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(128))
+    description = db.Column(db.String(256))
+    expiry_date = db.Column(db.DateTime(timezone=True))
+    answers = db.Column(db.ForeignKey("answer.id"))
+
+
+class Answer(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    value = db.Column(db.String(256))
+    votes = db.Column(db.Integer, default=0)
+
+
+class User_Answer(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    answer_id = db.Column(db.Integer, db.ForeignKey("answer.id"))  
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    # this is a slight data redundancy, but that value should never change and might make some things easier
+    survey_id = db.Column(db.Integer, db.ForeignKey("survey.id")) 
+
+#-----------------------------------------------------------------------------------------------------------------------------------
+
 class Password_Reset(db.Model):
     id = db.Column(db.String(256), primary_key=True)
     user_id = db.Column(db.Integer,db.ForeignKey("user.id"), unique=True)

@@ -4,11 +4,15 @@
 
 {% block content %}
 {% if get_user_role(current_user).can_upload %}
+    <h1>Artikel hochladen</h1>
     <form method="POST" enctype="multipart/form-data">
         <input type="file" name="file">
         <br>
         <button name="upload">upload</button>
     </form>
+
+    <h1>Neue Umfrage</h1>
+    <a href="{{ url_for('admin.create_survey') }}">Umfrage erstellen</a>
 {% else %}
     <h2 style="text-align: center">Du darfst keine Atikel hochladen - Komme in die Schülerzeitung oder warte, bis das feature auch für 
         Nicht-Mitglieder eingebaut wird :)

@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, url_for, redirect, flash, abort, request
 from flask_login import current_user, login_required
 from ._lib.docx_to_html import Tag, convert, htmlify, replace_links, create_image_placeholders, fill_image_placeholders
-from .models import Article, Role, Category, Tag, Article_Tag, generate_id
+from .models import Article, Role, Category, Tag, Article_Tag, Survey, Answer, User_Answer, generate_id
 from .articles import get_article_location
 from . import db, IMAGE_FOLDER, WORKING_DIR
 from datetime import datetime
@@ -212,6 +212,12 @@ def add_images(article_id):
         return redirect(url_for("admin.upload", phase="edit"))
     return render_template("upload/image_upload.html")
 
+#--------------------------------------------------------------------------------------------------------------------------------------------
+
+# TODO implement simple surveys
+@admin.route("/survey")
+def create_survey():
+    return redirect(url_for("admin.redir_upload"))
 
 
 #--------------------------------------------------------------------------------------------------------------------------------------------

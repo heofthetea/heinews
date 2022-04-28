@@ -1,4 +1,5 @@
 # use this quickly slapped together module to send emails
+# for this website: "Der Mailversand erfolgt über den SMTP-Ausgangsserver mail.belwue.de (Port 25/tcp)."
 
 from smtplib import SMTP
 from email.mime.text import MIMEText
@@ -17,7 +18,7 @@ def send_mail(*, from_email: str, password: str, recipients: (str or tuple[str])
         message = MIMEText(content, "plain", _charset="utf-8")
         message["Subject"] = subject
         message["From"] = from_email
-        message["Bcc"] = recipients if isinstance(recipients, str) == 1 else ','.join(recipients)
+        message["Bcc"] = recipients if isinstance(recipients, str) else ','.join(recipients)
         
 
         server = SMTP(smtp, port)

@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 from werkzeug.security import check_password_hash
 from .models import Article, User, Tag, Role
 from .articles import get_article_location
-from . import db
+from . import db, send_database
 from os import remove
 from os.path import exists, isdir
 from shutil import rmtree
@@ -24,10 +24,14 @@ def dev_panel() -> None:
         # stored current url as session variable before prompting authorization to be redirected correctly 
         return authorize_dev()
 
+
     users = User.__order_by_role__(User, descend=True)
     articles = Article.query.order_by(Article.validated).order_by(Article.title)
     filtered = False
     if request.method == "POST":
+        if request.form.get("backup"):
+            return send_database()
+
         if request.form.get("reset_user"):
             filtered = False
         elif request.form.get("id"):
@@ -131,6 +135,9 @@ def delete_article(id):
     flash("Article deleted successfully!", category="success")
     return redirect("/dev")
 
+
+
+
 #-------------------------------------------------------------------------------------------------------------------------------------------
 # @REGION authorization redirects
 """
@@ -146,13 +153,13 @@ def authorize_to_change_role(user):
     return redirect(url_for("dev.change_role", user=user)) #authorization is handled by if-statement in "follow-up" function
 
 
-@dev.route("yeet_user/<int:id>/authorize")
+@dev.route("/yeet_user/<int:id>/authorize")
 def authorize_to_delete_user(id):
     session["needs_authorization"] = True
     return redirect(url_for("dev.delete_user", id=id))
 
 
-@dev.route("yeet_article/<id>/authorize")
+@dev.route("/yeet_article/<id>/authorize")
 def authorize_to_delete_article(id):
     session["needs_authorization"] = True
     return redirect(url_for("dev.delete_article", id=id))

@@ -92,7 +92,6 @@ def is_dev(email):
 
 #----------------------------------------------------------------------------------------------------------------------------
 
-# TODO generate link to send per mail incorporating `request.base_url`
 @auth.route("/reset_link/<int:user_id>") # TODO rename
 def create_reset_token(user_id):
     if Password_Reset.query.filter_by(user_id=user_id).first():

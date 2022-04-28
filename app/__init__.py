@@ -1,4 +1,4 @@
-from flask import Flask, abort
+from flask import Flask, abort, send_file
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, current_user, AnonymousUserMixin
 from os import path
@@ -9,6 +9,11 @@ from os import getcwd
 db = SQLAlchemy()
 DB_NAME = "test.db" # TODO rename this to something cool on production
 
+
+def send_database() -> SQLAlchemy:
+    return send_file(DB_NAME)
+
+
 WORKING_DIR = getcwd()
 IMAGE_FOLDER = "/static/img/articles"
 __HOST__ = None
@@ -17,7 +22,6 @@ __HOST__ = None
 These are the "super-developers". On signup, only these email addresses get immediate developer status, which cannot be revoked.
 Why am I caring so much about keeping the addresses hashed and hidden? I don't know. It's fun.
 """
-# TODO store these (already hashed) in file (database would again need to be hardcoded into code)
 with open("__devs__.txt", "r") as f:
     __DEVELOPERS__ = f.read().splitlines()
 
