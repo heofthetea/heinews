@@ -12,11 +12,11 @@
 {% block title %}Developer Panel{% endblock %}
 
 {% block content %}
-<!--p style="text-align: center; font-size: larger;">
+<p style="text-align: center; font-size: larger;">
     This is the Dev-Panel. Some might rather call it a scuffed version of PHPMyAdmin, but I prefer to ignore the fact that I was to lazy to run a MySQL
     database with this app and call this fancy. In here you have full power - From promoting users to admins and admins to developers all the way to
     making the entire database go bye-bye with just a couple clicks and entering your password. <i>(I'd highly advise against doing so tho, since that 
-    might get you into trouble with the editorial team.)</i> I also admit that in the url-routing for this I might have used the word "yeet" a little 
+    might get you into trouble with the editorial team.)</i> I also admit that in the url routing for this I might have used the word "yeet" a little 
     often and probably not made the code as readable as it should be.
     <br>
     Things to be added: 
@@ -25,16 +25,13 @@
             Edit (and implement) Admin password (basically a password a user can use to promote himself to admin)
         </li>
         <li>
-            View and delete Tags
-        </li>
-        <li>
-            button to backup database
-        </li>
-        <li>
             some more fancy stuff I currently can't think of
         </li>
     </ul>
-</p-->
+</p>
+
+<!---------------------------------------------------------------------------------------------------------------------->
+
 <h1>Currently Existing Users</h1>
 <table>
     <tr>
@@ -60,8 +57,6 @@
             {% if users_filtered %}
                 <input type="submit" name="reset_user" value="Reset Filters">
             {% endif %}
-            
-            
         </form>
     </tr>
     {% for user in users %}
@@ -97,6 +92,9 @@
 
 </table>
 
+<!---------------------------------------------------------------------------------------------------------------------->
+
+<hr>
 <h1>All Articles</h1>
 <table>
     <tr>
@@ -132,6 +130,67 @@
 
 </table>
 
+<!---------------------------------------------------------------------------------------------------------------------->
+
+<hr>
+<h1>All Surveys</h1>
+<table>
+    <tr>
+        <th>id</th>
+        <th>Title</th>
+        <th>total votes</th>
+        <th>date created</th>
+        <th>yeet</th>
+    </tr>
+    {% for survey in surveys %}
+    <tr>
+        <td>{{ survey.id }}</td>
+        <td>
+            <a href="{{ url_for('surveys.survey', id=survey.id) }}">
+                {{ survey.title }}
+            </a>
+        </td>
+        <td>{{ survey.total_votes() }}</td>
+        <td>figure this out you lazy prick</td>
+        <td>
+            <form action="{{ url_for('dev.authorize_to_delete_survey', id=survey.id) }}">
+                <button>&times;</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+
+</table>
+
+<!---------------------------------------------------------------------------------------------------------------------->
+
+<hr>
+<h1>All Tags</h1>
+<table>
+    <tr>
+        <th>tag</th>
+        <th>yeet</th>
+    </tr>
+    {% for tag in tags %}
+    <tr>
+        <td>
+            <a href="{{ url_for('tag.articles_by_tag', tag=tag.tag.replace('#', '')) }}">
+                {{ tag.tag }}
+            </a>
+        </td>
+        <td>
+            <form action="{{ url_for('dev.authorize_to_delete_tag', tag=tag.tag) }}">
+                <button>&times;</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+
+</table>
+
+<!---------------------------------------------------------------------------------------------------------------------->
+
+<hr>
     <form method="POST">
         <label for="backup">backup database</label>
         <br>

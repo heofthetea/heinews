@@ -8,11 +8,11 @@ from datetime import timedelta
 # is it necessary to give everything a power of 2 as a length? No. Do I do it anyway? Yes, why not.
 
 
-#TODO connect Article with Article_Images
+#TODO? connect Article with Article_Images
 class Article(db.Model):
     id = db.Column(db.String(6), primary_key=True)
     title = db.Column(db.String(128))
-    description = db.Column(db.String(256))
+    description = db.Column(db.String(256)) #TODO if statement to not display this column if it is None
     date_created = db.Column(db.DateTime(timezone=True), default=func.now())
     validated = db.Column(db.Boolean(), default=False)
     upvotes = db.Column(db.Integer, nullable=False, default=0)
@@ -73,39 +73,47 @@ class User(db.Model, UserMixin):
 
 #-----------------------------------------------------------------------------------------------------------------------------------
 
+#TODO give surveys tags?
 class Survey(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.String(6), primary_key=True)
     title = db.Column(db.String(128))
     description = db.Column(db.String(256))
-    expiry_date = db.Column(db.DateTime(timezone=True))
-    answers = db.Column(db.ForeignKey("answer.id"))
+    # expiry_date = db.Column(db.DateTime(timezone=True)) # TODO find a way to select expiry dates in frontend
+
+    def total_votes(self):
+        votes = 0
+        for answer in Answer.query.filter_by(survey=self.id).all():
+            votes += answer.votes
+        return votes
 
 
 class Answer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     value = db.Column(db.String(256))
     votes = db.Column(db.Integer, default=0)
+    correct = db.Column(db.Boolean, default=None)
+    survey = db.Column(db.String, db.ForeignKey("survey.id"))
 
 
 class User_Answer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     answer_id = db.Column(db.Integer, db.ForeignKey("answer.id"))  
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-    # this is a slight data redundancy, but that value should never change and might make some things easier
-    survey_id = db.Column(db.Integer, db.ForeignKey("survey.id")) 
+    # slight data redundancy but makes things a lot easier and should not lead to any inconsistancies (id should never be changed)
+    survey_id = db.Column(db.String, db.ForeignKey("survey.id")) 
 
 #-----------------------------------------------------------------------------------------------------------------------------------
 
 class Password_Reset(db.Model):
     id = db.Column(db.String(256), primary_key=True)
     user_id = db.Column(db.Integer,db.ForeignKey("user.id"), unique=True)
-    #expiry_date = db.Column(db.DateTime(timezone=True), default=func.now() + timedelta(days=1)) #TODO get this column working
+    #expiry_date = db.Column(db.DateTime(timezone=True), default=func.now() + timedelta(days=1)) #TODO! get this column working
 
 
 class Verify_Email(db.Model):
     id = db.Column(db.String(256), primary_key=True)
     user_id = db.Column(db.Integer,db.ForeignKey("user.id"), unique=True)
-    #expiry_date = db.Column(db.DateTime(timezone=True), default=func.now() + timedelta(days=1)) #TODO get this column working
+    #expiry_date = db.Column(db.DateTime(timezone=True), default=func.now() + timedelta(days=1)) #TODO! get this column working
 
             
 
@@ -191,7 +199,6 @@ def get_tags(article: Article) -> list[Tag]:
 """
 def get_user_role(user: User) -> Role:
     return Role.query.get(user.role) if user_loggedin(user) else Role(can_validate=False, can_upload=False)
-
 
 """
 @return: DDL returns an sqlite query -> to effectively work with the dataset, functions like `.all()` have to be called on return

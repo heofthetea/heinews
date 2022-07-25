@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, render_template_string,  redirect, abort, url_for, flash, request, session
 from flask_login import login_required, current_user
 from werkzeug.security import check_password_hash
-from .models import Article, User, Tag, Role
+from .models import Article, User, Tag, Article_Tag, Role, Survey
 from .articles import get_article_location
 from . import db, send_database
 from os import remove
@@ -10,7 +10,7 @@ from shutil import rmtree
 
 
 dev = Blueprint("dev", __name__)
-#TODO set timer to reset this to false after certain amount of time (~15 minutes)
+#TODO!set timer to reset this to false after certain amount of time (~15 minutes)
 #TODO implement counter for wrong passwords (use url parameter overloading?)
 authorized = False # used to control if user is allowed to view the panel
 
@@ -49,6 +49,7 @@ def dev_panel() -> None:
         #users=User.query.all(),
         articles=articles,
         tags=Tag.query.all(),
+        surveys=Survey.query.order_by(Survey.title), #TODO rework this to date when it's actually implemented
         roles=Role.query.order_by(Role.hierarchy),
         users_filtered=filtered
     )
@@ -136,6 +137,25 @@ def delete_article(id):
     return redirect("/dev")
 
 
+@dev.route("/delete_survey/<id>")
+def delete_survey(id):
+    if session["needs_authorization"]:
+        return authorize_dev()
+    Survey.query.filter_by(id=id).delete()
+    db.session.commit()
+    flash("Survey deleted successfully!", category="success")
+    return redirect("/dev")
+
+
+@dev.route("/delete_tag/<tag>")
+def delete_tag(tag):
+    if session["needs_authorization"]:
+        return authorize_dev()
+    Tag.query.filter_by(tag=tag).delete()
+    Article_Tag.query.filter_by(tag=tag).delete()
+    db.session.commit()
+    flash("Tag deleted successfully!", category="success")
+    return redirect("/dev")
 
 
 #-------------------------------------------------------------------------------------------------------------------------------------------
@@ -163,6 +183,18 @@ def authorize_to_delete_user(id):
 def authorize_to_delete_article(id):
     session["needs_authorization"] = True
     return redirect(url_for("dev.delete_article", id=id))
+
+
+@dev.route("/yeet_survey/<id>/authorize")
+def authorize_to_delete_survey(id):
+    session["needs_authorization"] = True
+    return redirect(url_for("dev.delete_survey", id=id))
+
+
+@dev.route("/yeet_tag/<tag>/authorize")
+def authorize_to_delete_tag(tag):
+    session["needs_authorization"] = True
+    return redirect(url_for("dev.delete_tag", tag=tag))
 
 
 def authorize_dev():

@@ -59,8 +59,12 @@ def upvote(id):
         if not current_user.email_confirmed:
             flash("Hierfür musst du erst deine Email verifizieren! Schau mal in deinem Email-Postfach nach :)", category="error")
             abort(403)
-        db.session.add(User_Upvote(user_id=current_user.id,
-                        article_id=id))
+        db.session.add(
+            User_Upvote(
+                user_id=current_user.id,
+                article_id=id
+            )
+        )
         Article.query.get(id).upvotes += 1
         db.session.commit()
     except AttributeError:

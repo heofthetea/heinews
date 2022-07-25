@@ -83,6 +83,12 @@
                         <a href="/article/category/kreatives" class="nav-link">Kreatives</a>
                     </li>
                     {% endblock %}
+
+                    {% block surveys %}
+                    <li class="nav-item">
+                        <a href="{{ url_for('surveys.all_surveys') }}" class="nav-link">Umfragen</a>
+                    </li>
+                    {% endblock %}
                 </ul>
                 <form class="d-flex" action="{{ url_for('views.search') }}" method="POST">
                     

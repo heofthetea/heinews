@@ -1,0 +1,13 @@
+{% extends "overview.html" %}
+
+{% block title %}Tags{% endblock %}
+
+{% block content %}
+<!--#TODO sort by "active" and "over"-->
+    {% for survey in surveys %}
+        <a href="{{ url_for('surveys.survey', id=survey.id) }}">
+            {{ survey.title }}
+            <br>
+        </a>
+    {% endfor %}
+{% endblock %}

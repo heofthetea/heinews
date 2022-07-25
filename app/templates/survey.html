@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="/static/css/article.css">
+{% endblock %}
+{% block title %}{{ db_entry.title }}{% endblock %}
+
+{% block content%}
+<h1 style="text-align: center">
+    <u>{{ db_entry.title }}</u>
+</h1>
+
+{% if description != none %}
+    <h4>{{ db_entry.description }}</h4>
+{% endif %}
+
+<form action="{{ url_for('surveys.vote', survey_id=db_entry.id) }}" method="POST">
+    {% for answer in answers %}
+        <input 
+            type="radio" 
+            name="answer"
+            id="{{ answer.id }}"
+            value="{{ answer.id }}"
+            required
+        />
+        <label for="{{ answer.id }}">
+            {{ answer.value }}
+            {% if already_voted %}
+                ({{ answer.votes }} Stimmen)
+            {% endif %}
+        </label>
+        <br>
+    {% endfor %}
+
+
+    <button type="submit">Antwort abschicken</button>
+</form>
+
+{% endblock %}

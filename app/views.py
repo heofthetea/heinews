@@ -50,7 +50,7 @@ def profile():
     if get_user_role(current_user).can_upload:
         uploaded = Article.query.filter_by(creator_email=current_user.email).all()
     #TODO similar stuff depending on features added
-    #TODO add option to change notifications
+    #TODO! add option to change email notification settings
 
     reset = Password_Reset.query.filter_by(user_id=current_user.id).first()
     if reset:

@@ -43,17 +43,20 @@ def create_app(host: tuple=None) -> Flask:
     from .views import views, ErrorPages
     app.register_blueprint(views, url_prefix='/')
 
+    from .auth import auth
+    app.register_blueprint(auth, url_prefix='/')
+
     from .articles import articles
     app.register_blueprint(articles, url_prefix="/article/") #TODO rename url routings ? (to "/articles/") and the overview to "/"
 
     from .articles import tag
     app.register_blueprint(tag, url_prefix="/tags/")
+    
+    from .surveys import surveys
+    app.register_blueprint(surveys, url_prefix="/survey/")
 
     from .admin import admin
     app.register_blueprint(admin, url_prefix="/admin/")
-
-    from .auth import auth
-    app.register_blueprint(auth, url_prefix='/')
 
     from .dev import dev
     app.register_blueprint(dev, url_prefix="/dev/")

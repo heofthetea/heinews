@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Create Survey{% endblock %}
+{% block css %}
+<style>
+    #preview {
+        width: 288px;
+        height: 162px;
+    }
+
+    hr {
+        height: 3px;
+        fill: #000;
+    }
+
+
+    table {
+        margin-top: -75px;
+        width: 50%;
+        height: 300px;
+        vertical-align: left;
+    }
+
+    td {
+        margin-top: -300px;
+        width: 400px;
+        height: 300px;
+    }
+
+    input {
+        width: 300px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<form method="POST">
+    <h3>Umfrage erstellen</h3>
+    <div class="form-group">
+        <label for="title">Frage *</label>
+        <input type="title" class="form-control" id="title" name="title" placeholder="Sind wir von Vampiren unterwandert?" required />
+    </div>
+
+    <div class="form-group">
+        <label for="description">Beschreibung/Kurzübersicht</label>
+        <input type="description" class="form-control" id="description" name="description"
+            placeholder="Haben wir uns nicht alle schonmal gefragt, ob unser Schülersprecher in Wahrheit ein Vampir ist?" />
+    </div>
+
+    {% for i in range(num_answers) %}
+        <div class="form-group">
+            <label for="{{ i }}">Antwortmöglichkeit {{ i + 1 }} *</label>
+            <input type="answer" class="form-control" id="answer-{{ i }}" name="answer-{{ i }}" placeholder="Sie sind Vampire. Allesamt." required />
+        </div>
+    {% endfor %}
+
+    <hr>
+    <h4>Gibt es eine korrekte Antwort?</h4>
+    {% for i in range(num_answers) %}
+        <input type="radio" name="correct-answer" id="{{ i }}" value="{{ i }}">
+        <label for="{{ i }}">Antwort {{ i + 1 }}</label>
+        <br>
+    {% endfor %}
+
+    <br>
+    <button type="submit">Submit</button>
+</form>
+
+{% endblock %}

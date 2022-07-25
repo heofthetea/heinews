@@ -47,8 +47,8 @@ cache : dict = {}
 admin = Blueprint("admin", __name__)
 
 
-@login_required
 @admin.route("/")
+@login_required
 def admin_index():
     try:
         if current_user.role != "validate" and current_user.role != "developer":
@@ -81,34 +81,38 @@ def upload(phase) -> None:
     #handles file upload (including validation checks and docx to html conversion)
     if phase == "new":
         if request.method == 'POST':
-            # check if the post request has the file part
-            if 'file' not in request.files:
-                flash("Bitte wähle eine Datei aus", category="error")
-                return redirect(request.url)
-            file = request.files['file']
-            # If the user does not select a file, the browser submits an empty file without a filename.
-            if file.filename == '':
-                flash("Bitte wähle eine Datei aus", category="error")
-                return redirect(request.url)
-            if not allowed_file(file.filename):
-                flash("Dateityp nicht unterstützt (Unterstützt wird: .txt, .doc, .docx)")
-            if file and allowed_file(file.filename):
-                file_extension = file.filename.rsplit('.', 1)[1].lower()
-                if file_extension == "docx" or file_extension == "doc":
-                    file_content = convert(file)
-                    
-                #TODO something
-                elif file_extension == "txt":
-                    file_content = file.read().decode("utf-8") # file gets read as binary, thus needing to decode
-                    file_content = file_content.replace("\n", "<br>")
+            if "create-survey" in request.form:
+                cache["num_answers"] = request.form.get("num-answers")
+                return redirect(url_for("admin.create_survey"))
+            if "upload-article" in request.form:
+                # check if the post request has the file part
+                if 'file' not in request.files:
+                    flash("Bitte wähle eine Datei aus", category="error")
+                    return redirect(request.url)
+                file = request.files['file']
+                # If the user does not select a file, the browser submits an empty file without a filename.
+                if file.filename == '':
+                    flash("Bitte wähle eine Datei aus", category="error")
+                    return redirect(request.url)
+                if not allowed_file(file.filename):
+                    flash("Dateityp nicht unterstützt (Unterstützt wird: .txt, .doc, .docx)")
+                if file and allowed_file(file.filename):
+                    file_extension = file.filename.rsplit('.', 1)[1].lower()
+                    if file_extension == "docx" or file_extension == "doc":
+                        file_content = convert(file)
+                        
+                    #TODO! something
+                    elif file_extension == "txt":
+                        file_content = file.read().decode("utf-8") # file gets read as binary, thus needing to decode
+                        file_content = file_content.replace("\n", "<br>")
 
 
-                file_content : str = replace_links(file_content)
-                # caching all data necessary to use in next step (and setting up image cache)
-                cache["uploaded_content"] = file_content
-                cache["article_id"] = generate_id(6)
-                cache["images"] = []
-                return redirect(url_for("admin.add_images", article_id=cache["article_id"]))
+                    file_content : str = replace_links(file_content)
+                    # caching all data necessary to use in next step (and setting up image cache)
+                    cache["uploaded_content"] = file_content
+                    cache["article_id"] = generate_id(6)
+                    cache["images"] = []
+                    return redirect(url_for("admin.add_images", article_id=cache["article_id"]))
                 
         return render_template("upload/upload.html")
 
@@ -214,11 +218,46 @@ def add_images(article_id):
 
 #--------------------------------------------------------------------------------------------------------------------------------------------
 
-# TODO implement simple surveys
-@admin.route("/survey")
+# TODO GET TIME COLUMNS WORKING
+# TODO! implement simple surveys
+# create template
+    # for creation
+    # for actually voting
+# create system to view (results of) survey
+# 
+@admin.route("/newsurvey", methods=["GET", "POST"])
 def create_survey():
-    return redirect(url_for("admin.redir_upload"))
+    num_answers = int(cache["num_answers"])
+    if request.method == "POST":
+        correct_answer = request.form.get("correct-answer")
 
+        new_survey = Survey(
+            id=generate_id(6, table=Survey),
+            title=request.form.get("title"),
+            description=request.form.get("description")
+        )
+        db.session.add(new_survey)
+
+        for i in range(num_answers):
+            if correct_answer is None:
+                correct = None
+            else:
+                correct = True if i == int(correct_answer) else False
+
+            db.session.add(
+                Answer(
+                    value=request.form.get(f"answer-{i}"),
+                    correct=correct,
+                    survey=new_survey.id
+                )
+            )
+
+        db.session.commit()
+        cache.pop("num_answers")
+        return redirect(url_for("surveys.survey", id=new_survey.id))
+    return render_template("upload/upload_survey.html", num_answers=num_answers)
+
+#TODO add option for authors to send announcements over dashboard and mail
 
 #--------------------------------------------------------------------------------------------------------------------------------------------
 # I have no idea what this does but it's copied straight from flask documentation and works

@@ -1,4 +1,3 @@
-#TODO still needs tweaking, not entirely integratable into website yet
 from docx.shared import Pt
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx import Document

@@ -34,7 +34,9 @@
             {{ db_entry.validated }}
         </i>
     </div>
-    <h4>{{ db_entry.description }}</h4>
+    {% if db_entry.description != none %}
+        <h4>{{ db_entry.description }}</h4>
+    {% endif %}
 
 
     {% block article %}
