@@ -4,19 +4,23 @@
 
 {% block content %}
 {% if get_user_role(current_user).can_upload %}
+<div class="container-xl">
     <br>
     <h1>Gib deinem Artikel Bilder</h1>
     <br>
     <form method="POST" enctype="multipart/form-data">
         <input type="file" name="image" multiple>
         <br>
-        <button name="upload">upload</button>
+        <br>
+        <button name="upload" class="btn btn-primary">upload</button>
     </form>
 {% else %}
     <h2 style="text-align: center">Du darfst keine Artikel hochladen - Komme in die Schülerzeitung oder warte, bis das feature auch für 
         Nicht-Mitglieder eingebaut wird :)
     </h2>
     <a href="/">Homepage</a>
+
+</div>
 
 {% endif %}
 {% endblock %}

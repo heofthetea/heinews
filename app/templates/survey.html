@@ -3,37 +3,40 @@
 {% block css %}
 <link rel="stylesheet" href="/static/css/article.css">
 {% endblock %}
-{% block title %}{{ db_entry.title }}{% endblock %}
+    {% block title %}{{ db_entry.title }}{% endblock %}
 
-{% block content%}
-<h1 style="text-align: center">
-    <u>{{ db_entry.title }}</u>
-</h1>
+    {% block content%}
+<div class="container-xl">
+    <br>
+    <h1>
+        {{ db_entry.title }}
+    </h1>
+    <br>
+    {% if description != none %}
+        <h4>{{ db_entry.description }}</h4>
+    {% endif %}
 
-{% if description != none %}
-    <h4>{{ db_entry.description }}</h4>
-{% endif %}
+    <form action="{{ url_for('surveys.vote', survey_id=db_entry.id) }}" method="POST">
+        {% for answer in answers %}
+            <input 
+                type="radio" 
+                name="answer"
+                id="{{ answer.id }}"
+                value="{{ answer.id }}"
+                required
+            />
+            <label for="{{ answer.id }}">
+                {{ answer.value }}
+                {% if already_voted %}
+                    ({{ answer.votes }} Stimmen)
+                {% endif %}
+            </label>
+            <br>
+        {% endfor %}
 
-<form action="{{ url_for('surveys.vote', survey_id=db_entry.id) }}" method="POST">
-    {% for answer in answers %}
-        <input 
-            type="radio" 
-            name="answer"
-            id="{{ answer.id }}"
-            value="{{ answer.id }}"
-            required
-        />
-        <label for="{{ answer.id }}">
-            {{ answer.value }}
-            {% if already_voted %}
-                ({{ answer.votes }} Stimmen)
-            {% endif %}
-        </label>
         <br>
-    {% endfor %}
-
-
-    <button type="submit">Antwort abschicken</button>
-</form>
+        <button type="submit" class="btn btn-primary">Antwort abschicken</button>
+    </form>
+</div>
 
 {% endblock %}

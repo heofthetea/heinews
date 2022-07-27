@@ -34,36 +34,43 @@
 {% endblock %}
 
 {% block content %}
-<form method="POST">
-    <h3>Umfrage erstellen</h3>
-    <div class="form-group">
-        <label for="title">Frage *</label>
-        <input type="title" class="form-control" id="title" name="title" placeholder="Sind wir von Vampiren unterwandert?" required />
-    </div>
-
-    <div class="form-group">
-        <label for="description">Beschreibung/Kurzübersicht</label>
-        <input type="description" class="form-control" id="description" name="description"
-            placeholder="Haben wir uns nicht alle schonmal gefragt, ob unser Schülersprecher in Wahrheit ein Vampir ist?" />
-    </div>
-
-    {% for i in range(num_answers) %}
-        <div class="form-group">
-            <label for="{{ i }}">Antwortmöglichkeit {{ i + 1 }} *</label>
-            <input type="answer" class="form-control" id="answer-{{ i }}" name="answer-{{ i }}" placeholder="Sie sind Vampire. Allesamt." required />
-        </div>
-    {% endfor %}
-
-    <hr>
-    <h4>Gibt es eine korrekte Antwort?</h4>
-    {% for i in range(num_answers) %}
-        <input type="radio" name="correct-answer" id="{{ i }}" value="{{ i }}">
-        <label for="{{ i }}">Antwort {{ i + 1 }}</label>
+<div class="container-xl">
+    <form method="POST">
         <br>
-    {% endfor %}
+        <h1>Umfrage erstellen</h1>
+        <br>
+        <div class="form-group">
+            <label for="title"><b>Frage</b> *</label>
+            <input type="title" class="form-control" id="title" name="title" placeholder="Sind wir von Vampiren unterwandert?" required />
+        </div>
 
-    <br>
-    <button type="submit">Submit</button>
-</form>
+        <div class="form-group">
+            <b><label for="description">Beschreibung/Kurzübersicht</label></b>
+            <input type="description" class="form-control" id="description" name="description"
+                placeholder="Haben wir uns nicht alle schonmal gefragt, ob unser Schülersprecher in Wahrheit ein Vampir ist?" />
+        </div>
+
+        {% for i in range(num_answers) %}
+            <div class="form-group">
+                <label for="{{ i }}"><b>Antwortmöglichkeit {{ i + 1 }}</b> *</label>
+                <input type="answer" class="form-control" id="answer-{{ i }}" name="answer-{{ i }}" placeholder="Sie sind Vampire. Allesamt." required />
+            </div>
+        {% endfor %}
+
+        <hr>
+        <br>
+        <h4>Gibt es eine korrekte Antwort?</h4>
+        <br>
+        {% for i in range(num_answers) %}
+            <input type="radio" name="correct-answer" id="{{ i }}" value="{{ i }}">
+            <b><label for="{{ i }}">Antwort {{ i + 1 }}</label></b>
+            <br>
+        {% endfor %}
+
+        <br>
+        <p>Alle Felder die mit einem * gekennzeichnet sind müssen ausgefüllt werden!</p>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
 
 {% endblock %}
