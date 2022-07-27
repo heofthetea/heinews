@@ -3,7 +3,6 @@
 {% block title %}{{ current_user.name }}{% endblock %}
 
 {% block content %}
-<!--Keep side distance (Bootstrap)-->
 <div class="container-xl">
     <br>
     <br>
@@ -19,15 +18,21 @@
             <td>{{  current_user.email  }}</td>
         </tr>
         <tr>
-            <th>Role:</th>
+            <th>Rollen:</th>
             <td>{{  current_user.role  }}</td>
         </tr>
         <tr>
-            <th>recieve email notifications</th>
+            <th>Email Benachrichtigungen:</th>
             <td>{{  current_user.notifications  }}</td>
         </tr>
         <tr>
-            <th>Password:</th>
+            <th>Verifizieren:</th>
+            <td>
+                <b><a style="text-decoration: none;" href="{{ verification_link }}">{{ verification_link }}</a></b>
+            </td>
+        </tr>
+        <tr>
+            <th>Passwort:</th>
             <td>
                 {% if reset %}
                     <b><a style="text-decoration: none" href="{{ url_for('auth.reset_password', reset_id=reset) }}">Passwort zurücksetzen</a></b><!-- (TODO send this per email)-->
@@ -39,37 +44,57 @@
             </td>
         </tr>
     </table>
+    <h6><i class="bi bi-info-circle"></i>  Verification link is designed to work with manually entering it into browser -> clicking on this will lead to 404 error, in url remove the first 
+        127.0.0.1/
+    </h6>
     <br>
-    <h2>Analysis tool or sth</h2>
+    <br>
+
+    <!--------------------------------------------------------------------------------------------------------------------------------->
+    <h3>Statistiken</h3>
     <br>
     <table class="table">
         <tr>
-            <th>Articles upvoted:</th>
+            <th>Upvoted Artikel:</th>
             <td>{{ upvoted|length }}</td>
-            {% for article in upvoted %}
-                <a href="{{ url_for('articles.find_article', path='{0}.html'.format(article.id)) }}">
-                    {{ article.title }}
-                </a>
-                <br>
-            {% endfor %}
         </tr>
         <tr>
-            <th>Articles uploaded:</th>
+            
+        </tr>
+        <tr>
+            <th>Hochgeladene Artikel:</th>
             <td>{{ uploaded|length }}</td>
         </tr>
     </table>
-    {% for article in uploaded %}
-        <b><a style="text-decoration: none" href="{{ url_for('articles.find_article', path='{0}.html'.format(article.id)) }}">
-            {{ article.title }}
-        </a></b>
-        <b> --- </b>
-    {% endfor %}
-    <br>
-    <br>
-        <h6>link is designed to work with manually entering it into browser -> clicking on this will lead to 404 error, in url remove the first 
-            127.0.0.1/
-        </h6>
-        <h5><a style="text-decoration: none;" href="{{ verification_link }}">{{ verification_link }}</a></h5>
-        <!--TODO: move logout here?-->
+
+
+    <table>
+        <tr>
+            <td>
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                      Hochgeladene Artikel
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        {% for article in uploaded %}
+                            <li><a class="dropdown-item" href="{{ url_for('articles.find_article', path='{0}.html'.format(article.id)) }}">{{ article.title }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </td>
+            <td>
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                      Upvoted Artikel
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        {% for article in upvoted %}
+                            <li><a class="dropdown-item" href="{{ url_for('articles.find_article', path='{0}.html'.format(article.id)) }}">{{ article.title }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    </table>
     {% endblock %}
 </div>
