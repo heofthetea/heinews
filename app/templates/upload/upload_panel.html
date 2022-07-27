@@ -42,10 +42,13 @@ input {
 {% endblock %}
 
 {% block content %}
+<div class="container-xl">
     <form method="POST">
-    <h3>Edit Article</h3>
+    <br>
+    <h1>Edit Article</h1>
+    <br>
     <div class="form-group">
-        <label for="title">Titel *</label>
+        <label for="title"><b>Titel</b> *</label>
         <input
             type="title" 
             class="form-control" 
@@ -57,7 +60,7 @@ input {
     </div>
 
     <div class="form-group">
-        <label for="description">Beschreibung/Kurzübersicht</label>
+        <label for="description"><b>Beschreibung/Kurzübersicht</b></label>
         <input
             type="description" 
             class="form-control" 
@@ -68,7 +71,7 @@ input {
     </div>
 
     <div class="form-group">
-        <label for="category">Kategorie</label>
+        <label for="category"><b>Kategorie</b></label>
         <select name="category" id="category">
             {% for category in categories %}
                 <option value="{{ category.name }}">{{ category.name }}</option>
@@ -77,7 +80,7 @@ input {
     </div>
 
     <div class="form-group">
-        <label for="tags">Tags (getrennt durch Leerzeichen)</label>
+        <label for="tags"><b>Tags</b> (getrennt durch Leerzeichen)</label>
         <input
             type="tags" 
             class="form-control" 
@@ -87,22 +90,25 @@ input {
         />    
     </div>
 
+    <br>
     <hr>
+    <br>
+
     {% for image in images %}
     <div class="form-group" name="{{ image }}">
         <table>
             <tr>
                 <td>
-                    als Titelbild festlegen
+                    <b>Titelbild festlegen</b>
                     <input type="radio" name="primary-img" id="{{ image }}" value="{{ image }}" required>
                     <label for="primary_img">
                         <img src="{{ image }}" alt="i messed up" id="preview">
                     </label>
                 </td>
                 <td>
-                    <label for="description">Beschreibung</label>
+                    <label for="description"><b>Beschreibung</b></label>
                     <input type="text" class="form-control" name="{{ image }}_description" placeholder="Das ist ein wunderschönes Bild">
-                    <label for="source">Quelle *</label>
+                    <label for="source"><b>Quelle</b> *</label>
                     <input type="source" class="form-control" name="{{ image }}_source" placeholder="Hab' ich selbst gemalt" required>
                 </td>
             </tr>
@@ -115,5 +121,6 @@ input {
     <br>
     <button>Submit</button>
 </form>
+</div>
 
 {% endblock %}

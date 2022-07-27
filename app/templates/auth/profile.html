@@ -3,41 +3,71 @@
 {% block title %}{{ current_user.name }}{% endblock %}
 
 {% block content %}
-    <h4>name: {{ current_user.name }}</h4>
-    <h4>email: {{ current_user.email }}</h4>
-    <h4>role: {{ current_user.role }}</h4>
-    <h4>link is designed to work with manually entering it into browser -> clicking on this will lead to 404 error, in url remove the first 
-        127.0.0.1/
-    </h4>
-    <a href="{{ verification_link }}">{{ verification_link }}</a>
-    {% if reset %}
-        <a href="{{ url_for('auth.reset_password', reset_id=reset) }}">Passwort zurücksetzen (TODO send this per email)</a>
-        
-    {% else %}
-        <form action="{{ url_for('auth.create_reset_token', user_id=current_user.id) }}">
-            <button type="submit">Request password reset</button>
-        </form>
-    {% endif %}
-    <h4>receive email notifications: {{ current_user.notifications }}</h4>
-
-    <hr>
-    <h3>Analysis tools or sth</h3>
-
-    <h4>Articles upvoted: {{ upvoted|length }}</h4>
-    {% for article in upvoted %}
-        <a href="{{ url_for('articles.find_article', path='{0}.html'.format(article.id)) }}">
-            {{ article.title }}
-        </a>
-        <br>
-    {% endfor %}
-    
-    <h4>Articles uploaded: {{ uploaded|length }}</h4>
+<!--Keep side distance (Bootstrap)-->
+<div class="container-xl">
+    <br>
+    <br>
+    <h1>Profil</h1>
+    <br>
+    <table class="table">
+        <tr>
+            <th>Name:</th>
+            <td>{{  current_user.name  }}</td>
+        </tr>
+        <tr>
+            <th>Email:</th>
+            <td>{{  current_user.email  }}</td>
+        </tr>
+        <tr>
+            <th>Role:</th>
+            <td>{{  current_user.role  }}</td>
+        </tr>
+        <tr>
+            <th>recieve email notifications</th>
+            <td>{{  current_user.notifications  }}</td>
+        </tr>
+        <tr>
+            <th>Password:</th>
+            <td>
+                {% if reset %}
+                    <a href="{{ url_for('auth.reset_password', reset_id=reset) }}">Passwort zurücksetzen (TODO send this per email)</a>
+                {% else %}
+                    <form action="{{ url_for('auth.create_reset_token', user_id=current_user.id) }}">
+                        <button type="submit">Request password reset</button>
+                    </form>
+                {% endif %}
+            </td>
+        </tr>
+    </table>
+    <br>
+    <h2>Analysis tool or sth</h2>
+    <br>
+    <table class="table">
+        <tr>
+            <th>Articles upvoted:</th>
+            <td>{{ upvoted|length }}</td>
+            {% for article in upvoted %}
+                <a href="{{ url_for('articles.find_article', path='{0}.html'.format(article.id)) }}">
+                    {{ article.title }}
+                </a>
+                <br>
+            {% endfor %}
+        </tr>
+        <tr>
+            <th>Articles uploaded:</th>
+            <td>{{ uploaded|length }}</td>
+        </tr>
+    </table>
     {% for article in uploaded %}
-        <a href="{{ url_for('articles.find_article', path='{0}.html'.format(article.id)) }}">
+        <h5><a href="{{ url_for('articles.find_article', path='{0}.html'.format(article.id)) }}">
             {{ article.title }}
-        </a>
-        <br>
+        </a></h5>
     {% endfor %}
-
-    <!--TODO: move logout here?-->
-{% endblock %}
+    <br>
+        <h5>link is designed to work with manually entering it into browser -> clicking on this will lead to 404 error, in url remove the first 
+            127.0.0.1/
+        </h5>
+        <a href="{{ verification_link }}">{{ verification_link }}</a>
+        <!--TODO: move logout here?-->
+    {% endblock %}
+</div>

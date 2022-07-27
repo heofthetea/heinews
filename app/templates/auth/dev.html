@@ -2,200 +2,237 @@
 
 
 {% block css %}
-<style>
+<!--<style>
     table, tr, td, th {
-        border: 1px solid #000; 
+        border: 1px solid black; 
         border-collapse: collapse;
     }
+</style>-->
+<!--<style>
+    body{
+        color-scheme: dark;
+        color: rgb(202, 202, 202);
+        background-color: rgb(36, 36, 36);
+    }
 </style>
+-->
+<!--
+DEV Panel in Dark-Mode? class="table table-dark"
+-->
 {% endblock %}
 {% block title %}Developer Panel{% endblock %}
 
 {% block content %}
-<p style="text-align: center; font-size: larger;">
-    This is the Dev-Panel. Some might rather call it a scuffed version of PHPMyAdmin, but I prefer to ignore the fact that I was to lazy to run a MySQL
-    database with this app and call this fancy. In here you have full power - From promoting users to admins and admins to developers all the way to
-    making the entire database go bye-bye with just a couple clicks and entering your password. <i>(I'd highly advise against doing so tho, since that 
-    might get you into trouble with the editorial team.)</i> I also admit that in the url routing for this I might have used the word "yeet" a little 
-    often and probably not made the code as readable as it should be.
+<div class="container-fluid">
     <br>
-    Things to be added: 
-    <ul>
-        <li>
-            Edit (and implement) Admin password (basically a password a user can use to promote himself to admin)
-        </li>
-        <li>
-            some more fancy stuff I currently can't think of
-        </li>
-    </ul>
-</p>
-
-<!---------------------------------------------------------------------------------------------------------------------->
-
-<h1>Currently Existing Users</h1>
-<table>
-    <tr>
-        <form method="POST">
-            <th>
-                id
-                <input type="text" name="id" id="id" class="form-control" placeholder="find">
-            </th>
-            <th>
-                Name
-                <input type="text" name="name" id="name" class="form-control" placeholder="find">
-            </th>
-            <th>
-                Email
-                <input type="email" name="email" id="email" class="form-control" placeholder="find">
-            </th>
-            <th>Role</th>
-            <th>Email verified</th>
-            <th>yeet</th>
-            <!--rendering the actual submit button first makes pressing enter execute with corresponding filtering-->
-            <!-- -> resetting form only when the button actually is pressed-->
-            <button type="submit" style="display: none;"></button>
-            {% if users_filtered %}
-                <input type="submit" name="reset_user" value="Reset Filters">
-            {% endif %}
-        </form>
-    </tr>
-    {% for user in users %}
-    <tr>
-        <td>{{ user.id }}</td>
-        <td>{{ user.name }}</td>
-        <td>{{ user.email }}</td>
-        <td>
-            <form action="{{ url_for('dev.authorize_to_change_role', user=user.id) }}" method="POST">
-                <select name="role" id="role" onchange="this.form.submit()">
-                    {% for role in roles %}
-                    {% if role.name == user.role %}
-                        <option value="{{ role.name }}" selected="selected">
-                                {{ role.name }}
-                        </option>
-                    {% else %}
-                        <option value="{{ role.name }}">
-                                {{ role.name }}
-                        </option>
-                    {% endif %}
-                    {% endfor %}
-                </select>
-            </form>
-        </td>
-        <td>{{ user.email_confirmed }}</td>
-        <td>
-            <form action="{{ url_for('dev.authorize_to_delete_user', id=user.id) }}">
-                <button>&times;</button>
-            </form>
-        </td>
-    </tr>
-    {% endfor %}
-
-</table>
-
-<!---------------------------------------------------------------------------------------------------------------------->
-
-<hr>
-<h1>All Articles</h1>
-<table>
-    <tr>
-        <th>id</th>
-        <th>Title</th>
-        <th>author email</th>
-        <th>validated</th>
-        <th>date created</th>
-        <th>upvotes</th>
-        <th>yeet</th>
-    </tr>
-    {% for article in articles %}
-    <tr>
-        <td>{{ article.id }}</td>
-        <td>
-            <a href="{{ url_for('articles.find_article', path='{0}.html'.format(article.id)) }}">
-                {{ article.title }}
-            </a>
-        </td>
-        <td>
-            <a href="mailto:{{ article.creator_email }}">{{ article.creator_email }}</a>
-        </td>
-        <td>{{ article.validated }}</td>
-        <td>{{ article.date_created.date().strftime("%d.%m.%Y") }}</td>
-        <td>{{ article.upvotes }}</td>
-        <td>
-            <form action="{{ url_for('dev.authorize_to_delete_article', id=article.id) }}">
-                <button>&times;</button>
-            </form>
-        </td>
-    </tr>
-    {% endfor %}
-
-</table>
-
-<!---------------------------------------------------------------------------------------------------------------------->
-
-<hr>
-<h1>All Surveys</h1>
-<table>
-    <tr>
-        <th>id</th>
-        <th>Title</th>
-        <th>total votes</th>
-        <th>date created</th>
-        <th>yeet</th>
-    </tr>
-    {% for survey in surveys %}
-    <tr>
-        <td>{{ survey.id }}</td>
-        <td>
-            <a href="{{ url_for('surveys.survey', id=survey.id) }}">
-                {{ survey.title }}
-            </a>
-        </td>
-        <td>{{ survey.total_votes() }}</td>
-        <td>figure this out you lazy prick</td>
-        <td>
-            <form action="{{ url_for('dev.authorize_to_delete_survey', id=survey.id) }}">
-                <button>&times;</button>
-            </form>
-        </td>
-    </tr>
-    {% endfor %}
-
-</table>
-
-<!---------------------------------------------------------------------------------------------------------------------->
-
-<hr>
-<h1>All Tags</h1>
-<table>
-    <tr>
-        <th>tag</th>
-        <th>yeet</th>
-    </tr>
-    {% for tag in tags %}
-    <tr>
-        <td>
-            <a href="{{ url_for('tag.articles_by_tag', tag=tag.tag.replace('#', '')) }}">
-                {{ tag.tag }}
-            </a>
-        </td>
-        <td>
-            <form action="{{ url_for('dev.authorize_to_delete_tag', tag=tag.tag) }}">
-                <button>&times;</button>
-            </form>
-        </td>
-    </tr>
-    {% endfor %}
-
-</table>
-
-<!---------------------------------------------------------------------------------------------------------------------->
-
-<hr>
-    <form method="POST">
-        <label for="backup">backup database</label>
+    <h1>DEV-Panel</h1>
+    <br>
+    <p>
+        This is the Dev-Panel. Some might rather call it a scuffed version of PHPMyAdmin, but I prefer to ignore the fact that I was to lazy to run a MySQL
+        database with this app and call this fancy. In here you have full power - From promoting users to admins and admins to developers all the way to
+        making the entire database go bye-bye with just a couple clicks and entering your password. <i>(I'd highly advise against doing so tho, since that 
+        might get you into trouble with the editorial team.)</i> I also admit that in the url routing for this I might have used the word "yeet" a little 
+        often and probably not made the code as readable as it should be.
         <br>
-        <input type="submit" name="backup" value="backup">
-    </form>
+        Things to be added: 
+        <ul>
+            <li>
+                Edit (and implement) Admin password (basically a password a user can use to promote himself to admin)
+            </li>
+            <li>
+                some more fancy stuff I currently can't think of
+            </li>
+        </ul>
+    </p>
+
+    <!---------------------------------------------------------------------------------------------------------------------->
+
+    <br>
+    <h2>Users</h2>
+    <table class="table">
+        <tr>
+            <thead>
+                <form method="POST">
+                    <th scope="col">
+                        ID
+                        <input type="text" name="id" id="id" class="form-control" placeholder="search">
+                    </th>
+                    <th scope="col">
+                        Name
+                        <input type="text" name="name" id="name" class="form-control" placeholder="search">
+                    </th>
+                    <th scope="col">
+                        Email
+                        <input type="email" name="email" id="email" class="form-control" placeholder="search">
+                    </th>
+                    <th scope="col">Role</th>
+                    <th scope="col">Email verified</th>
+                    <th scope="col">yeet</th>
+                    <!--rendering the actual submit button first makes pressing enter execute with corresponding filtering-->
+                    <!-- -> resetting form only when the button actually is pressed-->
+                    <button type="submit" style="display: none;"></button>
+                    {% if users_filtered %}
+                        <input type="submit" name="reset_user" value="Reset Filters">
+                    {% endif %}
+                </form>
+            </thead>
+        </tr>
+        {% for user in users %}
+        <tr>
+            <tbody>
+                <td>{{ user.id }}</td>
+                <td>{{ user.name }}</td>
+                <td>{{ user.email }}</td>
+                <td>
+                    <form action="{{ url_for('dev.authorize_to_change_role', user=user.id) }}" method="POST">
+                        <select name="role" id="role" onchange="this.form.submit()">
+                            {% for role in roles %}
+                            {% if role.name == user.role %}
+                                <option value="{{ role.name }}" selected="selected">
+                                        {{ role.name }}
+                                </option>
+                            {% else %}
+                                <option value="{{ role.name }}">
+                                        {{ role.name }}
+                                </option>
+                            {% endif %}
+                            {% endfor %}
+                        </select>
+                    </form>
+                </td>
+                <td>{{ user.email_confirmed }}</td>
+                <td>
+                    <form action="{{ url_for('dev.authorize_to_delete_user', id=user.id) }}">
+                        <button>&times;</button>
+                    </form>
+                </td>
+            </tbody>
+        </tr>
+        {% endfor %}
+
+    </table>
+
+    <!---------------------------------------------------------------------------------------------------------------------->
+
+    <hr>
+    <br>
+    <h2>Articles</h2>
+    <table class="table">
+        <tr>
+            <thead>
+                <th scope="col">ID</th>
+                <th scope="col">Title</th>
+                <th scope="col">author email</th>
+                <th scope="col">validated</th>
+                <th scope="col">date created</th>
+                <th scope="col">upvotes</th>
+                <th scope="col">yeet</th>
+            <thead>
+        </tr>
+        {% for article in articles %}
+        <tr>
+            <tbody>
+                <td>{{ article.id }}</td>
+                <td>
+                    <a href="{{ url_for('articles.find_article', path='{0}.html'.format(article.id)) }}">
+                        {{ article.title }}
+                    </a>
+                </td>
+                <td>
+                    <a href="mailto:{{ article.creator_email }}">{{ article.creator_email }}</a>
+                </td>
+                <td>{{ article.validated }}</td>
+                <td>{{ article.date_created.date().strftime("%d.%m.%Y") }}</td>
+                <td>{{ article.upvotes }}</td>
+                <td>
+                    <form action="{{ url_for('dev.authorize_to_delete_article', id=article.id) }}">
+                        <button>&times;</button>
+                    </form>
+                </td>
+            </tbody>
+        </tr>
+        {% endfor %}
+
+    </table>
+
+    <!---------------------------------------------------------------------------------------------------------------------->
+
+    <hr>
+    <br>
+    <h2>Surveys</h2>
+    <table class="table">
+        <tr>
+            <thead>
+                <th scope="col">ID</th>
+                <th scope="col">Title</th>
+                <th scope="col">total votes</th>
+                <th scope="col">date created</th>
+                <th scope="col">yeet</th>
+            </thead>
+        </tr>
+        {% for survey in surveys %}
+        <tr>
+            <tbody>
+                <td>{{ survey.id }}</td>
+                <td>
+                    <a href="{{ url_for('surveys.survey', id=survey.id) }}">
+                        {{ survey.title }}
+                    </a>
+                </td>
+                <td>{{ survey.total_votes() }}</td>
+                <td>figure this out you lazy prick</td>
+                <td>
+                    <form action="{{ url_for('dev.authorize_to_delete_survey', id=survey.id) }}">
+                        <button>&times;</button>
+                    </form>
+                </td>
+            </tbody>
+        </tr>
+        {% endfor %}
+
+    </table>
+
+    <!---------------------------------------------------------------------------------------------------------------------->
+
+    <hr>
+    <br>
+    <h2>Tags</h2>
+    <table class="table">
+        <tr>
+            <thead>
+                <th scope="col">tag</th>
+                <th scope="col">yeet</th>
+            </thead>
+        </tr>
+        {% for tag in tags %}
+        <tr>
+            <tbody>
+                <td>
+                    <a href="{{ url_for('tag.articles_by_tag', tag=tag.tag.replace('#', '')) }}">
+                        {{ tag.tag }}
+                    </a>
+                </td>
+                <td>
+                    <form action="{{ url_for('dev.authorize_to_delete_tag', tag=tag.tag) }}">
+                        <button>&times;</button>
+                    </form>
+                </td>
+            </tbody>
+        </tr>
+        {% endfor %}
+
+    </table>
+
+
+    <!---------------------------------------------------------------------------------------------------------------------->
+
+    <hr>
+        <form method="POST">
+            <label for="backup">backup database</label>
+            <br>
+            <input type="submit" name="backup" value="backup">
+        </form>
+</div>
 
 {% endblock %}
 

@@ -4,16 +4,22 @@
 
 {% block content %}
 {% if get_user_role(current_user).can_upload %}
+<div class="container-xl">
+    <br>
     <h1>Artikel hochladen</h1>
+    <br>
     <form method="POST" enctype="multipart/form-data">
         <input type="file" name="file">
         <br>
         <button name="upload-article">upload</button>
     </form>
 
+    <br>
     <hr>
+    <br>
 
     <h1>Neue Umfrage</h1>
+    <br>
     <form method="POST">
         <div class="slider-wrapper" style="width: 75%">
             <input 
@@ -40,6 +46,7 @@
                 <option value="10" label="10">
             </datalist>
         </div>
+        <br>
         <button name="create-survey" type="submit">create Survey</button>
     </form>
 {% else %}
@@ -47,6 +54,7 @@
         Nicht-Mitglieder eingebaut wird :)
     </h2>
     <a href="/">Homepage</a>
+</div>
 
 {% endif %}
 {% endblock %}

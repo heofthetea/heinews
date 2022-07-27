@@ -4,7 +4,9 @@
 
 {% block content %}
 {% if get_user_role(current_user).can_upload %}
+    <br>
     <h1>Gib deinem Artikel Bilder</h1>
+    <br>
     <form method="POST" enctype="multipart/form-data">
         <input type="file" name="image" multiple>
         <br>
