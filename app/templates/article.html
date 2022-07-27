@@ -10,11 +10,13 @@
 {% block title %}{{ db_entry.title }}{% endblock %}
 
 {% block content%}
+<div class="container-xl">
+    <br>
     <h1 style="text-align: center">
-        <u>{{ db_entry.title }}</u>
+        {{ db_entry.title }}
     </h1>
-    {{ db_entry.primary_image }}
-    <div>
+    <br>
+    <div style="text-align: center">
         <i>Kategorie: 
             <a href="{{ url_for('articles.by_category', category=db_entry.category) }}">{{ db_entry.category }}</a>
         </i>
@@ -34,6 +36,9 @@
             {{ db_entry.validated }}
         </i>
     </div>
+    <br>
+    {{ db_entry.primary_image }}
+    
     {% if db_entry.description != none %}
         <h4>{{ db_entry.description }}</h4>
     {% endif %}
@@ -44,15 +49,15 @@
     {% endblock %}
     {% if upvoted %}
         <form action="{{ url_for('articles.remove_upvote', id=db_entry.id) }}">
-            <button id="upvoted">upvoted!</button>
+            <button class="btn btn-success">Upvoted!</button>
         </form>
     {% else%}
         <form action="{{ url_for('articles.upvote', id=db_entry.id) }}", method="POST">
-            <button>upvote</button>
+            <button class="btn btn-secondary">Upvote</button>
         </form>
     {% endif %}
 
-    upvotes: {{db_entry.upvotes}}
+    -Upvotes: <b>{{db_entry.upvotes}}</b>-
     
     {% if get_user_role(current_user).can_validate and not db_entry.validated %}
     <div>
@@ -71,4 +76,5 @@
         </form>
     </div>
     {% endif %}
+</div>
 {% endblock %}
