@@ -18,237 +18,233 @@
 </head>
 
 <body>
-
-    
-  <div>
-    {% block navbar %}
-    <!-- navbar -->
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-        <div class="container-fluid" style="margin-left: 5%; margin-right: 5%">
-            <a href="/" class="navbar-brand active">
-                <img src="/static/img/Logo.png" alt="HEINEWS" width="50" height="50" class="d-inline-block">
-            </a>
-            <!-- toggle button for mobile nav -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-nav"
-                aria-controls="main-nav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <!-- navbar links -->
-            <div class="collapse navbar-collapse" id="main-nav">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0 justify-content-start">
-                    {% block all_articles %}
-                    <li class="nav-item">
-                        <a href="{{ url_for('articles.all_articles') }}" class="nav-link">Alle Artikel</a>
-                    </li>
-                    {% endblock %}
-
-                    {% block aktuelles %}
-                    <li class="nav-item">
-                        <a href="/article/category/aktuelles" class="nav-link">Aktuelles</a>
-                    </li>
-                    {% endblock %}
-
-                    {% block wissen %}
-                    <li class="nav-item">
-                        <a href="/article/category/wissen" class="nav-link">Wissen</a>
-                    </li>
-                    {% endblock %}
-
-                    {% block schulleben %}
-                    <li class="nav-item">
-                        <a href="/article/category/schulleben" class="nav-link">Schulleben</a>
-                    </li>
-                    {% endblock %}
-
-                    {% block lifestyle %}
-                    <li class="nav-item">
-                        <a href="/article/category/lifestyle" class="nav-link">Lifestyle</a>
-                    </li>
-                    {% endblock %}
-
-                    {% block unterhaltung %}
-                    <li class="nav-item">
-                        <a href="/article/category/unterhaltung" class="nav-link">Unterhaltung</a>
-                    </li>
-                    {% endblock %}
-
-                    {% block kreatives %}
-                    <li class="nav-item">
-                        <a href="/article/category/kreatives" class="nav-link">Kreatives</a>
-                    </li>
-                    {% endblock %}
-
-                    {% block surveys %}
-                    <li class="nav-item">
-                        <a href="{{ url_for('surveys.all_surveys') }}" class="nav-link">Umfragen</a>
-                    </li>
-                    {% endblock %}
-                </ul>
-                <form class="d-flex" action="{{ url_for('views.search') }}" method="POST">
-                    
-                    <input 
-                        class="form-control me-2" 
-                        type="search" 
-                        id="search"
-                        name="search"
-                        placeholder="Search" 
-                        aria-label="Search"
-                    />
-                    <button class="btn btn-primary" type="submit" >Search</button>
-                </form>
-                <ul class="dropdown navbar-nav mw-5 mb-2 mb-lg-0">
-                    <a class="nav-item nav-link me-2" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                      <h2><i class="bi bi-person-circle"></i></h2>
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="{{ url_for('views.profile') }}">Profil</a></li>
-                        
-                        {% if not loggedin(current_user) %}
-                            <li><a class="dropdown-item" href="{{ url_for('auth.login') }}">Login</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('auth.signup') }}">Sign Up</a></li>
-                        {% endif %}
-                        {% if loggedin(current_user) %}
-                            <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Logout</a></li>
-                        {% endif %}
-                        <li><hr class="dropdown-divider"></li>
-                            
-                        {% if loggedin(current_user) %}
-                            {% if current_user.role == "developer" %}
-                                <li><a class="dropdown-item" href="{{ url_for('dev.dev_panel') }}">Dev-Panel</a></li>
-                            {% endif %}
-                            {% if get_user_role(current_user).can_validate %}
-                                <li><a class="dropdown-item" href="{{ url_for('admin.admin_index') }}">Admin-Panel</a></li>
-                            {% endif %}
-                            {% if get_user_role(current_user).can_upload %}
-                                <li><a class="dropdown-item" href="{{ url_for('admin.upload', phase='new') }}">Upload</a></li>
-                            {% endif %}
-                        {% endif %}
-                        <li><a class="dropdown-item" href="{{ url_for('tag.all_tags') }}">View All Tags</a></li>
-                    </ul>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    {% endblock %}
-
-    <!--flash messages-->
-    <!--
-    Flashed messages are used to provide feedback to the user; things like "article uploaded successfully" or "file format uploaded is not supported"
-    
-    categories: "error" -> something went wrong; "success" -> something was successful (further categories might get added in future)
-
-    -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-        {% for category, message in messages %}
-          {% if category == "error" %}
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-              {{ message }}
-              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-          {% elif category == "success" %}
-          <div class="alert alert-success alert-dismissible fade show" role="alert">
-              {{ message }}
-              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-
-          {% elif category == "info" %}
-            <div class="alert alert-info alert-dismissible fade show" role="alert">
-              {{ message }}
-              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-
-          {% elif category == "warning" %}
-            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-              {{ message }}
-              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-          {% endif %}
-        {% endfor %}
-    {% endif %}
-    {% endwith %}
-
-    {% block content%}
-    {% endblock %}
-
-    <footer class="text-center text-lg-start bg-light text-muted" style="vertical-align: bottom;">
-      <!-- Instagram + GitHub -->
-      <section class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
-        <!-- Left -->
-        <div class="me-5 d-none d-lg-block"></div>
-
-          <!-- Right -->
-        <div>
-          <a href="link-muss-hier-hin" class="me-4 text-reset text-decoration-none">
-            <i class="bi bi-instagram"></i>
+  {% block navbar %}
+  <!-- navbar -->
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+      <div class="container-fluid" style="margin-left: 5%; margin-right: 5%">
+          <a href="/" class="navbar-brand active">
+              <img src="/static/img/Logo.png" alt="HEINEWS" width="50" height="50" class="d-inline-block">
           </a>
-          <a href="https://github.com/ERROR-Emil-Not-Found/heiNEws" class="me-4 text-reset text-decoration-none">
-            <i class="bi bi-github"></i>
-          </a>
-        </div>
-      </section>
-      
-      <!-- Impressum  -->
-      <section>
-        <div class="container-fluid text-md-start mt-2" style="margin-left: 5%; margin-right: 5%">
-          <div class="row mt-3">
+          <!-- toggle button for mobile nav -->
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-nav"
+              aria-controls="main-nav" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <!-- navbar links -->
+          <div class="collapse navbar-collapse" id="main-nav">
+              <ul class="navbar-nav me-auto mb-2 mb-lg-0 justify-content-start">
+                  {% block all_articles %}
+                  <li class="nav-item">
+                      <a href="{{ url_for('articles.all_articles') }}" class="nav-link">Alle Artikel</a>
+                  </li>
+                  {% endblock %}
+
+                  {% block aktuelles %}
+                  <li class="nav-item">
+                      <a href="/article/category/aktuelles" class="nav-link">Aktuelles</a>
+                  </li>
+                  {% endblock %}
+
+                  {% block wissen %}
+                  <li class="nav-item">
+                      <a href="/article/category/wissen" class="nav-link">Wissen</a>
+                  </li>
+                  {% endblock %}
+
+                  {% block schulleben %}
+                  <li class="nav-item">
+                      <a href="/article/category/schulleben" class="nav-link">Schulleben</a>
+                  </li>
+                  {% endblock %}
+
+                  {% block lifestyle %}
+                  <li class="nav-item">
+                      <a href="/article/category/lifestyle" class="nav-link">Lifestyle</a>
+                  </li>
+                  {% endblock %}
+
+                  {% block unterhaltung %}
+                  <li class="nav-item">
+                      <a href="/article/category/unterhaltung" class="nav-link">Unterhaltung</a>
+                  </li>
+                  {% endblock %}
+
+                  {% block kreatives %}
+                  <li class="nav-item">
+                      <a href="/article/category/kreatives" class="nav-link">Kreatives</a>
+                  </li>
+                  {% endblock %}
+
+                  {% block surveys %}
+                  <li class="nav-item">
+                      <a href="{{ url_for('surveys.all_surveys') }}" class="nav-link">Umfragen</a>
+                  </li>
+                  {% endblock %}
+              </ul>
+              <form class="d-flex" action="{{ url_for('views.search') }}" method="POST">
+                  
+                  <input 
+                      class="form-control me-2" 
+                      type="search" 
+                      id="search"
+                      name="search"
+                      placeholder="Search" 
+                      aria-label="Search"
+                  />
+                  <button class="btn btn-primary" type="submit" >Search</button>
+              </form>
+              <ul class="dropdown navbar-nav mw-5 mb-2 mb-lg-0">
+                  <a class="nav-item nav-link me-2" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <h2><i class="bi bi-person-circle"></i></h2>
+                  </a>
+                  <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                      <li><a class="dropdown-item" href="{{ url_for('views.profile') }}">Profil</a></li>
+                      
+                      {% if not loggedin(current_user) %}
+                          <li><a class="dropdown-item" href="{{ url_for('auth.login') }}">Login</a></li>
+                          <li><a class="dropdown-item" href="{{ url_for('auth.signup') }}">Sign Up</a></li>
+                      {% endif %}
+                      {% if loggedin(current_user) %}
+                          <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Logout</a></li>
+                      {% endif %}
+                      <li><hr class="dropdown-divider"></li>
+                          
+                      {% if loggedin(current_user) %}
+                          {% if current_user.role == "developer" %}
+                              <li><a class="dropdown-item" href="{{ url_for('dev.dev_panel') }}">Dev-Panel</a></li>
+                          {% endif %}
+                          {% if get_user_role(current_user).can_validate %}
+                              <li><a class="dropdown-item" href="{{ url_for('admin.admin_index') }}">Admin-Panel</a></li>
+                          {% endif %}
+                          {% if get_user_role(current_user).can_upload %}
+                              <li><a class="dropdown-item" href="{{ url_for('admin.upload', phase='new') }}">Upload</a></li>
+                          {% endif %}
+                      {% endif %}
+                      <li><a class="dropdown-item" href="{{ url_for('tag.all_tags') }}">View All Tags</a></li>
+                  </ul>
+              </ul>
+          </div>
+      </div>
+  </nav>
+
+  {% endblock %}
+
+  <!--flash messages-->
+  <!--
+  Flashed messages are used to provide feedback to the user; things like "article uploaded successfully" or "file format uploaded is not supported"
+  
+  categories: "error" -> something went wrong; "success" -> something was successful (further categories might get added in future)
+
+  -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+      {% for category, message in messages %}
+        {% if category == "error" %}
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% elif category == "success" %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+
+        {% elif category == "info" %}
+          <div class="alert alert-info alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+
+        {% elif category == "warning" %}
+          <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endif %}
+      {% endfor %}
+  {% endif %}
+  {% endwith %}
+
+  {% block content%}
+  {% endblock %}
+
+  <footer class="text-center text-lg-start bg-light text-muted">
+    <!-- Instagram + GitHub -->
+    <section class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
+      <!-- Left -->
+      <div class="me-5 d-none d-lg-block"></div>
+
+        <!-- Right -->
+      <div>
+        <a href="link-muss-hier-hin" class="me-4 text-reset text-decoration-none">
+          <i class="bi bi-instagram"></i>
+        </a>
+        <a href="https://github.com/ERROR-Emil-Not-Found/heiNEws" class="me-4 text-reset text-decoration-none">
+          <i class="bi bi-github"></i>
+        </a>
+      </div>
+    </section>
     
-            <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
-              <h6 class="text-uppercase fw-bold mb-4">
-                <i class="bi bi-newspaper me-1"></i>heiNEws
-              </h6>
-              <p>
-                Diese Website wurde von zwei Schülern des Informatik-LKs des HHG Ostfildern gebaut.
-                <a href="http://teamnamenotfound.great-site.net" class="text-muted">Hier</a> finden Sie weitere Informationen zum Leistungskurs Informatik.
-              </p>
-            </div>
-      
-            <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
-              <!-- Links -->
-              <h6 class="text-uppercase fw-bold mb-4">
-                Links
-              </h6>
-              <p>
-                <a href="imprint.html" class="text-reset btn-link disabled">Impressum</a>
-              </p>
-              <p>
-                <a href="contact.html" class="text-reset btn-link disabled">Kontakt</a>
-              </p>
-            </div>
-      
-            <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
-              <!-- Externe Links -->
-              <h6 class="text-uppercase fw-bold mb-4">
-                Externe Links
-              </h6>
-              <p>
-                <a href="https://hhg-ostfildern.de" class="text-reset">HHG Ostfildern</a>
-              </p>
-            </div>
+    <!-- Impressum  -->
+    <section>
+      <div class="container text-md-start mt-2">
+        <div class="row mt-3">
+  
+          <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
+            <h6 class="text-uppercase fw-bold mb-4">
+              <i class="bi bi-newspaper me-1"></i>heiNEws
+            </h6>
+            <p>
+              Diese Website wurde von zwei Schülern des Informatik-LKs des HHG Ostfildern gebaut.
+              <a href="http://teamnamenotfound.great-site.net" class="text-muted">Hier</a> finden Sie weitere Informationen zum Leistungskurs Informatik.
+            </p>
+          </div>
     
-            <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
-              <!-- Kontakt -->
-              <h6 class="text-uppercase fw-bold mb-4">
-                Kontakt
-              </h6>
-              <p><i class="bi bi-person-fill me-3"></i>Frau Natalie Bachayan</p>
-              <p><i class="bi bi-house-fill me-3"></i>Heinrich-Heine-Gymnasium<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In den Anlagen 11<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;73760 Ostfildern</p>
-              <p><i class="bi bi-envelope-fill me-3"></i>zeitung@hhg-ostfildern.de</p>
-              <p><i class="bi bi-telephone-fill me-3"></i>0711 220707-0</p>
-            </div>
+          <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
+            <!-- Links -->
+            <h6 class="text-uppercase fw-bold mb-4">
+              Links
+            </h6>
+            <p>
+              <a href="imprint.html" class="text-reset btn-link disabled">Impressum</a>
+            </p>
+            <p>
+              <a href="contact.html" class="text-reset btn-link disabled">Kontakt</a>
+            </p>
+          </div>
+    
+          <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+            <!-- Externe Links -->
+            <h6 class="text-uppercase fw-bold mb-4">
+              Externe Links
+            </h6>
+            <p>
+              <a href="https://hhg-ostfildern.de" class="text-reset">HHG Ostfildern</a>
+            </p>
+          </div>
+  
+          <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+            <!-- Kontakt -->
+            <h6 class="text-uppercase fw-bold mb-4">
+              Kontakt
+            </h6>
+            <p><i class="bi bi-person-fill me-3"></i>Frau Natalie Bachayan</p>
+            <p><i class="bi bi-house-fill me-3"></i>Heinrich-Heine-Gymnasium<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In den Anlagen 11<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;73760 Ostfildern</p>
+            <p><i class="bi bi-envelope-fill me-3"></i>zeitung@hhg-ostfildern.de</p>
+            <p><i class="bi bi-telephone-fill me-3"></i>0711 220707-0</p>
           </div>
         </div>
-      </section>
-      
-      <!-- Copyright -->
-      <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
-        © 2022 heiNEws
       </div>
-  
-    </footer>
-  </div>
+    </section>
+    
+    <!-- Copyright -->
+    <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
+      © 2022 heiNEws
+    </div>
+
+  </footer>
   <script src="/static/css/bootstrap/js/bootstrap.bundle.min.js">
   </script>
 </body>
