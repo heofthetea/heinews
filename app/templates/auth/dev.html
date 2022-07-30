@@ -65,14 +65,14 @@ DEV Panel in Dark-Mode? class="table table-dark"
                         Email
                         <input type="email" name="email" id="email" class="form-control" placeholder="search">
                     </th>
+                    <th scope="col" class="col-2" style="vertical-align: top">Email verified</th>
                     <th scope="col" class="col-2" style="vertical-align: top">Role</th>
-                    <th scope="col" class="col-1" style="vertical-align: top">Email verified</th>
                     <th scope="col" style="text-align: right; vertical-align: top;">yeet</th>
                     <!--rendering the actual submit button first makes pressing enter execute with corresponding filtering-->
                     <!-- -> resetting form only when the button actually is pressed-->
                     <button type="submit" style="display: none;"></button>
                     {% if users_filtered %}
-                        <input type="submit" name="reset_user" value="Reset Filters">
+                        <input class="btn btn-secondary" type="submit" name="reset_user" value="Reset Filters">
                     {% endif %}
                 </form>
             </thead>
@@ -83,6 +83,7 @@ DEV Panel in Dark-Mode? class="table table-dark"
                 <td>{{ user.id }}</td>
                 <td>{{ user.name }}</td>
                 <td>{{ user.email }}</td>
+                <td>{{ user.email_confirmed }}</td>
                 <td>
                     <form action="{{ url_for('dev.authorize_to_change_role', user=user.id) }}" method="POST">
                         <select name="role" id="role" onchange="this.form.submit()">
@@ -100,7 +101,6 @@ DEV Panel in Dark-Mode? class="table table-dark"
                         </select>
                     </form>
                 </td>
-                <td>{{ user.email_confirmed }}</td>
                 <td style="text-align: right">
                     <form action="{{ url_for('dev.authorize_to_delete_user', id=user.id) }}">
                         <button class="btn btn-danger">&times;</button>

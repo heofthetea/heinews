@@ -20,7 +20,7 @@
 <body>
 
     
-
+  <div>
     {% block navbar %}
     <!-- navbar -->
     <nav class="navbar navbar-expand-md navbar-dark bg-dark">
@@ -173,87 +173,85 @@
     {% block content%}
     {% endblock %}
 
-    <footer class="text-center text-lg-start bg-light text-muted">
-        <section
-          class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom"
-        >
-          <!-- Left -->
-          <div class="me-5 d-none d-lg-block">
-          </div>
-    
-          <!-- Right -->
-          <div>
-            <a href="link-muss-hier-hin" class="me-4 text-reset text-decoration-none">
-              <i class="bi bi-instagram"></i>
-            </a>
-            <a href="https://github.com/ERROR-Emil-Not-Found/heiNEws" class="me-4 text-reset text-decoration-none">
-              <i class="bi bi-github"></i>
-            </a>
-          </div>
-        </section>
-      
-        <!-- Links  -->
-        <section>
-          <div class="container text-center text-md-start mt-2">
-            <div class="row mt-3">
-    
-              <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
-                <h6 class="text-uppercase fw-bold mb-4">
-                  <i class="bi bi-newspaper me-1"></i>heiNEws
-                </h6>
-                <p>
-                    Diese Website wurde von zwei Schülern des Informatik-LKs des HHG Ostfildern gebaut.
-                    <a href="http://teamnamenotfound.great-site.net" class="text-muted">Hier</a> finden Sie weitere Informationen zum Leistungskurs Informatik.
-                </p>
-              </div>
-      
-              <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
-                <!-- Links -->
-                <h6 class="text-uppercase fw-bold mb-4">
-                  Links
-                </h6>
-                <p>
-                  <a href="imprint.html" class="text-reset btn-link disabled">Impressum</a>
-                </p>
-                <p>
-                  <a href="contact.html" class="text-reset btn-link disabled">Kontakt</a>
-                </p>
-              </div>
-      
-              <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
-                <!-- Links -->
-                <h6 class="text-uppercase fw-bold mb-4">
-                  Externe Links
-                </h6>
-                <p>
-                  <a href="https://hhg-ostfildern.de" class="text-reset">HHG Ostfildern</a>
-                </p>
-              </div>
-    
-              <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
-                <!-- Links -->
-                <h6 class="text-uppercase fw-bold mb-4">
-                  Kontakt
-                </h6>
-                <p><i class="bi bi-person-fill me-3"></i>Frau Natalie Bachayan</p>
-                <p><i class="bi bi-house-fill me-3"></i>Heinrich-Heine-Gymnasium<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In den Anlagen 11<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;73760 Ostfildern</p>
-                <p><i class="bi bi-envelope-fill me-3"></i>zeitung@hhg-ostfildern.de</p>
-                <p><i class="bi bi-telephone-fill me-3"></i>0711 220707-0</p>
-              </div>
-            </div>
-          </div>
-        </section>
-      
-            <!-- Copyright -->
-            <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
-            © 2022 heiNEws
-            </div>
-        </footer>
+    <footer class="text-center text-lg-start bg-light text-muted" style="vertical-align: bottom;">
+      <!-- Instagram + GitHub -->
+      <section class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
+        <!-- Left -->
+        <div class="me-5 d-none d-lg-block"></div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-        crossorigin="anonymous">
-    </script>
+          <!-- Right -->
+        <div>
+          <a href="link-muss-hier-hin" class="me-4 text-reset text-decoration-none">
+            <i class="bi bi-instagram"></i>
+          </a>
+          <a href="https://github.com/ERROR-Emil-Not-Found/heiNEws" class="me-4 text-reset text-decoration-none">
+            <i class="bi bi-github"></i>
+          </a>
+        </div>
+      </section>
+      
+      <!-- Impressum  -->
+      <section>
+        <div class="container-fluid text-md-start mt-2" style="margin-left: 5%; margin-right: 5%">
+          <div class="row mt-3">
+    
+            <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
+              <h6 class="text-uppercase fw-bold mb-4">
+                <i class="bi bi-newspaper me-1"></i>heiNEws
+              </h6>
+              <p>
+                Diese Website wurde von zwei Schülern des Informatik-LKs des HHG Ostfildern gebaut.
+                <a href="http://teamnamenotfound.great-site.net" class="text-muted">Hier</a> finden Sie weitere Informationen zum Leistungskurs Informatik.
+              </p>
+            </div>
+      
+            <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
+              <!-- Links -->
+              <h6 class="text-uppercase fw-bold mb-4">
+                Links
+              </h6>
+              <p>
+                <a href="imprint.html" class="text-reset btn-link disabled">Impressum</a>
+              </p>
+              <p>
+                <a href="contact.html" class="text-reset btn-link disabled">Kontakt</a>
+              </p>
+            </div>
+      
+            <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+              <!-- Externe Links -->
+              <h6 class="text-uppercase fw-bold mb-4">
+                Externe Links
+              </h6>
+              <p>
+                <a href="https://hhg-ostfildern.de" class="text-reset">HHG Ostfildern</a>
+              </p>
+            </div>
+    
+            <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+              <!-- Kontakt -->
+              <h6 class="text-uppercase fw-bold mb-4">
+                Kontakt
+              </h6>
+              <p><i class="bi bi-person-fill me-3"></i>Frau Natalie Bachayan</p>
+              <p><i class="bi bi-house-fill me-3"></i>Heinrich-Heine-Gymnasium<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In den Anlagen 11<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;73760 Ostfildern</p>
+              <p><i class="bi bi-envelope-fill me-3"></i>zeitung@hhg-ostfildern.de</p>
+              <p><i class="bi bi-telephone-fill me-3"></i>0711 220707-0</p>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <!-- Copyright -->
+      <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
+        © 2022 heiNEws
+      </div>
+  
+    </footer>
+  
+  </div>
+
+
 </body>
 
 </html>
