@@ -87,13 +87,18 @@ def check_password():
         {% block navbar %}{% endblock %}
 
         {% block content %}
-        <h1>please verify it's you</h1>
-        <form method="POST">
-            <input type="password" name="password" class="form-control" id="password" placeholder="enter password">
-            <button type="submit">Submit</button>
-        </form>
-        <a href='/dev'>back</a>
-        {% endblock %}
+        <div class="container-xl">
+            <br>
+            <h1>please verify it's you</h1>
+            <br>
+            <form method="POST">
+                <input type="password" name="password" class="form-control" id="password" placeholder="enter password">
+                <br>
+                <button class="btn btn-primary" type="submit">Submit</button>
+            </form>
+            <b><a href='/dev' style="text-decoration: none">back</a></b>
+            {% endblock %}
+        </div>
         """
     )
 
