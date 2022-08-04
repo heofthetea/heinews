@@ -21,7 +21,7 @@
   {% block navbar %}
   <!-- navbar -->
   <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-      <div class="container-fluid" style="margin-left: 5%; margin-right: 5%">
+      <div class="container-fluid">
           <a href="/" class="navbar-brand active">
               <img src="/static/img/Logo.png" alt="HEINEWS" width="50" height="50" class="d-inline-block">
           </a>
@@ -94,36 +94,35 @@
                   />
                   <button class="btn btn-primary" type="submit" >Search</button>
               </form>
-              <ul class="dropdown navbar-nav mw-5 mb-2 mb-lg-0">
+              <div class="dropdown navbar-nav mw-5 mb-2 mb-lg-0">
                   <a class="nav-item nav-link me-2" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <h2><i class="bi bi-person-circle"></i></h2>
                   </a>
-                  <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                      <li><a class="dropdown-item" href="{{ url_for('views.profile') }}">Profil</a></li>
+                      <a class="dropdown-item " href="{{ url_for('views.profile') }}">Profil</a>
                       
                       {% if not loggedin(current_user) %}
-                          <li><a class="dropdown-item" href="{{ url_for('auth.login') }}">Login</a></li>
-                          <li><a class="dropdown-item" href="{{ url_for('auth.signup') }}">Sign Up</a></li>
+                          <a class="dropdown-item" href="{{ url_for('auth.login') }}">Login</a>
+                          <a class="dropdown-item" href="{{ url_for('auth.signup') }}">Sign Up</a>
                       {% endif %}
                       {% if loggedin(current_user) %}
-                          <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Logout</a></li>
+                          <a class="dropdown-item" href="{{ url_for('auth.logout') }}">Logout</a>
                       {% endif %}
-                      <li><hr class="dropdown-divider"></li>
+                      <hr class="dropdown-divider">
                           
                       {% if loggedin(current_user) %}
                           {% if current_user.role == "developer" %}
-                              <li><a class="dropdown-item" href="{{ url_for('dev.dev_panel') }}">Dev-Panel</a></li>
+                              <a class="dropdown-item" href="{{ url_for('dev.dev_panel') }}">Dev-Panel</a>
                           {% endif %}
                           {% if get_user_role(current_user).can_validate %}
-                              <li><a class="dropdown-item" href="{{ url_for('admin.admin_index') }}">Admin-Panel</a></li>
+                              <a class="dropdown-item" href="{{ url_for('admin.admin_index') }}">Admin-Panel</a>
                           {% endif %}
                           {% if get_user_role(current_user).can_upload %}
-                              <li><a class="dropdown-item" href="{{ url_for('admin.upload', phase='new') }}">Upload</a></li>
+                              <a class="dropdown-item" href="{{ url_for('admin.upload', phase='new') }}">Upload</a>
                           {% endif %}
                       {% endif %}
-                      <li><a class="dropdown-item" href="{{ url_for('tag.all_tags') }}">View All Tags</a></li>
-                  </ul>
-              </ul>
+                      <a class="dropdown-item" href="{{ url_for('tag.all_tags') }}">View All Tags</a>
+                  </div>
+                </div>
           </div>
       </div>
   </nav>
