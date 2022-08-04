@@ -2,8 +2,12 @@
 
 {% block title %}Alle Artikel{% endblock %}
 
-{% block all_articles %}
+{% block alle_artikel %}
     <li class="nav-item">
         <a href="{{ url_for('articles.all_articles') }}" class="nav-link active">Alle Artikel</a>
     </li>
+{% endblock %}
+
+{% block alle_artikel_mobile %}
+    <li><a href="{{ url_for('articles.all_articles') }}" class="dropdown-item fw-bold">Alle Artikel</a></li>
 {% endblock %}

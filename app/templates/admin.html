@@ -8,3 +8,7 @@
         </a>
     {% endfor %}
 {% endblock %}
+
+{% block admin_panel %}
+    <li><a class="dropdown-item fw-bold" href="{{ url_for('admin.admin_index') }}">Admin-Panel</a></li>
+{% endblock %}

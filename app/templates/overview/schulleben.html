@@ -7,3 +7,7 @@
         <a href="{{ url_for('articles.by_category', category='Schulleben') }}" class="nav-link active">Schulleben</a>
     </li>
 {% endblock %}
+
+{% block schulleben_mobile %}
+    <li><a href="/article/category/schulleben" class="dropdown-item fw-bold">Schulleben</a></li>
+{% endblock %}

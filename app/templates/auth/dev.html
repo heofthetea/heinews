@@ -236,3 +236,7 @@ DEV Panel in Dark-Mode? class="table table-dark"
 
 {% endblock %}
 
+{% block dev_panel %}
+    <li><a class="dropdown-item fw-bold" href="{{ url_for('dev.dev_panel') }}">Dev-Panel</a></li>
+{% endblock %}
+

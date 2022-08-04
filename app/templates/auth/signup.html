@@ -36,3 +36,7 @@
     </div>
 </form>
 {% endblock %}
+
+{% block sign_up %}
+    <li><a class="dropdown-item fw-bold" href="{{ url_for('auth.signup') }}">Sign Up</a></li>
+{% endblock %}

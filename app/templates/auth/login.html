@@ -24,3 +24,7 @@
     </div>
 </form>
 {% endblock %}
+
+{% block login %}
+  <li><a class="dropdown-item fw-bold" href="{{ url_for('auth.login') }}">Login</a></li>
+{% endblock %}

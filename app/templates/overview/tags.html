@@ -12,3 +12,7 @@
         {% endif %}
     {% endfor %}
 {% endblock %}
+
+{% block tags %}
+    <li><a class="dropdown-item fw-bold" href="{{ url_for('tag.all_tags') }}">View All Tags</a></li>
+{% endblock %}

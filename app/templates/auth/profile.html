@@ -96,5 +96,9 @@
             </td>
         </tr>
     </table>
-    {% endblock %}
 </div>
+{% endblock %}
+
+{% block profil %}
+    <li><a class="dropdown-item fw-bold" href="{{ url_for('views.profile') }}">Profil</a></li>
+{% endblock %}
