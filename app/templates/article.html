@@ -16,33 +16,41 @@
         {{ db_entry.title }}
     </h1>
     <br>
-    <div style="text-align: center">
-        <i>Kategorie: 
-            <a href="{{ url_for('articles.by_category', category=db_entry.category) }}">{{ db_entry.category }}</a>
-        </i>
-        <!--
-            That date_created query might be a little confusing, so to divide it up here:
-            1. db_entry.date_created.date() gets ONLY the date of when the article was created
-            2. strftime("%d.%m.%Y") formats it from yyyy-mm-dd to dd-mm-yyyy
-        -->
-        <i style="margin-left: 50px">Hochgeladen am {{ db_entry.date_created.date().strftime("%d.%m.%Y") }} von {{ created_by }}</i>
-        <i style="margin-left: 50px">tags: 
-            {% for tag in tags %}
-                <a href="{{ url_for('tag.articles_by_tag', tag=tag.tag.replace('#', '')) }}">{{ tag.tag }}</a>
-            {% endfor %}
-        </i>
-        <!--TODO: remove once tested-->
-        <i style="margin-left: 50px">validated:
-            {{ db_entry.validated }}
-        </i>
-    </div>
+    <table class="table">
+        <tr>
+            <td>
+                <i>Kategorie: 
+                    <a style="text-decoration: none" href="{{ url_for('articles.by_category', category=db_entry.category) }}"><b>{{ db_entry.category }}</b></a>
+                </i>
+            </td>
+            <!--
+                That date_created query might be a little confusing, so to divide it up here:
+                1. db_entry.date_created.date() gets ONLY the date of when the article was created
+                2. strftime("%d.%m.%Y") formats it from yyyy-mm-dd to dd-mm-yyyy
+            -->
+            <td>
+                <i style="margin-left: 50px">Hochgeladen am {{ db_entry.date_created.date().strftime("%d.%m.%Y") }} von {{ created_by }}</i>
+            </td>
+            <td>
+                <i style="margin-left: 50px">tags: 
+                    {% for tag in tags %}
+                        <a style="text-decoration: none;" href="{{ url_for('tag.articles_by_tag', tag=tag.tag.replace('#', '')) }}"><b>{{ tag.tag }}</b></a>
+                    {% endfor %}
+                </i>
+            </td>
+            <td>
+                <!--TODO: remove once tested-->
+                <i style="margin-left: 50px">validated:
+                    {{ db_entry.validated }}
+                </i>
+            </td>
+        </tr>
+    </table>
     <br>
-    {{ db_entry.primary_image }}
     
     {% if db_entry.description != none %}
         <h4>{{ db_entry.description }}</h4>
     {% endif %}
-
 
     {% block article %}
     <!-- override this with child file -->
@@ -60,18 +68,20 @@
     -Upvotes: <b>{{db_entry.upvotes}}</b>-
     
     {% if get_user_role(current_user).can_validate and not db_entry.validated %}
+    <br>
+    <br>
     <div>
         <form action="{{ url_for('articles.feedback', id=db_entry.id) }}">
             <div class="form-group">
                 <label for="cancel"></label>
-                    <button style="background-color: #f00; float: left; margin-left: 50px;">Give Feedback</button>
+                    <button style="background-color: #f00; float: left;">Give Feedback</button>
             </div>
         </form>
             
         <form action="{{ url_for('articles.approve', id=db_entry.id) }}">
             <div class="form-group">
                 <label for="approve"></label>
-                <button style="background-color: #0f0; float: right; margin-right: 50px;">Approve</button>
+                <button style="background-color: #0f0; float: right;">Approve</button>
             </div>
         </form>
     </div>
