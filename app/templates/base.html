@@ -19,107 +19,110 @@
 
 <body>
   {% block navbar %}
-  <!-- desktop navbar -->
-  <nav class="navbar navbar-expand-md navbar-dark bg-dark d-none d-lg-block">
+    <!-- desktop navbar -->
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark d-none d-lg-block">
       <div class="container-fluid">
-          <a href="/" class="navbar-brand active">
-              <img src="/static/img/Logo.png" alt="HEINEWS" width="50" height="50" class="d-inline-block">
-          </a>
+        <a href="/" class="navbar-brand">
+          <img src="/static/img/Logo.png" alt="HEINEWS" width="50" height="50" class="d-inline-block">
+        </a>
 
-          <!-- navbar links -->
-          <div class="collapse navbar-collapse" id="main-nav">
-              <ul class="navbar-nav me-auto mb-2 mb-lg-0 justify-content-start">
-                  {% block alle_artikel %}
-                  <li class="nav-item">
-                      <a href="{{ url_for('articles.all_articles') }}" class="nav-link">Alle Artikel</a>
-                  </li>
-                  {% endblock %}
+        <!-- navbar links -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            {% block alle_artikel %}
+              <li class="nav-item">
+                <a href="{{ url_for('articles.all_articles') }}" class="nav-link">Alle Artikel</a>
+              </li>
+            {% endblock %}
 
-                  {% block aktuelles %}
-                  <li class="nav-item">
-                      <a href="/article/category/aktuelles" class="nav-link">Aktuelles</a>
-                  </li>
-                  {% endblock %}
+            {% block aktuelles %}
+              <li class="nav-item">
+                <a href="/article/category/aktuelles" class="nav-link">Aktuelles</a>
+              </li>
+            {% endblock %}
 
-                  {% block wissen %}
-                  <li class="nav-item">
-                      <a href="/article/category/wissen" class="nav-link">Wissen</a>
-                  </li>
-                  {% endblock %}
+            {% block wissen %}
+              <li class="nav-item">
+                <a href="/article/category/wissen" class="nav-link">Wissen</a>
+              </li>
+            {% endblock %}
 
-                  {% block schulleben %}
-                  <li class="nav-item">
-                      <a href="/article/category/schulleben" class="nav-link">Schulleben</a>
-                  </li>
-                  {% endblock %}
+            {% block schulleben %}
+              <li class="nav-item">
+                <a href="/article/category/schulleben" class="nav-link">Schulleben</a>
+              </li>
+            {% endblock %}
 
-                  {% block lifestyle %}
-                  <li class="nav-item">
-                      <a href="/article/category/lifestyle" class="nav-link">Lifestyle</a>
-                  </li>
-                  {% endblock %}
+            {% block lifestyle %}
+              <li class="nav-item">
+                <a href="/article/category/lifestyle" class="nav-link">Lifestyle</a>
+              </li>
+            {% endblock %}
 
-                  {% block unterhaltung %}
-                  <li class="nav-item">
-                      <a href="/article/category/unterhaltung" class="nav-link">Unterhaltung</a>
-                  </li>
-                  {% endblock %}
+            {% block unterhaltung %}
+              <li class="nav-item">
+                <a href="/article/category/unterhaltung" class="nav-link">Unterhaltung</a>
+              </li>
+            {% endblock %}
 
-                  {% block kreatives %}
-                  <li class="nav-item">
-                      <a href="/article/category/kreatives" class="nav-link">Kreatives</a>
-                  </li>
-                  {% endblock %}
+            {% block kreatives %}
+              <li class="nav-item">
+                <a href="/article/category/kreatives" class="nav-link">Kreatives</a>
+              </li>
+            {% endblock %}
 
-                  {% block umfragen %}
-                  <li class="nav-item">
-                      <a href="{{ url_for('surveys.all_surveys') }}" class="nav-link">Umfragen</a>
-                  </li>
-                  {% endblock %}
+            {% block umfragen %}
+              <li class="nav-item">
+                <a href="{{ url_for('surveys.all_surveys') }}" class="nav-link">Umfragen</a>
+              </li>
+            {% endblock %}
+          </ul>
+
+          <form class="d-flex nav-item me-2" action="{{ url_for('views.search') }}" method="POST">
+            <input 
+              class="form-control me-2" 
+              type="search" 
+              id="search"
+              name="search"
+              placeholder="Suchbegriff" 
+              aria-label="Search"
+            />
+            <button class="btn btn-primary" type="submit" >Suchen</button>
+          </form>
+          	
+          <ul class="navbar-nav mw-5 mt-1 mb-2 mb-lg-0">
+            <li class="navbar-item dropdown">
+              <a class="nav-link me-2" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" data-toggle="dropdown">
+                <h2><i class="bi bi-person-circle"></i></h2>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                <li><a class="dropdown-item " href="{{ url_for('views.profile') }}">Profil</a></li>
+                {% if not loggedin(current_user) %}
+                  <li><a class="dropdown-item" href="{{ url_for('auth.login') }}">Login</a></li>
+                  <li><a class="dropdown-item" href="{{ url_for('auth.signup') }}">Sign Up</a></li>
+                {% endif %}
+                {% if loggedin(current_user) %}
+                  <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Logout</a></li>
+                {% endif %}
+
+                <hr class="dropdown-divider">
+                
+                {% if loggedin(current_user) %}
+                  {% if current_user.role == "developer" %}
+                    <li><a class="dropdown-item" href="{{ url_for('dev.dev_panel') }}">Dev-Panel</a></li>
+                  {% endif %}
+                  {% if get_user_role(current_user).can_validate %}
+                    <li><a class="dropdown-item" href="{{ url_for('admin.admin_index') }}">Admin-Panel</a></li>
+                  {% endif %}
+                  {% if get_user_role(current_user).can_upload %}
+                    <li><a class="dropdown-item" href="{{ url_for('admin.upload', phase='new') }}">Upload</a></li>
+                  {% endif %}
+                {% endif %}
+                <li><a class="dropdown-item" href="{{ url_for('tag.all_tags') }}">View All Tags</a></li>
               </ul>
-              <form class="d-flex" action="{{ url_for('views.search') }}" method="POST">
-                  
-                  <input 
-                      class="form-control me-2" 
-                      type="search" 
-                      id="search"
-                      name="search"
-                      placeholder="Suchbegriff" 
-                      aria-label="Search"
-                  />
-                  <button class="btn btn-primary" type="submit" >Suchen</button>
-              </form>
-              <div class="dropdown navbar-nav mw-5 mb-2 mb-lg-0">
-                  <a class="nav-item nav-link me-2" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <h2><i class="bi bi-person-circle"></i></h2>
-                  </a>
-                  <div class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-                      <a class="dropdown-item " href="{{ url_for('views.profile') }}">Profil</a>
-                      
-                      {% if not loggedin(current_user) %}
-                          <a class="dropdown-item" href="{{ url_for('auth.login') }}">Login</a>
-                          <a class="dropdown-item" href="{{ url_for('auth.signup') }}">Sign Up</a>
-                      {% endif %}
-                      {% if loggedin(current_user) %}
-                          <a class="dropdown-item" href="{{ url_for('auth.logout') }}">Logout</a>
-                      {% endif %}
-                      <hr class="dropdown-divider">
-                          
-                      {% if loggedin(current_user) %}
-                          {% if current_user.role == "developer" %}
-                              <a class="dropdown-item" href="{{ url_for('dev.dev_panel') }}">Dev-Panel</a>
-                          {% endif %}
-                          {% if get_user_role(current_user).can_validate %}
-                              <a class="dropdown-item" href="{{ url_for('admin.admin_index') }}">Admin-Panel</a>
-                          {% endif %}
-                          {% if get_user_role(current_user).can_upload %}
-                              <a class="dropdown-item" href="{{ url_for('admin.upload', phase='new') }}">Upload</a>
-                          {% endif %}
-                      {% endif %}
-                      <a class="dropdown-item" href="{{ url_for('tag.all_tags') }}">View All Tags</a>
-                  </div>
-                </div>
-          </div>
+            </li>
+          </ul>
+        </div>
       </div>
   </nav>
 
