@@ -260,7 +260,8 @@ def create_survey():
 #TODO add option for authors to send announcements over dashboard and mail
 
 #--------------------------------------------------------------------------------------------------------------------------------------------
+
 # I have no idea what this does but it's copied straight from flask documentation and works
-def allowed_file(filename, ext_dict: dict=ALLOWED_EXTENSIONS):
+def allowed_file(filename, ext_dict: dict=ALLOWED_EXTENSIONS) -> bool:
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ext_dict
 
