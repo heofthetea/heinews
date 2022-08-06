@@ -23,7 +23,7 @@ DEV Panel in Dark-Mode? class="table table-dark"
 {% block title %}Developer Panel{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
+<div style="margin-left: 5%; margin-right:5%">
     <br>
     <h1>DEV-Panel</h1>
     <br>
@@ -53,21 +53,21 @@ DEV Panel in Dark-Mode? class="table table-dark"
         <tr>
             <thead>
                 <form method="POST">
-                    <th scope="col">
+                    <th scope="col" class="col-1">
                         ID
                         <input type="text" name="id" id="id" class="form-control" placeholder="search">
                     </th>
-                    <th scope="col">
+                    <th scope="col" class="col-3">
                         Name
                         <input type="text" name="name" id="name" class="form-control" placeholder="search">
                     </th>
-                    <th scope="col">
+                    <th scope="col" class="col-3">
                         Email
                         <input type="email" name="email" id="email" class="form-control" placeholder="search">
                     </th>
-                    <th scope="col">Role</th>
-                    <th scope="col">Email verified</th>
-                    <th scope="col">yeet</th>
+                    <th scope="col" class="col-2" style="vertical-align: top">Role</th>
+                    <th scope="col" class="col-1" style="vertical-align: top">Email verified</th>
+                    <th scope="col" style="text-align: right; vertical-align: top;">yeet</th>
                     <!--rendering the actual submit button first makes pressing enter execute with corresponding filtering-->
                     <!-- -> resetting form only when the button actually is pressed-->
                     <button type="submit" style="display: none;"></button>
@@ -101,9 +101,9 @@ DEV Panel in Dark-Mode? class="table table-dark"
                     </form>
                 </td>
                 <td>{{ user.email_confirmed }}</td>
-                <td>
+                <td style="text-align: right">
                     <form action="{{ url_for('dev.authorize_to_delete_user', id=user.id) }}">
-                        <button>&times;</button>
+                        <button class="btn btn-danger">&times;</button>
                     </form>
                 </td>
             </tbody>
@@ -120,13 +120,13 @@ DEV Panel in Dark-Mode? class="table table-dark"
     <table class="table">
         <tr>
             <thead>
-                <th scope="col">ID</th>
-                <th scope="col">Title</th>
-                <th scope="col">author email</th>
-                <th scope="col">validated</th>
-                <th scope="col">date created</th>
-                <th scope="col">upvotes</th>
-                <th scope="col">yeet</th>
+                <th scope="col" class="col-1">ID</th>
+                <th scope="col" class="col-3">Title</th>
+                <th scope="col" class="col-3">author email</th>
+                <th scope="col" class="col-1">validated</th>
+                <th scope="col" class="col-1">date created</th>
+                <th scope="col" class="col-1">upvotes</th>
+                <th scope="col" style="text-align: right">yeet</th>
             <thead>
         </tr>
         {% for article in articles %}
@@ -144,9 +144,9 @@ DEV Panel in Dark-Mode? class="table table-dark"
                 <td>{{ article.validated }}</td>
                 <td>{{ article.date_created.date().strftime("%d.%m.%Y") }}</td>
                 <td>{{ article.upvotes }}</td>
-                <td>
+                <td style="text-align: right">
                     <form action="{{ url_for('dev.authorize_to_delete_article', id=article.id) }}">
-                        <button>&times;</button>
+                        <button class="btn btn-danger">&times;</button>
                     </form>
                 </td>
             </tbody>
@@ -163,11 +163,11 @@ DEV Panel in Dark-Mode? class="table table-dark"
     <table class="table">
         <tr>
             <thead>
-                <th scope="col">ID</th>
-                <th scope="col">Title</th>
+                <th scope="col" class="col-1">ID</th>
+                <th scope="col" class="col-7">Title</th>
+                <th scope="col" class="col-1">date created</th>
                 <th scope="col">total votes</th>
-                <th scope="col">date created</th>
-                <th scope="col">yeet</th>
+                <th scope="col" style="text-align: right">yeet</th>
             </thead>
         </tr>
         {% for survey in surveys %}
@@ -179,11 +179,11 @@ DEV Panel in Dark-Mode? class="table table-dark"
                         {{ survey.title }}
                     </a>
                 </td>
-                <td>{{ survey.total_votes() }}</td>
                 <td>figure this out you lazy prick</td>
-                <td>
+                <td>{{ survey.total_votes() }}</td>
+                <td style="text-align: right">
                     <form action="{{ url_for('dev.authorize_to_delete_survey', id=survey.id) }}">
-                        <button>&times;</button>
+                        <button class="btn btn-danger">&times;</button>
                     </form>
                 </td>
             </tbody>
@@ -201,7 +201,7 @@ DEV Panel in Dark-Mode? class="table table-dark"
         <tr>
             <thead>
                 <th scope="col">tag</th>
-                <th scope="col">yeet</th>
+                <th scope="col" style="text-align: right">yeet</th>
             </thead>
         </tr>
         {% for tag in tags %}
@@ -212,9 +212,9 @@ DEV Panel in Dark-Mode? class="table table-dark"
                         {{ tag.tag }}
                     </a>
                 </td>
-                <td>
+                <td style="text-align: right">
                     <form action="{{ url_for('dev.authorize_to_delete_tag', tag=tag.tag) }}">
-                        <button>&times;</button>
+                        <button class="btn btn-danger">&times;</button>
                     </form>
                 </td>
             </tbody>
@@ -228,11 +228,15 @@ DEV Panel in Dark-Mode? class="table table-dark"
 
     <hr>
         <form method="POST">
-            <label for="backup">backup database</label>
+            <label for="backup"></label>
             <br>
-            <input type="submit" name="backup" value="backup">
+            <input class="btn btn-danger" type="submit" name="backup" value="Backup Database">
         </form>
 </div>
 
+{% endblock %}
+
+{% block dev_panel %}
+    <li><a class="dropdown-item fw-bold" href="{{ url_for('dev.dev_panel') }}">Dev-Panel</a></li>
 {% endblock %}
 

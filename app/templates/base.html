@@ -5,14 +5,9 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <link rel="stylesheet" href="../bootstrap/css/main.min.css"> -->
     <!--SORRY GRÜMIL but I need this to get my message flashing to work and not look like absolute dog poo-->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/static/css/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/css/bootstrap-icons/font/bootstrap-icons.css">
     <link rel="icon" href="../static/img/Logo.png">
 
     {% block css %}{% endblock %}
@@ -23,242 +18,341 @@
 </head>
 
 <body>
+  {% block navbar %}
+    <!-- desktop navbar -->
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark d-none d-lg-block">
+      <div class="container-fluid">
+        <a href="/" class="navbar-brand">
+          <img src="/static/img/Logo.png" alt="HEINEWS" width="50" height="50" class="d-inline-block">
+        </a>
 
-    
+        <!-- navbar links -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            {% block alle_artikel %}
+              <li class="nav-item">
+                <a href="{{ url_for('articles.all_articles') }}" class="nav-link">Alle Artikel</a>
+              </li>
+            {% endblock %}
 
-    {% block navbar %}
-    <!-- navbar -->
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-        <div class="container-fluid">
-            <a href="/" class="navbar-brand active">
-                <img src="/static/img/Logo.png" alt="HEINEWS" width="50" height="50" class="d-inline-block">
-            </a>
-            <!-- toggle button for mobile nav -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-nav"
-                aria-controls="main-nav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            {% block aktuelles %}
+              <li class="nav-item">
+                <a href="/article/category/aktuelles" class="nav-link">Aktuelles</a>
+              </li>
+            {% endblock %}
 
-            <!-- navbar links -->
-            <div class="collapse navbar-collapse" id="main-nav">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0 justify-content-start">
-                    {% block all_articles %}
-                    <li class="nav-item">
-                        <a href="{{ url_for('articles.all_articles') }}" class="nav-link">Alle Artikel</a>
-                    </li>
-                    {% endblock %}
+            {% block wissen %}
+              <li class="nav-item">
+                <a href="/article/category/wissen" class="nav-link">Wissen</a>
+              </li>
+            {% endblock %}
 
-                    {% block aktuelles %}
-                    <li class="nav-item">
-                        <a href="/article/category/aktuelles" class="nav-link">Aktuelles</a>
-                    </li>
-                    {% endblock %}
+            {% block schulleben %}
+              <li class="nav-item">
+                <a href="/article/category/schulleben" class="nav-link">Schulleben</a>
+              </li>
+            {% endblock %}
 
-                    {% block wissen %}
-                    <li class="nav-item">
-                        <a href="/article/category/wissen" class="nav-link">Wissen</a>
-                    </li>
-                    {% endblock %}
+            {% block lifestyle %}
+              <li class="nav-item">
+                <a href="/article/category/lifestyle" class="nav-link">Lifestyle</a>
+              </li>
+            {% endblock %}
 
-                    {% block schulleben %}
-                    <li class="nav-item">
-                        <a href="/article/category/schulleben" class="nav-link">Schulleben</a>
-                    </li>
-                    {% endblock %}
+            {% block unterhaltung %}
+              <li class="nav-item">
+                <a href="/article/category/unterhaltung" class="nav-link">Unterhaltung</a>
+              </li>
+            {% endblock %}
 
-                    {% block lifestyle %}
-                    <li class="nav-item">
-                        <a href="/article/category/lifestyle" class="nav-link">Lifestyle</a>
-                    </li>
-                    {% endblock %}
+            {% block kreatives %}
+              <li class="nav-item">
+                <a href="/article/category/kreatives" class="nav-link">Kreatives</a>
+              </li>
+            {% endblock %}
 
-                    {% block unterhaltung %}
-                    <li class="nav-item">
-                        <a href="/article/category/unterhaltung" class="nav-link">Unterhaltung</a>
-                    </li>
-                    {% endblock %}
+            {% block umfragen %}
+              <li class="nav-item">
+                <a href="{{ url_for('surveys.all_surveys') }}" class="nav-link">Umfragen</a>
+              </li>
+            {% endblock %}
+          </ul>
 
-                    {% block kreatives %}
-                    <li class="nav-item">
-                        <a href="/article/category/kreatives" class="nav-link">Kreatives</a>
-                    </li>
-                    {% endblock %}
+          <form class="d-flex nav-item me-2" action="{{ url_for('views.search') }}" method="POST">
+            <input 
+              class="form-control me-2" 
+              type="search" 
+              id="search"
+              name="search"
+              placeholder="Suchbegriff" 
+              aria-label="Search"
+            />
+            <button class="btn btn-primary" type="submit" >Suchen</button>
+          </form>
+          	
+          <ul class="navbar-nav mw-5 mt-1 mb-2 mb-lg-0">
+            <li class="navbar-item dropdown">
+              <a class="nav-link me-2" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" data-toggle="dropdown">
+                <h2><i class="bi bi-person-circle"></i></h2>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                <li><a class="dropdown-item " href="{{ url_for('views.profile') }}">Profil</a></li>
+                {% if not loggedin(current_user) %}
+                  <li><a class="dropdown-item" href="{{ url_for('auth.login') }}">Login</a></li>
+                  <li><a class="dropdown-item" href="{{ url_for('auth.signup') }}">Sign Up</a></li>
+                {% endif %}
+                {% if loggedin(current_user) %}
+                  <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Logout</a></li>
+                {% endif %}
 
-                    {% block surveys %}
-                    <li class="nav-item">
-                        <a href="{{ url_for('surveys.all_surveys') }}" class="nav-link">Umfragen</a>
-                    </li>
-                    {% endblock %}
-                </ul>
-                <form class="d-flex" action="{{ url_for('views.search') }}" method="POST">
-                    
-                    <input 
-                        class="form-control me-2" 
-                        type="search" 
-                        id="search"
-                        name="search"
-                        placeholder="Search" 
-                        aria-label="Search"
-                    />
-                    <button class="btn btn-primary" type="submit" >Search</button>
-                </form>
-                <ul class="dropdown navbar-nav mw-5 mb-2 mb-lg-0">
-                    <a class="nav-item nav-link me-2" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                      <h2><i class="bi bi-person-circle"></i></h2>
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="{{ url_for('views.profile') }}">Profil</a></li>
-                        
-                        {% if not loggedin(current_user) %}
-                            <li><a class="dropdown-item" href="{{ url_for('auth.login') }}">Login</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('auth.signup') }}">Sign Up</a></li>
-                        {% endif %}
-                        {% if loggedin(current_user) %}
-                            <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Logout</a></li>
-                        {% endif %}
-                        <li><hr class="dropdown-divider"></li>
-                            
-                        {% if loggedin(current_user) %}
-                            {% if current_user.role == "developer" %}
-                                <li><a class="dropdown-item" href="{{ url_for('dev.dev_panel') }}">Dev-Panel</a></li>
-                            {% endif %}
-                            {% if get_user_role(current_user).can_validate %}
-                                <li><a class="dropdown-item" href="{{ url_for('admin.admin_index') }}">Admin-Panel</a></li>
-                            {% endif %}
-                            {% if get_user_role(current_user).can_upload %}
-                                <li><a class="dropdown-item" href="{{ url_for('admin.upload', phase='new') }}">Upload</a></li>
-                            {% endif %}
-                        {% endif %}
-                        <li><a class="dropdown-item" href="{{ url_for('tag.all_tags') }}">View All Tags</a></li>
-                    </ul>
-                </ul>
-            </div>
+                <hr class="dropdown-divider">
+                
+                {% if loggedin(current_user) %}
+                  {% if current_user.role == "developer" %}
+                    <li><a class="dropdown-item" href="{{ url_for('dev.dev_panel') }}">Dev-Panel</a></li>
+                  {% endif %}
+                  {% if get_user_role(current_user).can_validate %}
+                    <li><a class="dropdown-item" href="{{ url_for('admin.admin_index') }}">Admin-Panel</a></li>
+                  {% endif %}
+                  {% if get_user_role(current_user).can_upload %}
+                    <li><a class="dropdown-item" href="{{ url_for('admin.upload', phase='new') }}">Upload</a></li>
+                  {% endif %}
+                {% endif %}
+                <li><a class="dropdown-item" href="{{ url_for('tag.all_tags') }}">View All Tags</a></li>
+              </ul>
+            </li>
+          </ul>
         </div>
-    </nav>
+      </div>
+  </nav>
 
-    {% endblock %}
+  <!-- TODO: stop dropdown menus from changing height of navbar-->
 
-    <!--flash messages-->
-    <!--
-    Flashed messages are used to provide feedback to the user; things like "article uploaded successfully" or "file format uploaded is not supported"
-    
-    categories: "error" -> something went wrong; "success" -> something was successful (further categories might get added in future)
+  <!-- mobile navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark d-lg-none">
+    <div class="container-fluid">
+        <a href="/" class="navbar-brand active">
+            <img src="/static/img/Logo.png" alt="HEINEWS" width="50" height="50" class="d-inline-block">
+        </a>
+        <!-- toggle button for mobile nav -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-nav"
+            aria-controls="main-nav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-    -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-        {% for category, message in messages %}
-          {% if category == "error" %}
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-              {{ message }}
-              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-          {% elif category == "success" %}
-          <div class="alert alert-success alert-dismissible fade show" role="alert">
-              {{ message }}
-              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
+        <!-- navbar links -->
+        <div class="collapse navbar-collapse" id="main-nav">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <form class="d-flex" action="{{ url_for('views.search') }}" method="POST">
+                  <input 
+                    class="form-control me-2 mb-2" 
+                    type="search" 
+                    id="search"
+                    name="search"
+                    placeholder="Suchbegriff" 
+                    aria-label="Search"
+                  />
+                  <button class="btn btn-primary mb-2" type="submit">Suchen</button>
+                </form>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Rubriken
+                </a>
+                  <ul class="dropdown-menu dropdown-menu-dark">
+                    {% block alle_artikel_mobile %}
+                      <li><a href="{{ url_for('articles.all_articles') }}" class="dropdown-item">Alle Artikel</a></li>
+                    {% endblock %}
+                    {% block aktuelles_mobile %}
+                      <li><a href="/article/category/aktuelles" class="dropdown-item">Aktuelles</a></li>
+                    {% endblock %}
+                    {% block wissen_mobile %}
+                      <li><a href="/article/category/wissen" class="dropdown-item">Wissen</a></li>
+                    {% endblock %}
+                    {% block schulleben_mobile %}
+                      <li><a href="/article/category/schulleben" class="dropdown-item">Schulleben</a></li>
+                    {% endblock %}
+                    {% block lifestyle_mobile %}
+                      <li><a href="/article/category/lifestyle" class="dropdown-item">Lifestyle</a></li>
+                    {% endblock %}
+                    {% block unterhaltung_mobile %}
+                      <li><a href="/article/category/unterhaltung" class="dropdown-item">Unterhaltung</a></li>
+                    {% endblock %}
+                    {% block kreatives_mobile %}
+                      <li><a href="/article/category/kreatives" class="dropdown-item">Kreatives</a></li>
+                    {% endblock %}
+                    <hr class="dropdown-divider">
+                    {% block umfragen_mobile %}
+                      <li><a href="{{ url_for('surveys.all_surveys') }}" class="dropdown-item">Umfragen</a></li>
+                    {% endblock %}
+                  </ul>
+              </li>
 
-          {% elif category == "info" %}
-            <div class="alert alert-info alert-dismissible fade show" role="alert">
-              {{ message }}
-              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-person-circle"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-dark">
+                    {% block profil %}
+                      <li><a class="dropdown-item " href="{{ url_for('views.profile') }}">Profil</a></li>
+                    {% endblock %}
+                    {% if not loggedin(current_user) %}
+                      {% block login %}
+                        <li><a class="dropdown-item" href="{{ url_for('auth.login') }}">Login</a></li>
+                      {% endblock %}
+                      {% block sign_up %}
+                        <li><a class="dropdown-item" href="{{ url_for('auth.signup') }}">Sign Up</a></li>
+                      {% endblock %}
+                    {% endif %}
+                    {% if loggedin(current_user) %}
+                        <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Logout</a></li>
+                    {% endif %}
+                    <hr class="dropdown-divider">
+                    {% if loggedin(current_user) %}
+                        {% if current_user.role == "developer" %}
+                          {% block dev_panel%}
+                            <li><a class="dropdown-item" href="{{ url_for('dev.dev_panel') }}">Dev-Panel</a></li>
+                          {% endblock %}
+                        {% endif %}
+                        {% if get_user_role(current_user).can_validate %}
+                          {% block admin_panel %}
+                            <li><a class="dropdown-item" href="{{ url_for('admin.admin_index') }}">Admin-Panel</a></li>
+                          {% endblock %}
+                        {% endif %}
+                        {% if get_user_role(current_user).can_upload %}
+                          {% block upload %}
+                            <li><a class="dropdown-item" href="{{ url_for('admin.upload', phase='new') }}">Upload</a></li>
+                          {% endblock %}
+                        {% endif %}
+                    {% endif %}
+                      {% block tags %}
+                        <li><a class="dropdown-item" href="{{ url_for('tag.all_tags') }}">View All Tags</a></li>
+                      {% endblock %}
+                </ul>
+              </li>
+        </div>
+    </div>
+  </nav>
+  {% endblock %}
 
-          {% elif category == "warning" %}
-            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-              {{ message }}
-              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-          {% endif %}
-        {% endfor %}
-    {% endif %}
-    {% endwith %}
 
-    {% block content%}
-    {% endblock %}
+  <!--flash messages-->
+  <!--
+  Flashed messages are used to provide feedback to the user; things like "article uploaded successfully" or "file format uploaded is not supported"
+  
+  categories: "error" -> something went wrong; "success" -> something was successful (further categories might get added in future)
 
-    <footer class="text-center text-lg-start bg-light text-muted">
-        <section
-          class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom"
-        >
-          <!-- Left -->
-          <div class="me-5 d-none d-lg-block">
+  -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+      {% for category, message in messages %}
+        {% if category == "error" %}
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% elif category == "success" %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+
+        {% elif category == "info" %}
+          <div class="alert alert-info alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+
+        {% elif category == "warning" %}
+          <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endif %}
+      {% endfor %}
+  {% endif %}
+  {% endwith %}
+
+  {% block content%}
+  {% endblock %}
+
+  <footer class="text-center text-lg-start bg-light text-muted">
+    <!-- Instagram + GitHub -->
+    <section class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
+      <!-- Left -->
+      <div class="me-5 d-none d-lg-block"></div>
+
+        <!-- Right -->
+      <div>
+        <a href="https://www.instagram.com/heinews_sz/" class="me-4 text-reset text-decoration-none">
+          <i class="bi bi-instagram"></i>
+        </a>
+        <a href="https://github.com/ERROR-Emil-Not-Found/heiNEws" class="me-4 text-reset text-decoration-none">
+          <i class="bi bi-github"></i>
+        </a>
+      </div>
+    </section>
+    <!-- Impressum  -->
+    <section>
+      <div class="container text-md-start mt-4 mb-4">
+        <div class="row mt-3">
+  
+          <div class="col-md-3 col-lg-4 col-xl-3 mx-auto">
+            <h6 class="text-uppercase fw-bold mb-2">
+              <i class="bi bi-newspaper me-1"></i>HEINEWS
+            </h6>
+            <p>
+              Diese Website wurde von drei Schülern des Informatik-LKs des HHG Ostfildern gebaut.
+              <a href="http://teamnamenotfound.great-site.net" class="text-muted">Hier</a> finden Sie weitere Informationen zum Leistungskurs Informatik.
+            </p>
           </div>
     
-          <!-- Right -->
-          <div>
-            <a href="link-muss-hier-hin" class="me-4 text-reset text-decoration-none">
-              <i class="bi bi-instagram"></i>
-            </a>
-            <a href="https://github.com/ERROR-Emil-Not-Found/heiNEws" class="me-4 text-reset text-decoration-none">
-              <i class="bi bi-github"></i>
-            </a>
+          <div class="col-md-2 col-lg-2 col-xl-2 mx-auto">
+            <!-- Links -->
+            <h6 class="text-uppercase fw-bold mb-2">
+              Links
+            </h6>
+            <p>
+              <a href="imprint.html" class="text-reset btn-link disabled">Impressum</a>
+            </p>
+            <p>
+              <a href="contact.html" class="text-reset btn-link disabled">Kontakt</a>
+            </p>
           </div>
-        </section>
-      
-        <!-- Links  -->
-        <section>
-          <div class="container text-center text-md-start mt-2">
-            <div class="row mt-3">
     
-              <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
-                <h6 class="text-uppercase fw-bold mb-4">
-                  <i class="bi bi-newspaper me-1"></i>heiNEws
-                </h6>
-                <p>
-                    Diese Website wurde von zwei Schülern des Informatik-LKs des HHG Ostfildern gebaut.
-                    <a href="http://teamnamenotfound.great-site.net" class="text-muted">Hier</a> finden Sie weitere Informationen zum Leistungskurs Informatik.
-                </p>
-              </div>
-      
-              <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
-                <!-- Links -->
-                <h6 class="text-uppercase fw-bold mb-4">
-                  Links
-                </h6>
-                <p>
-                  <a href="imprint.html" class="text-reset btn-link disabled">Impressum</a>
-                </p>
-                <p>
-                  <a href="contact.html" class="text-reset btn-link disabled">Kontakt</a>
-                </p>
-              </div>
-      
-              <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
-                <!-- Links -->
-                <h6 class="text-uppercase fw-bold mb-4">
-                  Externe Links
-                </h6>
-                <p>
-                  <a href="https://hhg-ostfildern.de" class="text-reset">HHG Ostfildern</a>
-                </p>
-              </div>
-    
-              <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
-                <!-- Links -->
-                <h6 class="text-uppercase fw-bold mb-4">
-                  Kontakt
-                </h6>
-                <p><i class="bi bi-person-fill me-3"></i>Frau Natalie Bachayan</p>
-                <p><i class="bi bi-house-fill me-3"></i>Heinrich-Heine-Gymnasium<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In den Anlagen 11<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;73760 Ostfildern</p>
-                <p><i class="bi bi-envelope-fill me-3"></i>zeitung@hhg-ostfildern.de</p>
-                <p><i class="bi bi-telephone-fill me-3"></i>0711 220707-0</p>
-              </div>
-            </div>
+          <div class="col-md-3 col-lg-2 col-xl-2 mx-auto">
+            <!-- Externe Links -->
+            <h6 class="text-uppercase fw-bold mb-2">
+              Externe Links
+            </h6>
+            <p>
+              <a href="https://hhg-ostfildern.de" class="text-reset">HHG Ostfildern</a>
+            </p>
           </div>
-        </section>
-      
-            <!-- Copyright -->
-            <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
-            © 2022 heiNEws
-            </div>
-        </footer>
+  
+          <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-0 md-0">
+            <!-- Kontakt -->
+            <h6 class="text-uppercase fw-bold mb-2">
+              Kontakt
+            </h6>
+            <p><i class="bi bi-person-fill me-3"></i>Natalie Bachayan</p>
+            <p><i class="bi bi-house-fill me-3"></i>Heinrich-Heine-Gymnasium<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In den Anlagen 11<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;73760 Ostfildern</p>
+            <p><i class="bi bi-envelope-fill me-3"></i>zeitung@hhg-ostfildern.de</p>
+            <p><i class="bi bi-telephone-fill me-3"></i>0711 220707-0</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Copyright -->
+    <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
+      © 2022 HEINEWS
+    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-        crossorigin="anonymous">
-    </script>
+  </footer>
+  <script src="/static/css/bootstrap/js/bootstrap.bundle.min.js">
+  </script>
 </body>
 
 </html>

@@ -13,3 +13,14 @@
     {% endfor %}
 {% endblock %}
 </div>
+
+{% block umfragen %}
+    <li class="nav-item">
+        <a href="{{ url_for('surveys.all_surveys') }}" class="nav-link active" aria-current="page">Umfragen</a>
+    </li>
+{% endblock %}
+
+
+{% block umfragen_mobile %}
+    <li><a href="{{ url_for('surveys.all_surveys') }}" class="dropdown-item fw-bold">Umfragen</a></li>
+{% endblock %}

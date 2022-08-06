@@ -3,7 +3,7 @@
 {% block title %}{{ current_user.name }}{% endblock %}
 
 {% block content %}
-<div class="container-xl">
+<div style="margin-left: 15%; margin-right: 15%">
     <br>
     <br>
     <h1>Profil</h1>
@@ -100,5 +100,9 @@
             </td>
         </tr>
     </table>
-    {% endblock %}
 </div>
+{% endblock %}
+
+{% block profil %}
+    <li><a class="dropdown-item fw-bold" href="{{ url_for('views.profile') }}">Profil</a></li>
+{% endblock %}

@@ -59,3 +59,7 @@
 
 {% endif %}
 {% endblock %}
+
+{% block upload %}
+    <li><a class="dropdown-item fw-bold" href="{{ url_for('admin.upload', phase='new') }}">Upload</a></li>
+{% endblock %}

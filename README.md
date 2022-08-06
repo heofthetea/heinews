@@ -1,5 +1,5 @@
 # Online blog for the student newspaper at the HHG Ostfildern
-## developed by Emil Schläger, Emil Grümer
+## developed by Emil Schläger, Emil Grümer, Finn Österreicher
 #### Name Subject to change. 
 #### Using flask 2.0: https://flask.palletsprojects.com/en/2.0.x/
 
