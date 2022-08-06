@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, render_template_string,  redirect, abort, url_for, flash, request, session
 from flask_login import login_required, current_user
 from werkzeug.security import check_password_hash
-from .models import Article, User, Tag, Article_Tag, Role, Survey
+from .models import Article, User, Verify_Email, Password_Reset, Tag, Article_Tag, Role, Survey
 from .articles import get_article_location
 from . import db, send_database
 from os import remove
@@ -10,7 +10,7 @@ from shutil import rmtree
 
 
 dev = Blueprint("dev", __name__)
-#TODO!set timer to reset this to false after certain amount of time (~15 minutes)
+#TODO! set timer to reset this to false after certain amount of time (~15 minutes)
 #TODO implement counter for wrong passwords (use url parameter overloading?)
 authorized = False # used to control if user is allowed to view the panel
 
@@ -101,13 +101,15 @@ def check_password():
         </div>
         """
     )
+    
 
-# TODO also delete users db entries in Verify_Email and Reset_Password
 @dev.route("yeet_user/<int:id>")
 def delete_user(id):
     if session["needs_authorization"]:
         return authorize_dev()
     User.query.filter_by(id=id).delete()
+    Verify_Email.query.filter_by(user_id=id).delete()
+    Password_Reset.query.filter_by(user_id=id).delete()
     db.session.commit()
     flash("User deleted successfully!", category="success")
     return redirect("/dev")
@@ -137,7 +139,16 @@ def delete_article(id):
         remove(article_location)
     if isdir(article_image_location):
         rmtree(article_image_location)
+
+    connections = Article_Tag.query.filter_by(article_id=id).all()
+
+    # checking to see if deleting that article will leave any tag without any article - if so, delete it
+    for article_tag in connections:
+        if not len(Article_Tag.query.filter_by(tag=article_tag.tag).all()) > 1:
+            Tag.query.filter_by(tag=article_tag.tag).delete()
+    Article_Tag.query.filter_by(article_id=id).delete()
     db.session.commit()
+    
     flash("Article deleted successfully!", category="success")
     return redirect("/dev")
 

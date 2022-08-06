@@ -43,6 +43,18 @@
                 {% endif %}
             </td>
         </tr>
+        <tr>
+            <th>Account löschen:</th>
+            <td>
+                {% if delete %}
+                    <b><a style="text-decoration: none" href="{{ url_for('auth.delete_account', delete_id=delete) }}">Account löschen</a></b><!-- (TODO send this per email)-->
+                {% else %}
+                    <form action="{{ url_for('auth.create_delete_token', user_id=current_user.id) }}">
+                        <button type="submit">Request deletion</button>
+                    </form>
+                {% endif %}
+            </td>
+        </tr>
     </table>
     <h6><i class="bi bi-info-circle"></i>  Verification link is designed to work with manually entering it into browser -> clicking on this will lead to 404 error, in url remove the first 
         127.0.0.1/

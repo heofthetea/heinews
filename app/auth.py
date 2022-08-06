@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from .models import User, Password_Reset, Verify_Email, generate_id
+from .models import User, Password_Reset, Verify_Email, Delete_Account, generate_id
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db, __DEVELOPERS__, __HOST__
 from flask_login import login_user, login_required, logout_user, current_user
@@ -107,10 +107,28 @@ def create_reset_token(user_id):
     return redirect(url_for('views.profile'))
 
 
+@auth.route("/delete_link/<int:user_id>")
+def create_delete_token(user_id):
+    if Delete_Account.query.filter_by(user_id=user_id).first():
+        flash("Du hast bereits einen Link zum Löschen!!", category="error")
+    else:
+        db.session.add(
+            Delete_Account(
+                id=generate_id(265, table=Delete_Account),
+                user_id=int(user_id)
+            )
+        )
+        db.session.commit()
+    return redirect(url_for('views.profile'))
+
+
 
 @auth.route("/resetpw/<reset_id>", methods=["GET", "POST"])
 #@login_required # TODO keep this or not??
 # -> IF PIPELINE WORKS: test with this on, then,
+# future me: then what??
+
+# TODO! add option to cancel process
 def reset_password(reset_id):
     if request.method == "POST":
         user = User.query.get(Password_Reset.query.get(reset_id).user_id)
@@ -130,6 +148,25 @@ def reset_password(reset_id):
             flash("Passwort wurde erforlgreich geändert!", category="success")
             return(redirect(url_for("views.profile")))
     return render_template("auth/reset_password.html")
+
+
+@auth.route("/deleteacc/<delete_id>", methods=["GET", "POST"])
+#@login_required # TODO keep this or not??
+def delete_account(delete_id):
+    if request.method == "POST":
+        user = User.query.get(Delete_Account.query.get(delete_id).user_id)
+
+        password = request.form.get("password")
+
+        if check_password_hash(user.password, password):
+            Delete_Account.query.filter_by(id=delete_id).delete()
+            User.query.filter_by(id=user.id).delete()
+            db.session.commit()
+            
+            #TODO delete all connected db entries like upvotes?
+            flash("Dein Account wurde erfolgreich gelöscht!", category="success")
+            return(redirect(url_for("auth.signup")))
+    return render_template("auth/delete_account.html")
 
 
 

@@ -10,7 +10,7 @@ from os import path, mkdir
 from werkzeug.utils import secure_filename
 
 
-#TODO find places in articles for images
+#TODO! find places in articles for images
 
 ALLOWED_EXTENSIONS = {"txt", "docx", "doc"} # TODO support txt files because I like them
 ALLOWED_IMAGES = {"png", "jpg"}
@@ -156,6 +156,7 @@ def upload(phase) -> None:
             db.session.commit()
 
             #TODO implement preview ?
+            # no, to much work
 
             # creating entry in database
             

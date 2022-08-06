@@ -106,16 +106,20 @@ class User_Answer(db.Model):
 
 class Password_Reset(db.Model):
     id = db.Column(db.String(256), primary_key=True)
-    user_id = db.Column(db.Integer,db.ForeignKey("user.id"), unique=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), unique=True)
     #expiry_date = db.Column(db.DateTime(timezone=True), default=func.now() + timedelta(days=1)) #TODO! get this column working
 
 
 class Verify_Email(db.Model):
     id = db.Column(db.String(256), primary_key=True)
-    user_id = db.Column(db.Integer,db.ForeignKey("user.id"), unique=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), unique=True)
     #expiry_date = db.Column(db.DateTime(timezone=True), default=func.now() + timedelta(days=1)) #TODO! get this column working
 
             
+class Delete_Account(db.Model):
+    id = db.Column(db.String(256), primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), unique=True)
+    #expiry_date = db.Column(db.DateTime(timezone=True), default=func.now() + timedelta(days=1)) #TODO! get this column working
 
 #-----------------------------------------------------------------------------------------------------------------------------------
 # @REGION connections

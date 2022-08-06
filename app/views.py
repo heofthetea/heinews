@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, flash, url_for, request
 from flask_login import login_required, current_user
-from .models import Article, User_Upvote, Password_Reset, get_user_role
+from .models import Article, User_Upvote, Password_Reset, Delete_Account, get_user_role
 from .auth import send_verification_email
 from . import db
 from sqlalchemy import desc
@@ -50,16 +50,24 @@ def profile():
     if get_user_role(current_user).can_upload:
         uploaded = Article.query.filter_by(creator_email=current_user.email).all()
     #TODO similar stuff depending on features added
+    #TODO! something like this for surveys
     #TODO! add option to change email notification settings
+    #TODO! add option to delete ones account
 
     reset = Password_Reset.query.filter_by(user_id=current_user.id).first()
     if reset:
         reset = reset.id
+
+    delete = Delete_Account.query.filter_by(user_id=current_user.id).first()
+    if delete:
+        delete = delete.id
+        
     return render_template(
         "auth/profile.html", 
         upvoted=upvoted, 
         uploaded=uploaded,
         reset=reset,
+        delete=delete,
         # TODO remove this when sending verification link by email
         verification_link=send_verification_email(current_user.email) if not current_user.email_confirmed else "already verified"
     )
