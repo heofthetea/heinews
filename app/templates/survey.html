@@ -16,7 +16,10 @@
         <h4>{{ db_entry.description }}</h4>
     {% endif %}
 
+
     <form action="{{ url_for('surveys.vote', survey_id=db_entry.id) }}" method="POST">
+        <!-- TODO make the results page look a little bit prettier maybe? (pre-select radio buttons and stuff - maybe even have one giant if-statement and render two entirely seperate pages?)-->
+        <!-- see line 56-->
         {% for answer in answers %}
             <input 
                 type="radio" 
@@ -26,16 +29,46 @@
                 required
             />
             <label for="{{ answer.id }}">
-                {{ answer.value }}
-                {% if already_voted %}
-                    ({{ answer.votes }} Stimmen)
+                {% if not user_answer == none %} <!--if user has already voted on this survey -->
+                    {# checking for absolute boolean values because if a value v is `None`, the statement `not v` equates to true  #}
+                    {# I apologize for this if statement being confusing but it's the easiest way to do it xd #}
+                    {% if answer.correct == true %}
+                        <p style="color: #0f0;">
+                    {% elif answer.correct == false %}
+                        <p style="color: #f00;">
+                    {% else %}
+                        <p>
+                    {% endif %}
+                    
+                        {% if user_answer.answer_id == answer.id %}
+                            <u>{{ answer.value }} ({{ answer.votes }} Stimmen)</u>
+                        {% else %}
+                            {{ answer.value }} ({{ answer.votes }} Stimmen)
+                        {% endif %}
+                        </p>
+                {% else %}
+                    {{ answer.value }}
                 {% endif %}
-            </label>
-            <br>
+                </label>
+                <br>
         {% endfor %}
 
-        <br>
-        <button type="submit" class="btn btn-primary">Antwort abschicken</button>
+        {# same if-statement as in the label tag, you see the potential benefits of one giant if-else?#}
+        {% if not user_answer == none %}
+        <i>Die Option, für die du abgestimmt hast, ist unterstrichen.</i>
+            {% if not correct_answer == none %}
+                {% if user_answer.answer_id == correct_answer.id %}
+                    <h3>Deine Antwort ist korrekt!</h3>
+                {% else %}
+                    <h3>Deine Antwort ist leider nicht korrekt. Besseres Glück nächstes Mal :)</h3>
+                {% endif %}
+            {% endif %}
+
+        {% else %}
+            <br>
+            <button type="submit" class="btn btn-primary">Antwort abschicken</button>
+
+        {% endif %}
     </form>
 </div>
 

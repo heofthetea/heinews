@@ -3,11 +3,16 @@ from flask_login import login_required, current_user
 from werkzeug.security import check_password_hash
 from .models import Article, User, Verify_Email, Password_Reset, Tag, Article_Tag, Role, Survey
 from .articles import get_article_location
+from .auth import is_dev
 from . import db, send_database
 from os import remove
 from os.path import exists, isdir
 from shutil import rmtree
 
+
+#TODO get search function in tables to work
+# -> use %LIKE%
+# make searching for email not require correct format ting
 
 dev = Blueprint("dev", __name__)
 #TODO! set timer to reset this to false after certain amount of time (~15 minutes)
@@ -38,10 +43,11 @@ def dev_panel() -> None:
             users = User.query.filter_by(id=int(request.form.get("id")))
             filtered = True
         elif request.form.get("name"):
-            users = User.query.filter_by(name=request.form.get("name"))
+            # https://stackoverflow.com/questions/3325467/sqlalchemy-equivalent-to-sql-like-statement
+            users = User.query.filter(User.name.like(f"%{request.form.get('name')}%"))
             filtered = True
         elif request.form.get("email"):
-            users = User.query.filter_by(email=request.form.get("email")) 
+            users = User.query.filter(User.email.like(f"{request.form.get('email')}"))
             filtered = True
     return render_template(
         "auth/dev.html",
@@ -105,6 +111,9 @@ def check_password():
 
 @dev.route("yeet_user/<int:id>")
 def delete_user(id):
+    if is_dev(User.query.get(id).email):
+        flash("Can't delete eternal developer!", category="error")
+        return redirect("/dev")
     if session["needs_authorization"]:
         return authorize_dev()
     User.query.filter_by(id=id).delete()
@@ -118,9 +127,12 @@ def delete_user(id):
 
 @dev.route("/change_role/<int:user>")
 def change_role(user):
+    changed_user = User.query.get(int(user))
+    if is_dev(changed_user.email):
+        flash("Can't demote eternal developer!", category="error")
+        return redirect("/dev")
     if session["needs_authorization"]:
         return authorize_dev()
-    changed_user = User.query.get(int(user))
     changed_user.role = session["new_user_role"]
     db.session.commit()
     session.pop("new_user_role")

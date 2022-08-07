@@ -109,9 +109,25 @@
                         {% endfor %}
                     </ul>
                 </div>
-            </td>
+            </td>  
+            
         </tr>
     </table>
+    <!--TODO -------------------------------------------------------------------------------------------------------------------->
+    <h3>Surveys participated in:</h3>
+    <table>
+        {% for participation in surveys %}
+        <tr>
+            <td>
+                <a href="{{ url_for('surveys.survey', id=participation[0].id) }}">{{ participation[0].title }}</a>
+            </td>
+            <td>
+                {{ participation[1].value }}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    <!--------------------------------------------------------------------------------------------------------------------------->
 </div>
 {% endblock %}
 

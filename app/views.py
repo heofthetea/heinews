@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, flash, url_for, request
 from flask_login import login_required, current_user
-from .models import Article, User_Upvote, Password_Reset, Delete_Account, get_user_role
+from .models import Article, User_Upvote, Password_Reset, Delete_Account, Survey, User_Answer, Answer, get_user_role
 from .auth import send_verification_email
 from . import db
 from sqlalchemy import desc
@@ -46,6 +46,16 @@ def profile():
     # get all articles upvoted
     upvote_connections = User_Upvote.query.filter_by(user_id=current_user.id).all()
     upvoted = [Article.query.get(article.article_id) for article in upvote_connections]
+
+    # tuple: (survey_id, answer_id)
+    surveys: list[tuple[str, int]] = []
+    user_answers = User_Answer.query.filter_by(user_id=current_user.id).all()
+    for user_answer in user_answers:
+        surveys.append((
+            Survey.query.get(user_answer.survey_id), 
+            Answer.query.get(user_answer.answer_id)
+        ))
+
     uploaded = [] # declared as empty list instead of None because of later use of `len(uploaded)`
     if get_user_role(current_user).can_upload:
         uploaded = Article.query.filter_by(creator_email=current_user.email).all()
@@ -66,6 +76,7 @@ def profile():
         "auth/profile.html", 
         upvoted=upvoted, 
         uploaded=uploaded,
+        surveys=surveys,
         reset=reset,
         delete=delete,
         # TODO remove this when sending verification link by email

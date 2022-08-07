@@ -7,8 +7,6 @@ from datetime import timedelta
 
 # is it necessary to give everything a power of 2 as a length? No. Do I do it anyway? Yes, why not.
 
-
-#TODO? connect Article with Article_Images
 class Article(db.Model):
     id = db.Column(db.String(6), primary_key=True)
     title = db.Column(db.String(128))

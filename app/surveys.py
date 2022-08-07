@@ -14,17 +14,21 @@ def all_surveys():
 def survey(id):
     db_entry = Survey.query.get(id)
 
-    already_voted = False
+    user_answer = None
+    answers = Answer.query.filter_by(survey=db_entry.id)
+    correct_answer = answers.filter_by(correct=True).first()
     if user_loggedin(current_user):
-        if User_Answer.query.filter_by(survey_id=id).filter_by(user_id=current_user.id).first():
-            already_voted = True
+        # first get all answers of the survey, then search if current user is in one of them
+        user_answer = User_Answer.query.filter_by(survey_id=id).filter_by(user_id=current_user.id).first()
 
     
     return render_template(
         "survey.html",
         db_entry=db_entry,
-        answers=Answer.query.filter_by(survey=db_entry.id).all(),
-        already_voted=already_voted
+        answers=answers.all(),
+        #already_voted=already_voted
+        user_answer=user_answer,
+        correct_answer=correct_answer
     )
 
 @surveys.route("vote/<survey_id>", methods=["POST"])
