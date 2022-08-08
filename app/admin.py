@@ -63,14 +63,14 @@ def admin_index():
     
 
 @admin.route("/upload")
-def redir_upload():
-    return redirect(url_for("admin.upload", phase="new"))
+def redir_upload_article():
+    return redirect(url_for("admin.upload_article", phase="new"))
 
 
 #TODO split this up to 2 functions
 @admin.route('/upload/<phase>', methods=["GET", "POST"])
 @login_required
-def upload(phase) -> None:
+def upload_article(phase) -> None:
     #prevents unauthorized users from reaching the upload section
     if not Role.query.get(current_user.role).can_upload:
         abort(403)
@@ -114,7 +114,7 @@ def upload(phase) -> None:
                     cache["images"] = []
                     return redirect(url_for("admin.add_images", article_id=cache["article_id"]))
                 
-        return render_template("upload/upload.html")
+        return render_template("upload/admin.html")
 
     elif phase == "edit":
         # contains all necessary operations when article is completely finished (all needed additional arguments are given)
@@ -154,9 +154,6 @@ def upload(phase) -> None:
                     db.session.add(Tag(tag=tag))
                 db.session.add(Article_Tag(article_id=temp_article_id, tag=tag))
             db.session.commit()
-
-            #TODO implement preview ?
-            # no, to much work
 
             # creating entry in database
             
@@ -214,8 +211,8 @@ def add_images(article_id):
                 img_location = path.join(img_folder, filename)
                 image.save("app" + img_location)
                 cache["images"].append(img_location)
-        return redirect(url_for("admin.upload", phase="edit"))
-    return render_template("upload/image_upload.html")
+        return redirect(url_for("admin.upload_article", phase="edit"))
+    return render_template("upload/image_admin.html")
 
 #--------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -258,7 +255,7 @@ def create_survey():
         return redirect(url_for("surveys.survey", id=new_survey.id))
     return render_template("upload/upload_survey.html", num_answers=num_answers)
 
-#TODO add option for authors to send announcements over dashboard and mail
+#TODO! add option for authors to send announcements over dashboard and mail
 
 #--------------------------------------------------------------------------------------------------------------------------------------------
 

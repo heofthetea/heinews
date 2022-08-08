@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from .models import User, Password_Reset, Verify_Email, Delete_Account, generate_id
+from .models import User, Password_Reset, Verify_Email, Delete_Account, User_Answer, User_Upvote, generate_id
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db, __DEVELOPERS__, __HOST__
 from flask_login import login_user, login_required, logout_user, current_user
@@ -161,9 +161,15 @@ def delete_account(delete_id):
         if check_password_hash(user.password, password):
             Delete_Account.query.filter_by(id=delete_id).delete()
             User.query.filter_by(id=user.id).delete()
+
+            # when a user deletes his own account, all his traces are erased
+            # when instead a user gets deleted by devs, his upvotes and survey answers should remain
+            User_Answer.query.filter_by(user_id=user.id).delete()
+            User_Upvote.query.filter_by(user_id=user.id).delete()
+            Verify_Email.query.filter_by(user_id=user.id).delete()
+            Password_Reset.query.filter_by(user_id=user.id).delete()
+
             db.session.commit()
-            
-            #TODO delete all connected db entries like upvotes?
             flash("Dein Account wurde erfolgreich gelöscht!", category="success")
             return(redirect(url_for("auth.signup")))
     return render_template("auth/delete_account.html")
@@ -180,6 +186,22 @@ def verify_email(verify_id):
 
     flash("Deine Email wurde erfolgreich verifiziert! Jetzt verfügst du über alle dir zustehenden Freiheiten!", category="success")
     return redirect(url_for("views.profile"))
+
+
+@auth.route("/promote", methods=["POST"])
+@login_required
+def promote():
+    admin_password = request.form.get("admin_password")
+
+    if current_user.role != "user":
+        flash("Du kannst dich nur als User selbst befördern!", category="error")
+    elif check_admin_password(admin_password): #TODO implement a counter to a maximum of tries, otherwise some trolls will crash the database
+        current_user.role = "upload"
+        db.session.commit()
+        flash("Herzlichen Glückwunsch! Du bist nun berechtigt, Artikel etc. hochzuladen!", category="success")
+    return redirect(url_for("views.profile"))
+
+
 
 #----------------------------------------------------------------------------------------------------------------------------
 
@@ -199,4 +221,12 @@ def send_verification_email(email: str) -> str:
     link = f"{__HOST__}{url_for('auth.verify_email', verify_id=verification_token)}"
     print(link)
     return link
+
+#----------------------------------------------------------------------------------------------------------------------------
+
+def check_admin_password(pw):
+    with open("__admin__.txt", "r") as f:
+        if check_password_hash(f.readline(), pw):
+            return True
+    return False
 

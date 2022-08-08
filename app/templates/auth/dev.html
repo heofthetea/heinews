@@ -232,6 +232,12 @@ DEV Panel in Dark-Mode? class="table table-dark"
             <br>
             <input class="btn btn-danger" type="submit" name="backup" value="Backup Database">
         </form>
+        <form action="{{ url_for('dev.authorize_to_change_admin_password') }}" method="POST">
+            <label for="admin_password">Change Admin Password</label>
+            <br>
+            <input type="password" name="admin_password" id="admin_password" placeholder="New Admin Password">
+            <button type="submit">Change Password</button>
+        </form>
 </div>
 
 {% endblock %}

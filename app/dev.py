@@ -1,18 +1,13 @@
 from flask import Blueprint, render_template, render_template_string,  redirect, abort, url_for, flash, request, session
 from flask_login import login_required, current_user
-from werkzeug.security import check_password_hash
-from .models import Article, User, Verify_Email, Password_Reset, Tag, Article_Tag, Role, Survey
+from werkzeug.security import check_password_hash, generate_password_hash
+from .models import Article, User, Verify_Email, Password_Reset, Tag, Article_Tag, Role, Survey,  Answer, User_Answer
 from .articles import get_article_location
 from .auth import is_dev
 from . import db, send_database
 from os import remove
 from os.path import exists, isdir
 from shutil import rmtree
-
-
-#TODO get search function in tables to work
-# -> use %LIKE%
-# make searching for email not require correct format ting
 
 dev = Blueprint("dev", __name__)
 #TODO! set timer to reset this to false after certain amount of time (~15 minutes)
@@ -170,6 +165,8 @@ def delete_survey(id):
     if session["needs_authorization"]:
         return authorize_dev()
     Survey.query.filter_by(id=id).delete()
+    Answer.query.filter_by(survey_id=id).delete()
+    User_Answer.query.filter_by(survey_id=id).delete()
     db.session.commit()
     flash("Survey deleted successfully!", category="success")
     return redirect("/dev")
@@ -183,6 +180,22 @@ def delete_tag(tag):
     Article_Tag.query.filter_by(tag=tag).delete()
     db.session.commit()
     flash("Tag deleted successfully!", category="success")
+    return redirect("/dev")
+
+
+@dev.route("/change-admin-password")
+def change_admin_password():
+    if session["needs_authorization"]:
+        return authorize_dev()
+    new_password = session["new_admin_password"]
+    if len(new_password) < 4:
+        flash("Password must be at least 4 characters long", category="error")
+    else:
+        with open("__admin__.txt", "w+") as f:
+            f.write(generate_password_hash(new_password))
+        flash("Admin Password changed successfully!", category="success")
+    
+    session.pop("new_admin_password")
     return redirect("/dev")
 
 
@@ -225,7 +238,20 @@ def authorize_to_delete_tag(tag):
     return redirect(url_for("dev.delete_tag", tag=tag))
 
 
+@dev.route("/change-admin-password/authorize", methods=["POST"])
+def authorize_to_change_admin_password():
+    session["new_admin_password"] = request.form.get("admin_password")
+    session["needs_authorization"] = True
+    return redirect(url_for("dev.change_admin_password"))
+
+
 def authorize_dev():
     session["request_url"] = request.url
     return redirect(url_for("dev.check_password"))
     
+#-------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+

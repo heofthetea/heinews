@@ -10,7 +10,7 @@ from datetime import timedelta
 class Article(db.Model):
     id = db.Column(db.String(6), primary_key=True)
     title = db.Column(db.String(128))
-    description = db.Column(db.String(256)) #TODO if statement to not display this column if it is None
+    description = db.Column(db.String(256))
     date_created = db.Column(db.DateTime(timezone=True), default=func.now())
     validated = db.Column(db.Boolean(), default=False)
     upvotes = db.Column(db.Integer, nullable=False, default=0)

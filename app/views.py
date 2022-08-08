@@ -60,9 +60,7 @@ def profile():
     if get_user_role(current_user).can_upload:
         uploaded = Article.query.filter_by(creator_email=current_user.email).all()
     #TODO similar stuff depending on features added
-    #TODO! something like this for surveys
     #TODO! add option to change email notification settings
-    #TODO! add option to delete ones account
 
     reset = Password_Reset.query.filter_by(user_id=current_user.id).first()
     if reset:
@@ -83,7 +81,7 @@ def profile():
         verification_link=send_verification_email(current_user.email) if not current_user.email_confirmed else "already verified"
     )
 
-# TODO new error for "email not verified?"
+
 class ErrorPages:
     def __404__():
         return render_template("error/404.html")

@@ -25,7 +25,7 @@
             <th>Email Benachrichtigungen:</th>
             <td>{{  current_user.notifications  }}</td>
         </tr>
-        {% if not already_verified %}
+        {% if not current_user.email_confirmed %}
             <tr>
                 <th>Verifizieren:</th>
                 <td>
@@ -127,6 +127,16 @@
             
         </tr>
     </table>
+
+    {% if current_user.role == "user" %}
+        <hr>
+        <form action="{{ url_for('auth.promote') }}" method="POST">
+            <h1>Ich bin Redakteur der Schülerzeitung</h1>
+            <input type="password" class="form-control" id="admin_password" name="admin_password" placeholder="Admin-Passwort">
+            <button type="submit">Submit</button>
+        </form>
+    {% endif %}
+
 </div>
 {% endblock %}
 
