@@ -25,12 +25,14 @@
             <th>Email Benachrichtigungen:</th>
             <td>{{  current_user.notifications  }}</td>
         </tr>
-        <tr>
-            <th>Verifizieren:</th>
-            <td>
-                <b><a style="text-decoration: none;" href="{{ verification_link }}">{{ verification_link }}</a></b>
-            </td>
-        </tr>
+        {% if not already_verified %}
+            <tr>
+                <th>Verifizieren:</th>
+                <td>
+                    <b><a style="text-decoration: none;" href="{{ verification_link }}">{{ verification_link }}</a></b>
+                </td>
+            </tr>
+        {% endif %}
         <tr>
             <th>Passwort:</th>
             <td>
@@ -38,7 +40,7 @@
                     <b><a style="text-decoration: none" href="{{ url_for('auth.reset_password', reset_id=reset) }}">Passwort zurücksetzen</a></b><!-- (TODO send this per email)-->
                 {% else %}
                     <form action="{{ url_for('auth.create_reset_token', user_id=current_user.id) }}">
-                        <button type="submit">Request password reset</button>
+                        <button class="btn btn-primary" type="submit">Request password reset</button>
                     </form>
                 {% endif %}
             </td>
@@ -50,7 +52,7 @@
                     <b><a style="text-decoration: none" href="{{ url_for('auth.delete_account', delete_id=delete) }}">Account löschen</a></b><!-- (TODO send this per email)-->
                 {% else %}
                     <form action="{{ url_for('auth.create_delete_token', user_id=current_user.id) }}">
-                        <button type="submit">Request deletion</button>
+                        <button class="btn btn-danger" type="submit">Request deletion</button>
                     </form>
                 {% endif %}
             </td>
@@ -109,25 +111,22 @@
                         {% endfor %}
                     </ul>
                 </div>
-            </td>  
+            </td>
+            <td>
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                        Teilgenommene Umfragen
+                      </button>
+                      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                          {% for participation in surveys %}
+                              <li><a class="dropdown-item" href="{{ url_for('surveys.survey', id=participation[0].id) }}">{{ participation[0].title }} - Antwort: {{ participation[1].value }}</a></li>
+                          {% endfor %}
+                      </ul>
+                </div>
+            </td>
             
         </tr>
     </table>
-    <!--TODO -------------------------------------------------------------------------------------------------------------------->
-    <h3>Surveys participated in:</h3>
-    <table>
-        {% for participation in surveys %}
-        <tr>
-            <td>
-                <a href="{{ url_for('surveys.survey', id=participation[0].id) }}">{{ participation[0].title }}</a>
-            </td>
-            <td>
-                {{ participation[1].value }}
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
-    <!--------------------------------------------------------------------------------------------------------------------------->
 </div>
 {% endblock %}
 
