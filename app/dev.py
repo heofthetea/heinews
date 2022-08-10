@@ -1,10 +1,11 @@
 from flask import Blueprint, render_template, render_template_string,  redirect, abort, url_for, flash, request, session
 from flask_login import login_required, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
-from .models import Article, User, Verify_Email, Password_Reset, Tag, Article_Tag, Role, Survey,  Answer, User_Answer
+from ._lib.send_mail import send_mail
+from .models import Article, User, Verify_Email, Password_Reset, Tag, Article_Tag, Role, Survey, Answer, User_Answer, Banned_User
 from .articles import get_article_location
-from .auth import is_dev
-from . import db, send_database
+from .auth import is_eternal_dev, account_yeeted_mail
+from . import db, send_database, __MAIL_ACCOUNT__
 from os import remove
 from os.path import exists, isdir
 from shutil import rmtree
@@ -52,6 +53,7 @@ def dev_panel() -> None:
         tags=Tag.query.all(),
         surveys=Survey.query.order_by(Survey.title), #TODO rework this to date when it's actually implemented
         roles=Role.query.order_by(Role.hierarchy),
+        banned_users=Banned_User.query.order_by(Banned_User.expiry_date),
         users_filtered=filtered
     )
 
@@ -104,9 +106,11 @@ def check_password():
     )
     
 
+# TODO give yeeted users a ban for a certain amount of time before being able to create a new Account
 @dev.route("yeet_user/<int:id>")
 def delete_user(id):
-    if is_dev(User.query.get(id).email):
+    user_email = User.query.get(id).email
+    if is_eternal_dev(user_email):
         flash("Can't delete eternal developer!", category="error")
         return redirect("/dev")
     if session["needs_authorization"]:
@@ -114,7 +118,28 @@ def delete_user(id):
     User.query.filter_by(id=id).delete()
     Verify_Email.query.filter_by(user_id=id).delete()
     Password_Reset.query.filter_by(user_id=id).delete()
+
+    db.session.add(
+        Banned_User(
+            email=user_email
+        )
+    )
     db.session.commit()
+
+    content = account_yeeted_mail()
+    if send_mail(
+        from_email=__MAIL_ACCOUNT__["email"],
+        password=__MAIL_ACCOUNT__["password"],
+        recipients=user_email,
+        subject=content["head"],
+        content=content["body"],
+        smtp=__MAIL_ACCOUNT__["smtp"][0],
+        port=__MAIL_ACCOUNT__["smtp"][1]
+    ):
+        flash("User notified of deletion", category="info")
+    else:
+        flash("Couldn't notify user of deletion", category="info")
+    
     flash("User deleted successfully!", category="success")
     return redirect("/dev")
 
@@ -123,7 +148,7 @@ def delete_user(id):
 @dev.route("/change_role/<int:user>")
 def change_role(user):
     changed_user = User.query.get(int(user))
-    if is_dev(changed_user.email):
+    if is_eternal_dev(changed_user.email):
         flash("Can't demote eternal developer!", category="error")
         return redirect("/dev")
     if session["needs_authorization"]:
@@ -199,6 +224,16 @@ def change_admin_password():
     return redirect("/dev")
 
 
+@dev.route("/unban/<int:id>")
+def unban(id):
+    if session["needs_authorization"]:
+        return authorize_dev()
+    Banned_User.query.filter_by(id=id).delete()
+    db.session.commit()
+    flash("User unbanned successfully", category="success")
+    return redirect("/dev")
+
+
 #-------------------------------------------------------------------------------------------------------------------------------------------
 # @REGION authorization redirects
 """
@@ -243,6 +278,12 @@ def authorize_to_change_admin_password():
     session["new_admin_password"] = request.form.get("admin_password")
     session["needs_authorization"] = True
     return redirect(url_for("dev.change_admin_password"))
+
+
+@dev.route("/unban/<int:id>")
+def authorize_to_unban(id):
+    session["needs_authorization"] = True
+    return redirect(url_for("dev.unban", id=id))
 
 
 def authorize_dev():

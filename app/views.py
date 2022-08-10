@@ -62,13 +62,9 @@ def profile():
     #TODO similar stuff depending on features added
     #TODO! add option to change email notification settings
 
-    reset = Password_Reset.query.filter_by(user_id=current_user.id).first()
-    if reset:
-        reset = reset.id
+    reset = Password_Reset.query.filter_by(user_id=current_user.id).first() is not None
+    delete = Delete_Account.query.filter_by(user_id=current_user.id).first() is not None
 
-    delete = Delete_Account.query.filter_by(user_id=current_user.id).first()
-    if delete:
-        delete = delete.id
         
     return render_template(
         "auth/profile.html", 
@@ -76,9 +72,7 @@ def profile():
         uploaded=uploaded,
         surveys=surveys,
         reset=reset,
-        delete=delete,
-        # TODO remove this when sending verification link by email
-        verification_link=send_verification_email(current_user.email) if not current_user.email_confirmed else "already verified"
+        delete=delete
     )
 
 

@@ -4,7 +4,7 @@ from ._lib.docx_to_html import Tag, convert, htmlify, replace_links, create_imag
 from .models import Article, Role, Category, Tag, Article_Tag, Survey, Answer, User_Answer, generate_id
 from .articles import get_article_location
 from . import db, IMAGE_FOLDER, WORKING_DIR
-from datetime import datetime
+from datetime import datetime, timedelta
 from sqlalchemy import asc
 from os import path, mkdir
 from werkzeug.utils import secure_filename
@@ -114,7 +114,7 @@ def upload_article(phase) -> None:
                     cache["images"] = []
                     return redirect(url_for("admin.add_images", article_id=cache["article_id"]))
                 
-        return render_template("upload/admin.html")
+        return render_template("upload/upload.html")
 
     elif phase == "edit":
         # contains all necessary operations when article is completely finished (all needed additional arguments are given)
@@ -228,11 +228,13 @@ def create_survey():
     num_answers = int(cache["num_answers"])
     if request.method == "POST":
         correct_answer = request.form.get("correct-answer")
+        print(request.form.get("expiry-date"))
 
         new_survey = Survey(
             id=generate_id(6, table=Survey),
             title=request.form.get("title"),
-            description=request.form.get("description")
+            description=request.form.get("description"),
+            expiry_date=datetime.now() + timedelta(int(request.form.get("expiry-date")))
         )
         db.session.add(new_survey)
 

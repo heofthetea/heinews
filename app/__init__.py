@@ -18,16 +18,18 @@ WORKING_DIR = getcwd()
 IMAGE_FOLDER = "/static/img/articles"
 __HOST__ = None
 
-# CURRENT ADMIN PASSWORD
-# TODO change to serious one
-print(hash("admin123", method="sha256"))
-
 """
 These are the "super-developers". On signup, only these email addresses get immediate developer status, which cannot be revoked.
 Why am I caring so much about keeping the addresses hashed and hidden? I don't know. It's fun.
 """
 with open("__devs__.txt", "r") as f:
     __DEVELOPERS__ = f.read().splitlines()
+
+__MAIL_ACCOUNT__  = {
+    "email": "emil.schlaeger@gmx.de",
+    "password": "EgidW13.",
+    "smtp": ("mail.gmx.net", 587)
+}
 
 
 """
@@ -109,8 +111,6 @@ def create_app(host: tuple=None) -> Flask:
         return ErrorPages.__403__()
     
     return app
-
-
 
 
 #------------------------------------------------------------------------------------------------------------------------------------
