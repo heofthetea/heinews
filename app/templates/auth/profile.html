@@ -23,13 +23,20 @@
         </tr>
         <tr>
             <th>Email Benachrichtigungen:</th>
-            <td>{{  current_user.notifications  }}</td>
+            <td>
+                {% if current_user.notifications == true %}
+                    Aktiviert
+                {% else %}
+                    Deaktiviert
+                {% endif %}
+
+            </td>
         </tr>
         {% if not current_user.email_confirmed %}
             <tr>
                 <th>Verifizieren:</th>
                 <td>
-                    Dir wurde eine Mail mit Link gesendet <!--TODO option to resend mail-->
+                    <b>Dir wurde eine Mail mit Link gesendet</b> <!--TODO option to resend mail-->
                 </td>
             </tr>
         {% endif %}
@@ -37,7 +44,7 @@
             <th>Passwort:</th>
             <td>
                 {% if reset %}
-                    Dir wurde eine Mail mit Link gesendet
+                    <b>Dir wurde eine Mail mit Link gesendet</b>
                 {% else %}
                     <form action="{{ url_for('auth.send_reset_mail', user_id=current_user.id) }}">
                         <button class="btn btn-primary" type="submit">Request password reset</button>
@@ -49,7 +56,7 @@
             <th>Account löschen:</th>
             <td>
                 {% if delete %}
-                    Dir wurde eine Mail mit Link gesendet
+                    <b>Dir wurde eine Mail mit Link gesendet</b>
                 {% else %}
                     <form action="{{ url_for('auth.send_delete_mail', user_id=current_user.id) }}">
                         <button class="btn btn-danger" type="submit">Löschen anfragen</button>
@@ -58,12 +65,13 @@
             </td>
         </tr>
     </table>
+    <!--
     {% if not current_user.email_confirmed %}
     <h6><i class="bi bi-info-circle"></i>  Verification link is designed to work with manually entering it into browser -> clicking on this will lead to 404 error, in url remove the first 
         127.0.0.1/
     </h6>
     <br>
-    {% endif %}
+    {% endif %}-->
     <br>
 
     <!--------------------------------------------------------------------------------------------------------------------------------->
