@@ -19,7 +19,17 @@
         </tr>
         <tr>
             <th>Rollen:</th>
-            <td>{{  current_user.role  }}</td>
+            <td>    <!-- TODO: Namen für die Rollen finden  -->
+                {% if current_user.role == "user" %}
+                    Benutzer
+                {% elif current_user.role == "upload"%}
+                    Hochladen
+                {% elif current_user.role == "validate"%}
+                    Überprüfen
+                {% elif current_user.role == "developer"%}
+                    Entwickler
+                {% endif %}
+            </td>
         </tr>
         <tr>
             <th>Email Benachrichtigungen:</th>
@@ -47,7 +57,7 @@
                     <b>Dir wurde eine Mail mit Link gesendet</b>
                 {% else %}
                     <form action="{{ url_for('auth.send_reset_mail', user_id=current_user.id) }}">
-                        <button class="btn btn-primary" type="submit">Request password reset</button>
+                        <button class="btn btn-primary" type="submit">Neues Passwort anfragen</button>
                     </form>
                 {% endif %}
             </td>
