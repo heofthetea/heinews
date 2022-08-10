@@ -3,7 +3,7 @@ from sqlalchemy.sql import func
 from sqlalchemy import asc, desc
 from . import db, user_loggedin
 from flask_login import UserMixin
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 # is it necessary to give everything a power of 2 as a length? No. Do I do it anyway? Yes, why not.
 
@@ -69,6 +69,12 @@ class User(db.Model, UserMixin):
         return users_sorted
 
 
+class Banned_User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(64), unique=True)
+    expiry_date = db.Column(db.DateTime(), default=datetime.now() + timedelta(weeks=1))
+
+
 #-----------------------------------------------------------------------------------------------------------------------------------
 
 #TODO give surveys tags?
@@ -76,7 +82,7 @@ class Survey(db.Model):
     id = db.Column(db.String(6), primary_key=True)
     title = db.Column(db.String(128))
     description = db.Column(db.String(256))
-    # expiry_date = db.Column(db.DateTime(timezone=True)) # TODO find a way to select expiry dates in frontend
+    expiry_date = db.Column(db.DateTime())
 
     def total_votes(self):
         votes = 0
@@ -105,19 +111,19 @@ class User_Answer(db.Model):
 class Password_Reset(db.Model):
     id = db.Column(db.String(256), primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), unique=True)
-    #expiry_date = db.Column(db.DateTime(timezone=True), default=func.now() + timedelta(days=1)) #TODO! get this column working
+    expiry_date = db.Column(db.DateTime(), default=datetime.now() + timedelta(days=1))
 
 
 class Verify_Email(db.Model):
     id = db.Column(db.String(256), primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), unique=True)
-    #expiry_date = db.Column(db.DateTime(timezone=True), default=func.now() + timedelta(days=1)) #TODO! get this column working
+    expiry_date = db.Column(db.DateTime(), default=datetime.now() + timedelta(days=1))
 
             
 class Delete_Account(db.Model):
     id = db.Column(db.String(256), primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), unique=True)
-    #expiry_date = db.Column(db.DateTime(timezone=True), default=func.now() + timedelta(days=1)) #TODO! get this column working
+    expiry_date = db.Column(db.DateTime(), default=datetime.now() + timedelta(days=1))
 
 #-----------------------------------------------------------------------------------------------------------------------------------
 # @REGION connections

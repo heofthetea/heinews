@@ -1,13 +1,51 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from .models import User, Password_Reset, Verify_Email, Delete_Account, User_Answer, User_Upvote, generate_id
+from .models import User, Password_Reset, Verify_Email, Delete_Account, User_Answer, User_Upvote, Banned_User, generate_id
 from werkzeug.security import generate_password_hash, check_password_hash
-from . import db, __DEVELOPERS__, __HOST__
+from . import db, __DEVELOPERS__, __HOST__, __MAIL_ACCOUNT__
+from ._lib.send_mail import send_mail
 from flask_login import login_user, login_required, logout_user, current_user
+from datetime import datetime
 
 
 auth = Blueprint("auth", __name__)
 get_checkbutton = lambda val : val == "on"
 
+#----------------------------------------------------------------------------------------------------------------------------
+# @REGION mail contents
+# All these functions contain a template text that gets sent per mail. Exists as a function instead of just a string because to every 
+# message, a custom link will have to be put into it.
+def verification_mail(link: str):
+    return {
+        "head": "Verifikation für deinen HEINEWS-Account",
+        "body": f"""
+    {link}"""
+    }
+
+
+def reset_mail(link: str):
+    return {
+        "head": "Passwort deines HEINEWS-Accounts zurücksetzen",
+        "body": f"""
+    {link}"""
+    }
+
+
+def delete_mail(link: str):
+    return {
+        "head": "Deinen HEINEWS-Accounts löschen",
+        "body": f"""
+    {link}"""
+    }
+
+
+def account_yeeted_mail():
+    return {
+        "head": "Dein HEINEWS-Account wurde von unseren Moderatoren gelöscht.",
+        "body": """Aus Gründen, die vermutlich ein Fehlverhalten o.ä. darstellen, hat sich unser Moderationsteam dafür entschieden, deinen 
+        Account zu löschen. Du kannst dir nach einer gewissen Zeit einen neuen Account erstellen."""
+    }
+    
+#----------------------------------------------------------------------------------------------------------------------------
 
 @auth.route("/login", methods=["GET", "POST"])
 def login():
@@ -44,6 +82,7 @@ def signup():
         notifications = request.form.get("notifications")
 
         user = User.query.filter_by(email=email).first()
+        is_banned = user_banned(email)
 
         if user:
             flash("Email bereits vergeben", category="error")
@@ -51,11 +90,13 @@ def signup():
             flash("Name muss mindestens 2 Zeichen lang sein", category="error")
         elif password1 != password2:
             flash("Passwörter stimmen nicht überein", category="error")
-
+        elif is_banned is not None:
+            flash(f"Dein Account wurde von Moderatoren gelöscht. Warte bis zum {is_banned.strftime('%d.%m.%Y um %H:%M')} \
+                , um einen neuen Account erstellen zu können!", category="error")
         else:
             # add user to data base
             role = "user"
-            if is_dev(email):
+            if is_eternal_dev(email):
                 role = "developer"
 
             new_user = User(
@@ -71,8 +112,6 @@ def signup():
             send_verification_email(new_user.email)
 
             login_user(new_user, remember=get_checkbutton(loggedin))
-            flash("Du erhältst demnächst eine Email mit Verifizierungscode. Sobald wir deine Email-Addresse verifiziert haben, hast du \
-                Zugriff auf Aktionen wie Upvoten.", category="info")
             return redirect(url_for("views.profile"))
     return render_template("auth/signup.html", user=current_user)
 
@@ -84,44 +123,13 @@ def logout():
     return redirect(url_for("auth.login"))
 
 
-def is_dev(email):
+def is_eternal_dev(email):
     for dev in __DEVELOPERS__:
         if check_password_hash(dev, email):
             return True
     return False
 
 #----------------------------------------------------------------------------------------------------------------------------
-
-@auth.route("/reset_link/<int:user_id>") # TODO rename
-def create_reset_token(user_id):
-    if Password_Reset.query.filter_by(user_id=user_id).first():
-        flash("Du hast bereits einen Link zum Zurücksetzen!!", category="error")
-    else:
-        db.session.add(
-            Password_Reset(
-                id=generate_id(265, table=Password_Reset),
-                user_id=int(user_id)
-            )
-        )
-        db.session.commit()
-    return redirect(url_for('views.profile'))
-
-
-@auth.route("/delete_link/<int:user_id>")
-def create_delete_token(user_id):
-    if Delete_Account.query.filter_by(user_id=user_id).first():
-        flash("Du hast bereits einen Link zum Löschen!!", category="error")
-    else:
-        db.session.add(
-            Delete_Account(
-                id=generate_id(265, table=Delete_Account),
-                user_id=int(user_id)
-            )
-        )
-        db.session.commit()
-    return redirect(url_for('views.profile'))
-
-
 
 @auth.route("/resetpw/<reset_id>", methods=["GET", "POST"])
 #@login_required # TODO keep this or not??
@@ -130,8 +138,21 @@ def create_delete_token(user_id):
 
 # TODO! add option to cancel process
 def reset_password(reset_id):
+    reset_token = Password_Reset.query.get(reset_id)
+    Password_Reset.query.filter_by(id=reset_id).delete()
+
+    if datetime.now() > reset_token.expiry_date:
+        flash("Dein Reset Token ist abgelaufen! Auf deinem Profil kannst du einen neuen anfordern!", category="error")
+        db.session.commit()
+        return redirect(url_for("views.profile"))
+
     if request.method == "POST":
-        user = User.query.get(Password_Reset.query.get(reset_id).user_id)
+        user = User.query.get(reset_token.user_id)
+
+        if "cancel" in request.form:
+            db.session.commit()
+            flash("Vorgang erfolgreich abgebrochen", category="success")
+            return redirect(url_for("views.profile"))
 
         password1 = request.form.get("password1")
         password2 = request.form.get("password2")
@@ -142,7 +163,6 @@ def reset_password(reset_id):
             flash("Herzlichen Glückwunsch, du hast dein altes Passwort erraten :)", category="success")
         else:
             user.password = generate_password_hash(password1, method="sha256")
-            Password_Reset.query.filter_by(id=reset_id).delete()
             db.session.commit()
             
             flash("Passwort wurde erforlgreich geändert!", category="success")
@@ -153,13 +173,25 @@ def reset_password(reset_id):
 @auth.route("/deleteacc/<delete_id>", methods=["GET", "POST"])
 #@login_required # TODO keep this or not??
 def delete_account(delete_id):
-    if request.method == "POST":
-        user = User.query.get(Delete_Account.query.get(delete_id).user_id)
+    delete_token = Delete_Account.query.get(delete_id)
+    Delete_Account.query.filter_by(id=delete_id).delete()
+
+    if datetime.now() > delete_token.expiry_date:
+        flash("Dein Deletion Token ist abgelaufen! Auf deinem Profil kannst du einen neuen anfordern!", category="error")
+        db.session.commit()
+        return redirect(url_for("views.profile"))
+
+    elif request.method == "POST":
+        user = User.query.get(delete_token.user_id)
+
+        if "cancel" in request.form:
+            db.session.commit()
+            flash("Vorgang erfolgreich abgebrochen", category="success")
+            return redirect(url_for("views.profile"))
 
         password = request.form.get("password")
 
         if check_password_hash(user.password, password):
-            Delete_Account.query.filter_by(id=delete_id).delete()
             User.query.filter_by(id=user.id).delete()
 
             # when a user deletes his own account, all his traces are erased
@@ -172,13 +204,23 @@ def delete_account(delete_id):
             db.session.commit()
             flash("Dein Account wurde erfolgreich gelöscht!", category="success")
             return(redirect(url_for("auth.signup")))
+        else:
+            flash("Das Passwort stimmt leider nicht :/", category="error")
+            return(redirect(url_for("auth.profile")))
     return render_template("auth/delete_account.html")
-
 
 
 @auth.route("/verify/<verify_id>")
 def verify_email(verify_id):
-    user = User.query.get(Verify_Email.query.get(verify_id).user_id)
+    verification_token = Verify_Email.query.get(verify_id)
+
+    if datetime.now() > verification_token.expiry_date:
+        flash("Dein Verification Token ist abgelaufen! Auf deinem Profil kannst du einen neuen anfordern!", category="error")
+        Verify_Email.query.filter_by(id=verify_id).delete()
+        db.session.commit()
+        return redirect(url_for("views.profile"))
+    
+    user = User.query.get(verification_token.user_id)
     user.email_confirmed = True
 
     Verify_Email.query.filter_by(id=verify_id).delete()
@@ -204,29 +246,130 @@ def promote():
 
 
 #----------------------------------------------------------------------------------------------------------------------------
+# @REGION sending links per mail
 
-# TODO change return type when actually sending link per email
-def send_verification_email(email: str) -> str:
+# check comment on send_reset_mail for explanation
+def send_verification_email(email: str) -> None:
     user = User.query.filter_by(email=email).first()
-    if Verify_Email.query.filter_by(user_id=user.id).first():
-        return f"{__HOST__}/{url_for('auth.verify_email', verify_id=Verify_Email.query.filter_by(user_id=user.id).first().id)}"
+    temp_id = generate_id(256, table=Verify_Email)
     
-    verification_token = Verify_Email(
-        id=generate_id(256),
-        user_id=user.id
-    )
-    db.session.add(verification_token)
-    db.session.commit()
+    link = f"{__HOST__}{url_for('auth.verify_email', verify_id=temp_id)}"
+    content = verification_mail(link)
+    # sending mail before adding database entry because that is much more likely to go wrong and in that case won't create
+    # a DB entry that cannot be accessed in any way
+    if send_mail(
+        from_email=__MAIL_ACCOUNT__["email"],
+        password=__MAIL_ACCOUNT__["password"],
+        recipients=email,
+        subject=content["head"],
+        content=content["body"],
+        smtp=__MAIL_ACCOUNT__["smtp"][0],
+        port=__MAIL_ACCOUNT__["smtp"][1]
+    ):
+        db.session.add(
+            Verify_Email(
+                id=temp_id,
+                user_id=user.id
+            )
+        )
+        db.session.commit()
+        flash("Du erhältst demnächst eine Email mit Verifizierungscode. Sobald wir deine Email-Addresse verifiziert haben, hast du \
+                Zugriff auf Aktionen wie Upvoten.", category="info")
+    else:
+        flash("Whoops... Da ist wohl was schief gelaufen! Wir konnten dir keine Mail senden :/", category="error")
+
+
+"""
+Sends a link to reset the users password per Mail and creates a reset token in the database. First the mail gets sent, because this 
+process is far more likely to go wrong than a simple DB operation, and if it were to happen the other way around and something did go 
+wrong, there would exist a reset token which a) cannot be accessed from anywhere and b) will prevent the user from requesting another.
+"""
+@auth.route("/reset_link/<int:user_id>")
+def send_reset_mail(user_id):
+    # if the user already has a reset token, he should not request another
+    if Password_Reset.query.filter_by(user_id=user_id).first():
+        flash("Du hast bereits einen Link zum Zurücksetzen!!", category="error")
+    else:
+        temp_id = generate_id(256, table=Password_Reset) # id is created here because it is used in both the DB entry and the link
+
+        link = f"{__HOST__}{url_for('auth.reset_password', reset_id=temp_id)}"
+        content = reset_mail(link)
+        if send_mail(
+            from_email=__MAIL_ACCOUNT__["email"],
+            password=__MAIL_ACCOUNT__["password"],
+            recipients=User.query.get(user_id).email,
+            subject=content["head"],
+            content=content["body"],
+            smtp=__MAIL_ACCOUNT__["smtp"][0],
+            port=__MAIL_ACCOUNT__["smtp"][1]
+        ):
+            db.session.add(
+                Password_Reset(
+                    id=temp_id,
+                    user_id=int(user_id)
+                )
+            )
+            db.session.commit()
+            flash("Dir wurde eine Mail mit einem Link gesendet, unter dem du dein Passwort zurücksetzen kannst.", category="info")
+        else:
+            flash("Whoops... Da ist wohl was schief gelaufen! Wir konnten dir keine Mail senden :/", category="error")
+
+    return redirect(url_for('views.profile'))
+
+
+@auth.route("/delete_link/<int:user_id>")
+def send_delete_mail(user_id):
+    if Delete_Account.query.filter_by(user_id=user_id).first():
+        flash("Du hast bereits einen Link zum Löschen!!", category="error")
+    else:
+        temp_id = generate_id(256, table=Delete_Account)
+
+        link = f"{__HOST__}{url_for('auth.delete_account', delete_id=temp_id)}"
+        content = delete_mail(link)
+        if send_mail(
+            from_email=__MAIL_ACCOUNT__["email"],
+            password=__MAIL_ACCOUNT__["password"],
+            recipients=User.query.get(user_id).email,
+            subject=content["head"],
+            content=content["body"],
+            smtp=__MAIL_ACCOUNT__["smtp"][0],
+            port=__MAIL_ACCOUNT__["smtp"][1]
+        ):
+            db.session.add(
+                Delete_Account(
+                    id=temp_id,
+                    user_id=int(user_id)
+                )
+            )
+            db.session.commit()
+            flash("Dir wurde eine Mail mit einem Link gesendet, unter dem du deinen Account löschen kannst.", category="info")
+        else:
+            flash("Whoops... Da ist wohl was schief gelaufen! Wir konnten dir keine Mail senden :/", category="error")
+    return redirect(url_for('views.profile'))
     
-    link = f"{__HOST__}{url_for('auth.verify_email', verify_id=verification_token)}"
-    print(link)
-    return link
 
 #----------------------------------------------------------------------------------------------------------------------------
 
-def check_admin_password(pw):
+def check_admin_password(pw: str) -> bool:
     with open("__admin__.txt", "r") as f:
         if check_password_hash(f.readline(), pw):
             return True
     return False
+
+"""
+checks if a user is banned. If ban is expired, the ban gets lifted, i.e. the DB entry deleted
+@param email: the email, the user entered on signup
+@return the expiry date of the ban if there is one, None if user is not banned
+"""
+def user_banned(email: str) -> datetime:
+    ban = Banned_User.query.filter_by(email=email).first()
+    
+    if ban:
+        if datetime.now() > ban.expiry_date:
+            Banned_User.query.filter_by(email=email).delete()
+            db.session.commit()
+            return None
+        return ban.expiry_date
+    return None
+
 

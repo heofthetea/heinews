@@ -15,6 +15,7 @@
     {% if description != none %}
         <h4>{{ db_entry.description }}</h4>
     {% endif %}
+    <h4>Läuft ab am {{ db_entry.expiry_date.strftime("%d.%m.%Y um %H:%M")}}</h4>
 
 
     <form action="{{ url_for('surveys.vote', survey_id=db_entry.id) }}" method="POST">
@@ -29,7 +30,7 @@
                 required
             />
             <label for="{{ answer.id }}">
-                {% if not user_answer == none %} <!--if user has already voted on this survey -->
+                {% if not user_answer == none or survey_expired %} <!--if user has already voted on this survey -->
                     {# checking for absolute boolean values because if a value v is `None`, the statement `not v` equates to true  #}
                     {# I apologize for this if statement being confusing but it's the easiest way to do it xd #}
                     {% if answer.correct == true %}
@@ -54,7 +55,7 @@
         {% endfor %}
 
         {# same if-statement as in the label tag, you see the potential benefits of one giant if-else?#}
-        {% if not user_answer == none %}
+        {% if not user_answer == none or survey_expired %}
         <i>Die Option, für die du abgestimmt hast, ist unterstrichen.</i>
             {% if not correct_answer == none %}
                 {% if user_answer.answer_id == correct_answer.id %}

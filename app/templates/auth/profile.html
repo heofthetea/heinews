@@ -29,7 +29,7 @@
             <tr>
                 <th>Verifizieren:</th>
                 <td>
-                    <b><a style="text-decoration: none;" href="{{ verification_link }}">{{ verification_link }}</a></b>
+                    Dir wurde eine Mail mit Link gesendet <!--TODO option to resend mail-->
                 </td>
             </tr>
         {% endif %}
@@ -37,9 +37,9 @@
             <th>Passwort:</th>
             <td>
                 {% if reset %}
-                    <b><a style="text-decoration: none" href="{{ url_for('auth.reset_password', reset_id=reset) }}">Passwort zurücksetzen</a></b><!-- (TODO send this per email)-->
+                    Dir wurde eine Mail mit Link gesendet
                 {% else %}
-                    <form action="{{ url_for('auth.create_reset_token', user_id=current_user.id) }}">
+                    <form action="{{ url_for('auth.send_reset_mail', user_id=current_user.id) }}">
                         <button class="btn btn-primary" type="submit">Request password reset</button>
                     </form>
                 {% endif %}
@@ -49,9 +49,9 @@
             <th>Account löschen:</th>
             <td>
                 {% if delete %}
-                    <b><a style="text-decoration: none" href="{{ url_for('auth.delete_account', delete_id=delete) }}">Account löschen</a></b><!-- (TODO send this per email)-->
+                    Dir wurde eine Mail mit Link gesendet
                 {% else %}
-                    <form action="{{ url_for('auth.create_delete_token', user_id=current_user.id) }}">
+                    <form action="{{ url_for('auth.send_delete_mail', user_id=current_user.id) }}">
                         <button class="btn btn-danger" type="submit">Löschen anfragen</button>
                     </form>
                 {% endif %}
