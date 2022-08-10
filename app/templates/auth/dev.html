@@ -247,7 +247,7 @@ DEV Panel in Dark-Mode? class="table table-dark"
                 </td>
                 <td style="text-align: right">
                     <form action="{{ url_for('dev.authorize_to_unban', id=ban.id) }}">
-                        <button class="btn btn-danger">&times;</button>
+                        <button class="btn btn-success">&times;</button>
                     </form>
                 </td>
             </tbody>
@@ -259,17 +259,27 @@ DEV Panel in Dark-Mode? class="table table-dark"
     <!---------------------------------------------------------------------------------------------------------------------->
 
     <hr>
-        <form method="POST">
-            <label for="backup"></label>
-            <br>
-            <input class="btn btn-danger" type="submit" name="backup" value="Backup Database">
-        </form>
-        <form action="{{ url_for('dev.authorize_to_change_admin_password') }}" method="POST">
-            <label for="admin_password">Change Admin Password</label>
-            <br>
-            <input type="password" name="admin_password" id="admin_password" placeholder="New Admin Password">
-            <button type="submit">Change Password</button>
-        </form>
+    <br>
+    <table class="table">
+        <tr>
+            <th>
+                <h5>Change Admin Password</h5>
+            </th>
+        </tr>
+        <tr>
+            <td>
+                <form action="{{ url_for('dev.authorize_to_change_admin_password') }}" method="POST">
+                    <input type="password" name="admin_password" id="admin_password" placeholder="New Admin Password">
+                    <button class="btn btn-warning" type="submit">Change Password</button>
+                </form>
+            </td>
+            <td style="text-align:right">
+                <form method="POST">
+                    <input class="btn btn-danger" type="submit" name="backup" value="Backup Database">
+                </form>
+            </td>
+        </tr>
+    </table>
 </div>
 
 {% endblock %}
