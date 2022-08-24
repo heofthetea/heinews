@@ -58,7 +58,7 @@ input {
             required
         />
     </div>
-
+    <br>
     <div class="form-group">
         <label for="description"><b>Beschreibung/Kurzübersicht</b></label>
         <input
@@ -69,7 +69,7 @@ input {
             placeholder="Deshalb solltet Ihr diesen Artikel  u n b e d i n g t  lesen"
         />
     </div>
-
+    <br>
     <div class="form-group">
         <label for="category"><b>Kategorie</b></label>
         <select name="category" id="category">
@@ -78,7 +78,7 @@ input {
             {% endfor %}
         </select>
     </div>
-
+    <br>
     <div class="form-group">
         <label for="tags"><b>Tags</b> (getrennt durch Leerzeichen)</label>
         <input
@@ -108,6 +108,7 @@ input {
                 <td>
                     <label for="description"><b>Beschreibung</b></label>
                     <input type="text" class="form-control" name="{{ image }}_description" placeholder="Das ist ein wunderschönes Bild">
+                    <br>
                     <label for="source"><b>Quelle</b> *</label>
                     <input type="source" class="form-control" name="{{ image }}_source" placeholder="Hab' ich selbst gemalt" required>
                 </td>
@@ -119,7 +120,7 @@ input {
     {% endfor %}
 
     <br>
-    <button>Submit</button>
+    <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 </div>
 
