@@ -212,7 +212,7 @@ def add_images(article_id):
                 image.save("app" + img_location)
                 cache["images"].append(img_location)
         return redirect(url_for("admin.upload_article", phase="edit"))
-    return render_template("upload/image_admin.html")
+    return render_template("upload/image_upload.html")
 
 #--------------------------------------------------------------------------------------------------------------------------------------------
 

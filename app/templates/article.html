@@ -74,14 +74,14 @@
         <form action="{{ url_for('articles.feedback', id=db_entry.id) }}">
             <div class="form-group">
                 <label for="cancel"></label>
-                    <button style="background-color: #f00; float: left;">Give Feedback</button>
+                    <button class="btn btn-danger" style="float: left;">Give Feedback</button>
             </div>
         </form>
             
         <form action="{{ url_for('articles.approve', id=db_entry.id) }}">
             <div class="form-group">
                 <label for="approve"></label>
-                <button style="background-color: #0f0; float: right;">Approve</button>
+                <button class="btn btn-success" style="float: right;">Approve</button>
             </div>
         </form>
     </div>
