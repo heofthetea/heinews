@@ -212,7 +212,7 @@ DEV Panel in Dark-Mode? class="table table-dark"
                     </a>
                 </td>
                 <td style="text-align: right">
-                    <form action="{{ url_for('dev.authorize_to_unban', id=ban.id) }}">
+                    <form action="{{ url_for('dev.authorize_to_delete_tag', tag=tag.tag) }}">
                         <button class="btn btn-danger">&times;</button>
                     </form>
                 </td>
