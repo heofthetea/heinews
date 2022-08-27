@@ -1,13 +1,27 @@
 {% extends "base.html" %}
 
 {% block content %}
-    {% for article in invalidated_articles %}
-        <a href="{{ url_for('articles.find_article', path='{0}.html'.format(article.id)) }}">
-            {{ article.title }} ({{ article.date_created.date().strftime("%d.%m.%Y") }})
-            <br>
-        </a>
-    {% endfor %}
+    <div class="container-fluid">
+        <div class="row my-5 flex-row flex-nowrap">
+            {% for article in invalidated_articles %}
+                <div class="col-sm-3">
+                    <div class="card card-block border-1 border-secondary">
+                        <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(article.id)) }}">
+                            <img src="{{ article.primary_image }}" style="max-height: 200px;" class="card-img-top" alt="">
+                            <div class="card-body text-center py-4">
+                                <h4 class="card-title">{{ article.title }}</h4>
+                                <p class="lead card-subtitle">{{ article.description }}</p>
+                                <br>
+                                <p>Hochgeladen am {{ article.date_created.date().strftime("%d.%m.%Y") }}</p>
+                            </div>
+                        </a>    
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 {% endblock %}
+
 
 {% block admin_panel %}
     <li><a class="dropdown-item fw-bold" href="{{ url_for('admin.admin_index') }}">Admin-Panel</a></li>
