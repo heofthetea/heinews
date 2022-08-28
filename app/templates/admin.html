@@ -1,6 +1,12 @@
 {% extends "base.html" %}
 
+{% block title %}Admin Panel{% endblock %}
+
 {% block content %}
+<div style="margin-left: 5%; margin-right:5%">
+    <br>
+    <h1>Admin-Panel</h1>
+    <br>
     <div class="container-fluid">
         <div class="row my-5 flex-row flex-nowrap">
             {% for article in invalidated_articles %}
@@ -20,6 +26,7 @@
             {% endfor %}
         </div>
     </div>
+</div>
 {% endblock %}
 
 

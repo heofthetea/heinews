@@ -12,7 +12,7 @@
         <input type="file" name="file">
         <br>
         <br>
-        <button name="upload-article" class="btn btn-primary">upload</button>
+        <button name="upload-article" class="btn btn-primary">Hochladen</button>
     </form>
 
     <br>
@@ -50,7 +50,7 @@
             </datalist>
         </div>
         <br>
-        <button name="create-survey" type="submit" class="btn btn-primary">create Survey</button>
+        <button name="create-survey" type="submit" class="btn btn-primary">Umfrage erstellen</button>
     </form>
     <br>
     <hr>
@@ -75,5 +75,5 @@
 {% endblock %}
 
 {% block upload %}
-    <li><a class="dropdown-item fw-bold" href="{{ url_for('admin.upload_article', phase='new') }}">Upload</a></li>
+    <li><a class="dropdown-item fw-bold" href="{{ url_for('admin.upload_article', phase='new') }}">Hochladen</a></li>
 {% endblock %}
