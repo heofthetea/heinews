@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, abort, redirect, url_for, flash, request
 from jinja2.exceptions import TemplateNotFound
 from flask_login import current_user, AnonymousUserMixin
-from .models import Article, User, Tag, User_Upvote, get_tags, get_articles, get_User_Upvote
+from .models import Article, User, Tag, User_Upvote, Announcement, get_tags, get_articles, get_User_Upvote
 from . import db
 
 
@@ -35,12 +35,25 @@ def find_article(path: str) -> None:
             user_upvoted = False
 
 
-        return render_template(f"articles/{path}", db_entry=db_entry,
-                                                   created_by=User.query.filter_by(email=db_entry.creator_email).first().name,
-                                                   tags=get_tags(db_entry),
-                                                   upvoted=user_upvoted)
+        return render_template(
+            f"articles/{path}", db_entry=db_entry,
+            created_by=User.query.filter_by(email=db_entry.creator_email).first().name,
+            tags=get_tags(db_entry),
+            upvoted=user_upvoted
+        )
     except TemplateNotFound:
         abort(404)
+
+
+@articles.route("/announcement/<id>")
+def announcement(id):
+    announcement = Announcement.query.get(id)
+    if announcement:
+        return render_template(
+            "announcement.html",
+            announcement=announcement
+        )
+    abort(404)
 
 
 @articles.route("/all")
@@ -50,7 +63,7 @@ def all_articles() -> None:
 
 @articles.route("/category/<category>")
 def by_category(category: str):
-    return render_template(f"overview/{category}.html", articles=Article.query.filter_by(category=category).all())
+    return render_template(f"overview/{category}.html", articles=Article.__validated_articles__(Article).filter_by(category=category).all())
 
 
 @articles.route("/upvote/<id>", methods=["POST"])

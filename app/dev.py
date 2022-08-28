@@ -2,9 +2,10 @@ from flask import Blueprint, render_template, render_template_string,  redirect,
 from flask_login import login_required, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
 from ._lib.send_mail import send_mail
-from .models import Article, User, Verify_Email, Password_Reset, Tag, Article_Tag, Role, Survey, Answer, User_Answer, Banned_User
+from .models import Article, User, Verify_Email, Password_Reset, Tag, Article_Tag, Role, Survey, Answer, User_Answer, Banned_User, Announcement, get_users_to_notify
 from .articles import get_article_location
-from .auth import is_eternal_dev, account_yeeted_mail
+from .auth import is_eternal_dev
+from .mail_contents import account_yeeted, announcement
 from . import db, send_database, __MAIL_ACCOUNT__
 from os import remove
 from os.path import exists, isdir
@@ -28,6 +29,7 @@ def dev_panel() -> None:
 
     users = User.__order_by_role__(User, descend=True)
     articles = Article.query.order_by(Article.validated).order_by(Article.title)
+    announcements = Announcement.query.order_by(Announcement.validated).order_by(Announcement.date_created)
     filtered = False
     if request.method == "POST":
         if request.form.get("backup"):
@@ -50,6 +52,7 @@ def dev_panel() -> None:
         users=users,
         #users=User.query.all(),
         articles=articles,
+        announcements=announcements,
         tags=Tag.query.all(),
         surveys=Survey.query.order_by(Survey.title), #TODO rework this to date when it's actually implemented
         roles=Role.query.order_by(Role.hierarchy),
@@ -126,7 +129,7 @@ def delete_user(id):
     )
     db.session.commit()
 
-    content = account_yeeted_mail()
+    content = account_yeeted()
     if send_mail(
         from_email=__MAIL_ACCOUNT__["email"],
         password=__MAIL_ACCOUNT__["password"],
@@ -234,6 +237,49 @@ def unban(id):
     return redirect("/dev")
 
 
+@dev.route("/delete-announcement/<id>")
+def delete_announcement(id):
+    # since this function is accessed from outside the dev panel, that token might not exist - hence the try-catch, to enable non-developers
+    # to be able to review announcements properly
+    try:
+        if session["needs_authorization"]:
+                return authorize_dev()
+    except KeyError: pass
+
+    Announcement.query.filter_by(id=id).delete()
+    db.session.commit()
+    flash("Announcement deleted successfully", category="success")
+    return redirect("/dev")
+
+
+
+@dev.route("/approve-announcement/<id>", methods=["POST"])
+@login_required
+def approve_announcement(id):
+    announcement = Announcement.query.get(id)
+    if current_user.role != "developer":
+        abort(418)
+    announcement.validated = True
+    db.session.commit()
+    flash("Announcement is now public!", category="success")
+    
+    mail = announcement(announcement)
+    if send_mail(
+        from_email=__MAIL_ACCOUNT__["email"],
+        password=__MAIL_ACCOUNT__["password"],
+        recipients=get_users_to_notify(),
+        subject=mail["head"],
+        content=mail["body"],
+        smtp=__MAIL_ACCOUNT__["smtp"][0],
+        port=__MAIL_ACCOUNT__["smtp"][1]
+    ):
+        flash("Mail notifications sent successfully!", category="success")
+    else:
+        flash("Mail could not be sent", category="info")
+    return redirect("/dev")
+
+
+
 #-------------------------------------------------------------------------------------------------------------------------------------------
 # @REGION authorization redirects
 """
@@ -241,6 +287,8 @@ the way this works is that for every operation, the dev has to enter his passwor
 functions that set a session variable to "needing authorization" The actual authorization is handled by an if statement in the "follow-up" 
 function redirecting to the password check.
 """
+
+# edit: I fucking hate it. This is by far the worst code in this entire project.
 
 @dev.route("/change_role/<int:user>/authorize", methods=["POST"])
 def authorize_to_change_role(user):
@@ -280,10 +328,16 @@ def authorize_to_change_admin_password():
     return redirect(url_for("dev.change_admin_password"))
 
 
-@dev.route("/unban/<int:id>")
+@dev.route("/unban/<int:id>/athorize")
 def authorize_to_unban(id):
     session["needs_authorization"] = True
     return redirect(url_for("dev.unban", id=id))
+
+
+@dev.route("/delete-announcement/<id>/authorize")
+def authorize_to_delete_announcement(id):
+    session["needs_authorization"] = True
+    return redirect(url_for("dev.delete_announcement", id=id))
 
 
 def authorize_dev():
@@ -291,8 +345,4 @@ def authorize_dev():
     return redirect(url_for("dev.check_password"))
     
 #-------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-
 

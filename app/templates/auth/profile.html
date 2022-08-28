@@ -34,6 +34,19 @@
         <tr>
             <th>Email Benachrichtigungen:</th>
             <td>
+                <form action="{{ url_for('auth.change_notification_settings') }}", method="POST">
+                    <label for="notifications">
+                    <input 
+                        type="checkbox" 
+                        id="notifications" 
+                        name="notifications" 
+                        onchange="this.form.submit()" 
+                        {# I am surprised this way of writing jinja if-statements actually works xd #}
+                        {% if current_user.notifications %}
+                        checked
+                        {% endif %}
+                    />
+                </form>
                 {% if current_user.notifications == true %}
                     Aktiviert
                 {% else %}

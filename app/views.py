@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, flash, url_for, request
 from flask_login import login_required, current_user
-from .models import Article, User_Upvote, Password_Reset, Delete_Account, Survey, User_Answer, Answer, get_user_role
+from .models import Article, User_Upvote, Password_Reset, Delete_Account, Survey, User_Answer, Answer, Announcement, get_user_role
 from .auth import send_verification_email
 from . import db
 from sqlalchemy import desc
@@ -21,12 +21,14 @@ def inject_title_image():
 def index() -> str:
     most_upvoted = Article.__validated_articles__(Article).order_by(desc(Article.upvotes)).first()
     most_recent = Article.__validated_articles__(Article).order_by(desc(Article.date_created)).first()
+    announcements: list = Announcement.query.filter_by(validated=True).order_by(desc(Announcement.date_created)).all()
     try:
         random_article = choice(Article.__validated_articles__(Article).all())
     except IndexError:
         random_article = []
     return render_template(
         "index.html",
+        announcements=announcements,
         most_upvoted_article=most_upvoted,
         most_recent_article=most_recent,
         random_article=random_article,

@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, url_for, redirect, flash, abort, request
 from flask_login import current_user, login_required
 from ._lib.docx_to_html import Tag, convert, htmlify, replace_links, create_image_placeholders, fill_image_placeholders
-from .models import Article, Role, Category, Tag, Article_Tag, Survey, Answer, User_Answer, generate_id
+from .models import Article, Role, Category, Tag, Article_Tag, Survey, Answer, User_Answer, Announcement, generate_id
 from .articles import get_article_location
 from . import db, IMAGE_FOLDER, WORKING_DIR
 from datetime import datetime, timedelta
@@ -84,6 +84,8 @@ def upload_article(phase) -> None:
             if "create-survey" in request.form:
                 cache["num_answers"] = request.form.get("num-answers")
                 return redirect(url_for("admin.create_survey"))
+            if "create-announcement" in request.form:
+                return redirect(url_for("admin.create_announcement"))
             if "upload-article" in request.form:
                 # check if the post request has the file part
                 if 'file' not in request.files:
@@ -216,14 +218,10 @@ def add_images(article_id):
 
 #--------------------------------------------------------------------------------------------------------------------------------------------
 
-# TODO GET TIME COLUMNS WORKING
-# TODO! implement simple surveys
-# create template
-    # for creation
-    # for actually voting
 # create system to view (results of) survey
 # 
 @admin.route("/newsurvey", methods=["GET", "POST"])
+@login_required
 def create_survey():
     num_answers = int(cache["num_answers"])
     if request.method == "POST":
@@ -258,6 +256,27 @@ def create_survey():
     return render_template("upload/upload_survey.html", num_answers=num_answers)
 
 #TODO! add option for authors to send announcements over dashboard and mail
+@admin.route("/newannouncement", methods=["GET", "POST"])
+@login_required
+def create_announcement():
+    if request.method == "POST":
+        title = request.form.get("title")
+        content = replace_dangerous_characters(replace_links(request.form.get("content")))
+
+        db.session.add(
+            Announcement(
+                id=generate_id(6, table=Announcement),
+                title=title,
+                content=content,
+                creator_email=current_user.email
+            )
+        )
+        db.session.commit()
+        flash("Die Ankündigung wurde erstellt. Jetzt muss nur noch ein Chefredakteur drüber schauen, und dann geht's an die Schüler!", 
+            category="success")
+        return redirect('/')
+
+    return render_template("upload/upload_announcement.html")
 
 #--------------------------------------------------------------------------------------------------------------------------------------------
 

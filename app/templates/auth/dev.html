@@ -193,7 +193,45 @@ DEV Panel in Dark-Mode? class="table table-dark"
     </table>
 
     <!---------------------------------------------------------------------------------------------------------------------->
-
+    
+    <hr>
+    <br>
+    <h2>Announcements</h2>
+    <table class="table">
+        <tr>
+            <thead>
+                <th scope="col" class="col-1">ID</th>
+                <th scope="col" class="col-6">Title</th>
+                <th scope="col" class="col-1">Validated</th>
+                <th scope="col" class="col-1">date submitted</th>
+                <th scope="col">creator</th>
+                <th scope="col" style="text-align: right">yeet</th>
+            </thead>
+        </tr>
+        {% for announcement in announcements %}
+        <tr>
+            <tbody>
+                <td>{{ announcement.id }}</td>
+                <td>
+                    <a href="{{ url_for('articles.announcement', id=announcement.id) }}">
+                        {{ announcement.title }}
+                    </a>
+                </td>
+                <td>{{ announcement.validated }}</td>
+                <td>{{ announcement.date_created.strftime("%d.%m.%Y: %H:%M") }}</td>
+                <td>{{ announcement.creator_email }}</td>
+                <td style="text-align: right">
+                    <form action="{{ url_for('dev.authorize_to_delete_announcement', id=announcement.id) }}">
+                        <button class="btn btn-danger">&times;</button>
+                    </form>
+                </td>
+            </tbody>
+        </tr>
+        {% endfor %}
+    
+    </table>
+    
+    <!---------------------------------------------------------------------------------------------------------------------->
     
     <h2>Tags</h2>
     <table class="table">

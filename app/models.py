@@ -11,7 +11,7 @@ class Article(db.Model):
     id = db.Column(db.String(6), primary_key=True)
     title = db.Column(db.String(128))
     description = db.Column(db.String(256))
-    date_created = db.Column(db.DateTime(timezone=True), default=func.now())
+    date_created = db.Column(db.DateTime(timezone=True), default=datetime.now())
     validated = db.Column(db.Boolean(), default=False)
     upvotes = db.Column(db.Integer, nullable=False, default=0)
     primary_image = db.Column(db.String(128)) #TODO fill this table
@@ -73,6 +73,16 @@ class Banned_User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(64), unique=True)
     expiry_date = db.Column(db.DateTime(), default=datetime.now() + timedelta(weeks=1))
+
+
+class Announcement(db.Model):
+    id = db.Column(db.String(6), primary_key=True)
+    title = db.Column(db.String(128))
+    content = db.Column(db.String(2048))
+    # that should be checked through the dev-panel, just so that no troll releases announcement after announcement on his own
+    validated = db.Column(db.Boolean(), default=False) 
+    date_created = db.Column(db.DateTime(), default=datetime.now())
+    creator_email = db.Column(db.String(64), db.ForeignKey("user.email"))
 
 
 #-----------------------------------------------------------------------------------------------------------------------------------
@@ -213,4 +223,8 @@ def get_user_role(user: User) -> Role:
 """
 def get_User_Upvote(user_id, article_id) -> DDL:
     return User_Upvote.query.filter_by(user_id=user_id).filter_by(article_id=article_id)
+
+
+def get_users_to_notify():
+    return User.query.filter_by(notifications=True).all()
 

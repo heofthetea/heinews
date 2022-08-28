@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="/static/css/article.css">
+{% endblock %}
+{% block title %}{{ announcement.title }}{% endblock %}
+
+{% block content%}
+<div class="container-xl">
+    <br>
+    <h1 style="text-align: center">
+        {{ announcement.title }}
+    </h1>
+    <br>
+
+    {{ announcement.content }}
+
+    {% if get_user_role(current_user).can_validate and not announcement.validated %}
+    <br>
+    <br>
+    <div>
+        {# rewrite to dev._delete_announcement to have non-developers be able to review announcements #}
+        <form action="{{ url_for('dev.authorize_to_delete_announcement', id=announcement.id) }}" method="POST">
+            <div class="form-group">
+                <label for="cancel"></label>
+                <button class="btn btn-danger" style="float: left;">Ankündigung löschen</button>
+            </div>
+        </form>
+
+        <form action="{{ url_for('dev.approve_announcement', id=announcement.id) }}" method="POST">
+            <div class="form-group">
+                <label for="approve"></label>
+                <button class="btn btn-success" style="float: right;">Bestätigen</button>
+            </div>
+        </form>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

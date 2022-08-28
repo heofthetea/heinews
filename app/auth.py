@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from .models import User, Password_Reset, Verify_Email, Delete_Account, User_Answer, User_Upvote, Banned_User, generate_id
 from werkzeug.security import generate_password_hash, check_password_hash
+from .models import User, Password_Reset, Verify_Email, Delete_Account, User_Answer, User_Upvote, Banned_User, generate_id
+from .mail_contents import verification, reset, delete, account_yeeted
 from . import db, __DEVELOPERS__, __HOST__, __MAIL_ACCOUNT__
 from ._lib.send_mail import send_mail
 from flask_login import login_user, login_required, logout_user, current_user
@@ -10,41 +11,6 @@ from datetime import datetime
 auth = Blueprint("auth", __name__)
 get_checkbutton = lambda val : val == "on"
 
-#----------------------------------------------------------------------------------------------------------------------------
-# @REGION mail contents
-# All these functions contain a template text that gets sent per mail. Exists as a function instead of just a string because to every 
-# message, a custom link will have to be put into it.
-def verification_mail(link: str):
-    return {
-        "head": "Verifikation für deinen HEINEWS-Account",
-        "body": f"""
-    {link}"""
-    }
-
-
-def reset_mail(link: str):
-    return {
-        "head": "Passwort deines HEINEWS-Accounts zurücksetzen",
-        "body": f"""
-    {link}"""
-    }
-
-
-def delete_mail(link: str):
-    return {
-        "head": "Deinen HEINEWS-Accounts löschen",
-        "body": f"""
-    {link}"""
-    }
-
-
-def account_yeeted_mail():
-    return {
-        "head": "Dein HEINEWS-Account wurde von unseren Moderatoren gelöscht.",
-        "body": """Aus Gründen, die vermutlich ein Fehlverhalten o.ä. darstellen, hat sich unser Moderationsteam dafür entschieden, deinen 
-        Account zu löschen. Du kannst dir nach einer gewissen Zeit einen neuen Account erstellen."""
-    }
-    
 #----------------------------------------------------------------------------------------------------------------------------
 
 @auth.route("/login", methods=["GET", "POST"])
@@ -244,6 +210,19 @@ def promote():
     return redirect(url_for("views.profile"))
 
 
+@auth.route("/changenotifications", methods=["POST"])
+@login_required
+def change_notification_settings():
+    email_notifications = get_checkbutton(request.form.get("notifications"))
+    current_user.notifications = email_notifications
+    db.session.commit()
+    flash(
+        "Du erhältst ab jetzt Benachrichtigungen per Mail über neuen Content auf der Website!" if email_notifications 
+        else "Wir werden dich nicht mehr per Mail über neuen Content auf der Website benachrichtigen!", 
+        category="success"
+    )
+    return redirect(url_for("views.profile"))
+
 
 #----------------------------------------------------------------------------------------------------------------------------
 # @REGION sending links per mail
@@ -254,7 +233,7 @@ def send_verification_email(email: str) -> None:
     temp_id = generate_id(256, table=Verify_Email)
     
     link = f"{__HOST__}{url_for('auth.verify_email', verify_id=temp_id)}"
-    content = verification_mail(link)
+    content = verification(link)
     # sending mail before adding database entry because that is much more likely to go wrong and in that case won't create
     # a DB entry that cannot be accessed in any way
     if send_mail(
@@ -293,7 +272,7 @@ def send_reset_mail(user_id):
         temp_id = generate_id(256, table=Password_Reset) # id is created here because it is used in both the DB entry and the link
 
         link = f"{__HOST__}{url_for('auth.reset_password', reset_id=temp_id)}"
-        content = reset_mail(link)
+        content = reset(link)
         if send_mail(
             from_email=__MAIL_ACCOUNT__["email"],
             password=__MAIL_ACCOUNT__["password"],
@@ -325,7 +304,7 @@ def send_delete_mail(user_id):
         temp_id = generate_id(256, table=Delete_Account)
 
         link = f"{__HOST__}{url_for('auth.delete_account', delete_id=temp_id)}"
-        content = delete_mail(link)
+        content = delete(link)
         if send_mail(
             from_email=__MAIL_ACCOUNT__["email"],
             password=__MAIL_ACCOUNT__["password"],
