@@ -9,13 +9,36 @@
     <h1>Artikel hochladen</h1>
     <br>
     <form method="POST" enctype="multipart/form-data">
-        <input type="file" name="file">
+        <table>
+            <tr>
+                <td scope="col" class="col-2">
+                    <label for="num-images">Wähle aus, wie viele Bilder dein Artikel haben soll *</label>
+                    <select id="num-images" name="num-images" required>
+                        <option value="0" selected>0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                    </select>
+                </td>
+                <td scope="col" class="col-2">
+                    <label for="file">Lade hier deine Artikeldatei hoch: *</label>
+                    <input type="file" name="file">
+                </td>
+            </tr>
+        </table>
         <br>
-        <br>
-        <button name="upload-article" class="btn btn-primary">Hochladen</button>
+        <button name="upload-article" class="btn btn-primary">Hochladen</button> 
     </form>
 
     <br>
+    Eine Übersicht darüber, wie Dein Artikel formattiert sein sollte, findest Du <a href="/article-formatting">hier.</a>
     <hr>
     <br>
 
@@ -75,5 +98,5 @@
 {% endblock %}
 
 {% block upload %}
-    <li><a class="dropdown-item fw-bold" href="{{ url_for('admin.upload_article', phase='new') }}">Hochladen</a></li>
+    <li><a class="dropdown-item fw-bold" href="{{ url_for('admin.new_article') }}">Hochladen</a></li>
 {% endblock %}

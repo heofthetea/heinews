@@ -1,5 +1,4 @@
 from sqlalchemy import event, DDL
-from sqlalchemy.sql import func
 from sqlalchemy import asc, desc
 from . import db, user_loggedin
 from flask_login import UserMixin
@@ -14,7 +13,7 @@ class Article(db.Model):
     date_created = db.Column(db.DateTime(timezone=True), default=datetime.now())
     validated = db.Column(db.Boolean(), default=False)
     upvotes = db.Column(db.Integer, nullable=False, default=0)
-    primary_image = db.Column(db.String(128)) #TODO fill this table
+    primary_image = db.Column(db.String(128))
     category = db.Column(db.String(64), db.ForeignKey("category.name"))
     creator_email = db.Column(db.String(64), db.ForeignKey("user.email"))
 

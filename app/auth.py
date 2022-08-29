@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from .models import User, Password_Reset, Verify_Email, Delete_Account, User_Answer, User_Upvote, Banned_User, generate_id
-from .mail_contents import verification, reset, delete, account_yeeted
+from .mail_contents import verification, reset, delete
 from . import db, __DEVELOPERS__, __HOST__, __MAIL_ACCOUNT__
 from ._lib.send_mail import send_mail
 from flask_login import login_user, login_required, logout_user, current_user

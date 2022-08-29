@@ -5,3 +5,4 @@ _done.txt
 /app/_lib/__pycache__/*.pyc
 /app/*.db
 /app/templates/articles/*.html
+/app/static/img/articles/**

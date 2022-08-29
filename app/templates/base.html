@@ -115,7 +115,7 @@
                     <li><a class="dropdown-item" href="{{ url_for('admin.admin_index') }}">Admin-Panel</a></li>
                   {% endif %}
                   {% if get_user_role(current_user).can_upload %}
-                    <li><a class="dropdown-item" href="{{ url_for('admin.upload_article', phase='new') }}">Upload</a></li>
+                    <li><a class="dropdown-item" href="{{ url_for('admin.new_article') }}">Upload</a></li>
                   {% endif %}
                 {% endif %}
                 <li><a class="dropdown-item" href="{{ url_for('tag.all_tags') }}">View All Tags</a></li>
@@ -222,7 +222,7 @@
                         {% endif %}
                         {% if get_user_role(current_user).can_upload %}
                           {% block upload %}
-                            <li><a class="dropdown-item" href="{{ url_for('admin.upload_article', phase='new') }}">Upload</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('admin.new_article') }}">Upload</a></li>
                           {% endblock %}
                         {% endif %}
                     {% endif %}
