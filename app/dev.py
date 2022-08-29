@@ -14,6 +14,7 @@ from shutil import rmtree
 dev = Blueprint("dev", __name__)
 #TODO! set timer to reset this to false after certain amount of time (~15 minutes)
 #TODO implement counter for wrong passwords (use url parameter overloading?)
+#TODO also delete the to an article related pictures
 authorized = False # used to control if user is allowed to view the panel
 
 
