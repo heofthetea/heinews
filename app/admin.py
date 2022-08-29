@@ -272,7 +272,7 @@ def create_survey():
         return redirect(url_for("surveys.survey", id=new_survey.id))
     return render_template("upload/upload_survey.html", num_answers=num_answers)
 
-#TODO! add option for authors to send announcements over dashboard and mail
+
 @admin.route("/newannouncement", methods=["GET", "POST"])
 @login_required
 def create_announcement():

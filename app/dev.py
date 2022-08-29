@@ -5,7 +5,7 @@ from ._lib.send_mail import send_mail
 from .models import Article, User, Verify_Email, Password_Reset, Tag, Article_Tag, Role, Survey, Answer, User_Answer, Banned_User, Announcement, get_users_to_notify
 from .articles import get_article_location
 from .auth import is_eternal_dev
-from .mail_contents import account_yeeted, announcement
+from .mail_contents import account_yeeted, announcement as announcement_mail
 from . import db, send_database, __MAIL_ACCOUNT__
 from os import remove
 from os.path import exists, isdir
@@ -253,7 +253,7 @@ def delete_announcement(id):
 
 
 
-@dev.route("/approve-announcement/<id>", methods=["POST"])
+@dev.route("/approve-announcement/<id>")
 @login_required
 def approve_announcement(id):
     announcement = Announcement.query.get(id)
@@ -263,7 +263,7 @@ def approve_announcement(id):
     db.session.commit()
     flash("Announcement is now public!", category="success")
     
-    mail = announcement(announcement)
+    mail = announcement_mail(announcement)
     if send_mail(
         from_email=__MAIL_ACCOUNT__["email"],
         password=__MAIL_ACCOUNT__["password"],

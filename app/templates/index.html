@@ -5,7 +5,7 @@
 {% block content %}
 <div class="container" style="margin-left: 5%; margin-right: 5%;">
 
-    {% if announcements[0] %}
+    {% if announcements|length > 0 %}
     <h2>
         <a href="{{ url_for('articles.announcement', id=announcements[0].id) }}">
             {{ announcements[0].title }}

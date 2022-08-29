@@ -20,14 +20,14 @@
     <br>
     <div>
         {# rewrite to dev._delete_announcement to have non-developers be able to review announcements #}
-        <form action="{{ url_for('dev.authorize_to_delete_announcement', id=announcement.id) }}" method="POST">
+        <form action="{{ url_for('dev.authorize_to_delete_announcement', id=announcement.id) }}">
             <div class="form-group">
                 <label for="cancel"></label>
                 <button class="btn btn-danger" style="float: left;">Ankündigung löschen</button>
             </div>
         </form>
 
-        <form action="{{ url_for('dev.approve_announcement', id=announcement.id) }}" method="POST">
+        <form action="{{ url_for('dev.approve_announcement', id=announcement.id) }}">
             <div class="form-group">
                 <label for="approve"></label>
                 <button class="btn btn-success" style="float: right;">Bestätigen</button>
