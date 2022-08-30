@@ -22,6 +22,14 @@ def index() -> str:
     most_upvoted = Article.__validated_articles__(Article).order_by(desc(Article.upvotes)).first()
     most_recent = Article.__validated_articles__(Article).order_by(desc(Article.date_created)).first()
     announcements: list = Announcement.query.filter_by(validated=True).order_by(desc(Announcement.date_created)).all()
+    surveys = Survey.query.all()
+
+    aktuelles = Article.__validated_articles__.filter_by(category="aktuelles").order_by(desc(Article.date_created)).all()
+    wissen = Article.__validated_articles__.filter_by(category="wissen").order_by(desc(Article.date_created)).all()
+    schulleben = Article.__validated_articles__.filter_by(category="schulleben").order_by(desc(Article.date_created)).all()
+    lifestyle = Article.__validated_articles__.filter_by(category="lifestyle").order_by(desc(Article.date_created)).all()
+    unterhaltung = Article.__validated_articles__.filter_by(category="unterhaltung").order_by(desc(Article.date_created)).all()
+    kreatives = Article.__validated_articles__.filter_by(category="kreatives").order_by(desc(Article.date_created)).all()
     try:
         random_article = choice(Article.__validated_articles__(Article).all())
     except IndexError:
@@ -32,6 +40,15 @@ def index() -> str:
         most_upvoted_article=most_upvoted,
         most_recent_article=most_recent,
         random_article=random_article,
+        surveys=surveys,
+
+        aktuelles=aktuelles,
+        wissen=wissen,
+        schulleben=schulleben,
+        lifestyle=lifestyle,
+        unterhaltung=unterhaltung,
+        kreatives=kreatives,
+
         articles=len(Article.__validated_articles__(Article).all()) > 0
     )
 
