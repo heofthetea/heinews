@@ -24,12 +24,12 @@ def index() -> str:
     announcements: list = Announcement.query.filter_by(validated=True).order_by(desc(Announcement.date_created)).all()
     surveys = Survey.query.all()
 
-    aktuelles = Article.__validated_articles__.filter_by(category="aktuelles").order_by(desc(Article.date_created)).all()
-    wissen = Article.__validated_articles__.filter_by(category="wissen").order_by(desc(Article.date_created)).all()
-    schulleben = Article.__validated_articles__.filter_by(category="schulleben").order_by(desc(Article.date_created)).all()
-    lifestyle = Article.__validated_articles__.filter_by(category="lifestyle").order_by(desc(Article.date_created)).all()
-    unterhaltung = Article.__validated_articles__.filter_by(category="unterhaltung").order_by(desc(Article.date_created)).all()
-    kreatives = Article.__validated_articles__.filter_by(category="kreatives").order_by(desc(Article.date_created)).all()
+    aktuelles = Article.__validated_articles__(Article).filter_by(category="aktuelles").order_by(desc(Article.date_created)).all()
+    wissen = Article.__validated_articles__(Article).filter_by(category="wissen").order_by(desc(Article.date_created)).all()
+    schulleben = Article.__validated_articles__(Article).filter_by(category="schulleben").order_by(desc(Article.date_created)).all()
+    lifestyle = Article.__validated_articles__(Article).filter_by(category="lifestyle").order_by(desc(Article.date_created)).all()
+    unterhaltung = Article.__validated_articles__(Article).filter_by(category="unterhaltung").order_by(desc(Article.date_created)).all()
+    kreatives = Article.__validated_articles__(Article).filter_by(category="kreatives").order_by(desc(Article.date_created)).all()
     try:
         random_article = choice(Article.__validated_articles__(Article).all())
     except IndexError:
