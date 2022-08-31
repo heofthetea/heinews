@@ -1,9 +1,9 @@
 from flask import Blueprint, render_template, redirect, flash, url_for, request
 from flask_login import login_required, current_user
-from .models import Article, User_Upvote, Password_Reset, Delete_Account, Survey, User_Answer, Answer, Announcement, get_user_role
+from .models import Article, Tag, User_Upvote, Password_Reset, Delete_Account, Survey, User_Answer, Answer, Announcement, get_user_role
 from .auth import send_verification_email
 from . import db
-from sqlalchemy import desc
+from sqlalchemy import desc, or_
 from random import choice
 
 views = Blueprint("views", __name__)
@@ -53,10 +53,80 @@ def index() -> str:
     )
 
 
+"""
+Enables the user to search through the entire content of the website. Searched are:
+    i) Articles:
+        - titles
+        - descriptions
+        - NO html files - so the content of an article will not be searched
+    ii) Surveys (matched either title or description)
+    iii) Tags (this is the primary way the search function is supposed to be used)
+    iv) Pages:
+        - categories
+        - Profile (see `match` dictionary for clarification, which search terms point to the profile (yes I hardcoded that))
+
+Search term is splitted by spaces and for each individual term, exact matches are found.
+"""
 @views.route("/search", methods=["POST"])
 def search():
-    search_content = request.form.get("search")
-    return redirect('/')
+    try:
+        search_content = request.form.get("search")
+    except KeyError:
+        return redirect('/')
+    
+    terms = search_content.split(' ')
+
+    # deals with double spaces by removing every space still left in the split terms
+    while '' in terms:
+        terms.remove('')
+    while ' ' in terms:
+        terms.remove(' ')
+
+    tags: list[str] = []
+    # list of (article.id, article.title) (title is needed for frontend display - more efficient than storing entire objects)
+    titles: list[list[str, str]] = [] 
+    descriptions: list[list[str, str]] = []
+    surveys: list[str] = [] # stores survey ids
+    for term in terms:
+        tags.extend(
+            db.session.query(Tag.tag)
+            .filter(Tag.tag.like(f"%{term}%"))
+            .all()
+        )
+        titles.extend(
+            db.session.query(Article.id, Article.title)
+            .filter(Article.validated == True)
+            .filter(Article.title.like(f"%{term}%"))
+            .all()
+        )
+        descriptions.extend(
+            db.session.query(Article.id, Article.title, Article.description)
+            .filter(Article.validated == True)
+            .filter(Article.description.like(f"%{term}%"))
+            .all()
+        )
+        surveys.extend(
+            db.session.query(Survey.id, Survey.title)
+            .filter(
+                or_(
+                    Survey.title.like(f"%{term}%"), 
+                    Survey.description.like(f"%{term}%")
+                )
+            )
+            .all()
+        )
+
+    # `list(dict.fromkeys(list))` is essentially just a way of removing duplicates in a list
+    return render_template(
+        "search.html",
+        tags=list(dict.fromkeys(tags)),
+        titles=list(dict.fromkeys(titles)),
+        descriptions=list(dict.fromkeys(descriptions)),
+        surveys=list(dict.fromkeys(surveys)),
+        pages=None,
+
+        search=search_content
+    )
 
 
 @views.route("/user")

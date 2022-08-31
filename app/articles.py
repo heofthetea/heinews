@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, abort, redirect, url_for, flash, request
 from jinja2.exceptions import TemplateNotFound
 from flask_login import current_user, AnonymousUserMixin
-from .models import Article, User, Tag, User_Upvote, Announcement, get_tags, get_articles, get_User_Upvote
-from . import db
+from .models import Article, User, Role, Tag, User_Upvote, Announcement, get_tags, get_articles, get_User_Upvote
+from . import db, user_loggedin
 
 
 # TODO change phone number in footer
@@ -17,22 +17,28 @@ def get_article_location(id):
 check if article existes as a template (try-catch) and as a database entry, if so:
 renders article as jinja2 template
 
-@param path: name of html file article is stored at
+@param path: name of html file article is stored at (with the '.html' extension)
 """
 @articles.route('/<path:path>')
 def find_article(path: str) -> None:
     try:
+        loggedin = user_loggedin(current_user)
         article_id = path.split('.')[0]
         db_entry = Article.query.get(article_id)
         if not db_entry:
             abort(404)
-        try:
-            if  get_User_Upvote(current_user.id, article_id).first():
-                user_upvoted = True
+
+        if not db_entry.validated:
+            if loggedin:
+                if not Role.query.get(current_user.role).can_validate:
+                    abort(403)
             else:
-                user_upvoted = False
-        except AttributeError:
-            user_upvoted = False
+                abort(403)
+        
+        user_upvoted = False
+        if loggedin:
+            if get_User_Upvote(current_user.id, article_id).first():
+                user_upvoted = True
 
 
         return render_template(
@@ -122,6 +128,7 @@ def approve(id):
 
 tag = Blueprint("tag", __name__)
 
+# @param tag: tag WITHOUT '#' (because that won't work with URL encoding)
 @tag.route("/<tag>")
 def articles_by_tag(tag: str):
     tag = '#' + tag
