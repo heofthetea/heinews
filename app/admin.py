@@ -60,15 +60,10 @@ def admin_index():
         abort(403)
     invalidated_articles = Article.query.filter_by(validated=False)
     return render_template("admin.html", invalidated_articles=invalidated_articles.order_by(asc(Article.date_created)))
-    
-
-@admin.route("/upload")
-def redir_new_article():
-    return redirect(url_for("admin.new_article", phase="new"))
 
 
 #TODO split this up to 2 functions
-@admin.route('/upload/', methods=["GET", "POST"])
+@admin.route('/upload', methods=["GET", "POST"])
 @login_required
 def new_article() -> None:
     #prevents unauthorized users from reaching the upload section

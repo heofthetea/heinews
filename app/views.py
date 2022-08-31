@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, flash, url_for, request
 from flask_login import login_required, current_user
-from .models import Article, Tag, User_Upvote, Password_Reset, Delete_Account, Survey, User_Answer, Answer, Announcement, get_user_role
+from .models import Article, Tag, User_Upvote, Password_Reset, Delete_Account, Survey, User_Answer, Answer, Announcement, get_user_role, get_articles
 from .auth import send_verification_email
 from . import db
 from sqlalchemy import desc, or_
@@ -61,16 +61,43 @@ Enables the user to search through the entire content of the website. Searched a
         - NO html files - so the content of an article will not be searched
     ii) Surveys (matched either title or description)
     iii) Tags (this is the primary way the search function is supposed to be used)
-    iv) Pages:
-        - categories
+    iv) Announcements (matched either title or content)
+    v) Pages:
+        - categories (I was too lazy to figure out an algorithm for that and since there's only 6 of them they're in the match dict as well)
         - Profile (see `match` dictionary for clarification, which search terms point to the profile (yes I hardcoded that))
 
 Search term is splitted by spaces and for each individual term, exact matches are found.
 """
+
+# `url_for()` appearantly only works inside a `redirect()` function - thus, urls are hardcoded here...
+# OH GOD THIS IS DEFINITELY THE WORST CODE IN THIS PROJECT XDDD
+category_url = "/article/category"
+# format: `(url, title): (list of key words that point to that page)`
+__MATCH__: dict = {
+    (f"{category_url}/aktuelles", "Kategorie: Aktuelles"): "aktuelles kategorien",
+    (f"{category_url}/wissen", "Kategorie: Wissen"): "wissen kategorien",
+    (f"{category_url}/schulleben", "Kategorie: Schulleben"): "schulleben kategorien",
+    (f"{category_url}/lifestyle", "Kategorie: Lifestyle"): "lifestyle kategorien",
+    (f"{category_url}/unterhaltung", "Kategorie: Unterhaltung"): "unterhaltung kategorien",
+    (f"{category_url}/kreatives", "Kategorie: Kreatives"): "kreatives kategorien",
+
+    # because of the `in` operator, everything that should point to the profile can just be written into one giant string
+    ("/user", "Dein Profil"): 
+"""profil account konto löschen passwort zurücksetzen neues passwort resetten email e-mail benachrichtigungen deaktivieren 
+einstellungen upvoted hochgeladen teilgenommen rolle befördern nutzername""",
+
+    ("/survey/all", "Alle Umfragen"): "umfrage",
+    ("/admin/", "Admin Panel"): "admin panel validieren",
+    ("/admin/upload", "Upload Panel"): "hochladen neuer erstellen",
+    ("/tags/all", "Alle Tags"): "tags"
+}
+
 @views.route("/search", methods=["POST"])
 def search():
     try:
         search_content = request.form.get("search")
+        if search_content == '':
+            return redirect('/')
     except KeyError:
         return redirect('/')
     
@@ -83,10 +110,14 @@ def search():
         terms.remove(' ')
 
     tags: list[str] = []
+    five_articles_for_tag: dict = {} # yes that is a stupid name
     # list of (article.id, article.title) (title is needed for frontend display - more efficient than storing entire objects)
     titles: list[list[str, str]] = [] 
     descriptions: list[list[str, str]] = []
-    surveys: list[str] = [] # stores survey ids
+    surveys: list[list[str, str]] = [] # (Survey.id, Survey.title)
+    announcements: list[list[str, str]] = [] # is actually list[list[str, str, datetime]], for the date created is stored as well
+    pages: list[str] = []
+
     for term in terms:
         tags.extend(
             db.session.query(Tag.tag)
@@ -115,15 +146,36 @@ def search():
             )
             .all()
         )
+        announcements.extend(
+            db.session.query(Announcement.id, Announcement.title, Announcement.date_created)
+            .filter(Announcement.validated == True)
+            .filter(
+                or_(
+                    Announcement.title.like(f"%{term}%"),
+                    Announcement.content.like(f"%{term}%")
+                )
+            )
+            .order_by(desc(Announcement.date_created))
+            .all()
+        )
 
+        for match in __MATCH__.items():
+            if term in match[1]:
+                pages.append(match[0]) # appends dictionary key (which is a url)
+
+        for tag in tags:
+            five_articles_for_tag[tag[0]] = get_articles(tag=tag, limit=5)
+            
     # `list(dict.fromkeys(list))` is essentially just a way of removing duplicates in a list
     return render_template(
         "search.html",
         tags=list(dict.fromkeys(tags)),
+        five_articles_for_tag=five_articles_for_tag,
         titles=list(dict.fromkeys(titles)),
         descriptions=list(dict.fromkeys(descriptions)),
         surveys=list(dict.fromkeys(surveys)),
-        pages=None,
+        announcements=list(dict.fromkeys(announcements)),
+        pages=list(dict.fromkeys(pages)),
 
         search=search_content
     )

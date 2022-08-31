@@ -10,6 +10,7 @@ surveys = Blueprint("surveys", __name__)
 def all_surveys():
     return render_template("overview/surveys.html", surveys=Survey.query.all())
 
+
 @surveys.route("/<id>")
 def survey(id):
     db_entry = Survey.query.get(id)
@@ -30,6 +31,7 @@ def survey(id):
         user_answer=user_answer,
         correct_answer=correct_answer
     )
+
 
 @surveys.route("vote/<survey_id>", methods=["POST"])
 def vote(survey_id):

@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, abort, redirect, url_for, flash, request
 from jinja2.exceptions import TemplateNotFound
 from flask_login import current_user, AnonymousUserMixin
-from .models import Article, User, Role, Tag, User_Upvote, Announcement, get_tags, get_articles, get_User_Upvote
+from .models import Article, User, Role, Tag, User_Upvote, Announcement, get_tags, get_articles, get_User_Upvote, get_user_role
 from . import db, user_loggedin
 
 
@@ -29,12 +29,9 @@ def find_article(path: str) -> None:
             abort(404)
 
         if not db_entry.validated:
-            if loggedin:
-                if not Role.query.get(current_user.role).can_validate:
-                    abort(403)
-            else:
+            if not get_user_role(current_user).can_validate:
                 abort(403)
-        
+
         user_upvoted = False
         if loggedin:
             if get_User_Upvote(current_user.id, article_id).first():
@@ -135,6 +132,7 @@ def articles_by_tag(tag: str):
     if not Tag.query.get(tag):
         abort(404)
     articles_with_tag = get_articles(Tag.query.get(tag))
+    # articles without validation are handled in frontend to make them visible to roles that can validate only
     return render_template("overview/all.html", articles=articles_with_tag)
 
 

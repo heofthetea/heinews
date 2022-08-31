@@ -5,29 +5,34 @@
 {% block content %}
     <h1>Suchergebnisse für "{{ search }}"</h1>
 
+    <!--The indicees (e.g. `[0]`) are needed, because the SQLAlchemy queries return the columns as lists-->
     {% if tags|length > 0 %}
     <h4>Passende Tags:</h4>
     {% for tag in tags %}
-    <a href="{{ url_for('tag.articles_by_tag', tag=tag.remove('#')) }}">tag</a>
-    <br>
+        {{ tag[0] }}
+        <br>
+        <!--@Finn please turn the shit until the next comment into a drop down menu-->
+        {% for article in five_articles_for_tag[tag[0]] %}
+            {% if article.validated or get_user_role(current_user).can_validate %}
+                <a href="{{ url_for('articles.find_article', path=article.id + '.html') }}">{{ article.title }}</a>
+                <br>
+            {% endif %}
+        {% endfor %}
+        <a href="{{ url_for('tag.articles_by_tag', tag=tag[0].replace('#', '')) }}">alle</a>
+        <br>
+        <hr>
+        <!--drop down menu of everything above since the last comment-->
     {% endfor %}
     {% endif %}
 
-    <!--@Finn: Rework?: Einfach nur "Artikel", und in ner extra spalte schreiben, ob Titel oder Beschreibung gematcht haben?-->
-    {% if titles|length > 0 %}
+    {% if titles|length > 0 or descriptions|length > 0 %}
     <hr>
-    <h4>Artikel mit ähnlichem Titel:</h4>
     {% for article in titles %}
-    <a href="{{ url_for('articles.find_article', path=article[0] + '.html') }}">{{ article[1] }}</a>
+    <a href="{{ url_for('articles.find_article', path=article[0] + '.html') }}">{{ article[1] }}</a> / matched title
     <br>
     {% endfor %}
-    {% endif %}
-
-    {% if descriptions|length > 0 %}
-    <hr>
-    <h4>Artikel mit ähnlicher Beschreibung:</h4>
     {% for article in descriptions %}
-    <a href="{{ url_for('articles.find_article', path=article[0] + '.html') }}">{{ article[1] }}</a> / {{ article[2] }}
+    <a href="{{ url_for('articles.find_article', path=article[0] + '.html') }}">{{ article[1] }}</a> / matched description: {{ article[2] }}
     <br>
     {% endfor %}
     {% endif %}
@@ -36,13 +41,26 @@
     <hr>
     <h4>Passende Umfragen:</h4>
     {% for survey in surveys %}
-    <a href="{{ url_for('surveys.survey', id=survey) }}">{{ survey }}</a>
+    <a href="{{ url_for('surveys.survey', id=survey[0]) }}">{{ survey[1] }}</a>
     <br>
     {% endfor %}
     {% endif %}
 
-    {% if pages is not none %}
+    {% if announcements|length > 0 %}
     <hr>
-    Pages: {{ pages }}
+    <h4>Passende Ankündigungen:</h4>
+    {% for announcement in announcements %}
+    <a href="{{ url_for('articles.announcement', id=announcement[0]) }}">{{ announcement[1] }}</a> (veröffentlicht: {{ announcement[2].date().strftime("%d.%m.%Y") }})
+    <br>
+    {% endfor %}
+    {% endif %}
+
+    {% if pages|length > 0 %}
+    <hr>
+    <h4>Vielleicht hilft Dir das weiter?</h4>
+    {% for page in pages %}
+        <a href="{{ page[0] }}">{{ page[1] }}</a>
+        <br>
+    {% endfor %}
     {% endif %}
 {% endblock %}

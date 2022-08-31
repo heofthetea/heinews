@@ -200,8 +200,11 @@ corresponding SQL query of this function:
     AND article_tag_connection.tag = tag.tag
     AND article_tag_connection.article_id = article.id;
 """
-def get_articles(tag: Tag) -> list[Article]:
-    connections = Article_Tag.query.filter_by(tag=tag.tag).all()
+def get_articles(tag: Tag, limit=None) -> list[Article]:
+    if limit:
+        connections = Article_Tag.query.filter_by(tag=tag.tag).limit(limit).all()
+    else:
+        connections = Article_Tag.query.filter_by(tag=tag.tag).all()
     return [Article.query.get(connection.article_id) for connection in connections]
 
 """

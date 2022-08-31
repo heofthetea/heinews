@@ -11,6 +11,9 @@
     <h1 style="text-align: center">
         {{ announcement.title }}
     </h1>
+    <h4 style="text-align: center">
+        {{ announcement.date_created.strftime("%d.%m.%Y, %H:%M") }}
+    </h4>
     <br>
 
     {{ announcement.content }}
