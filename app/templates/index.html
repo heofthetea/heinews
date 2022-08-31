@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block css %}
+<link rel="stylesheet" href="/static/css/index.css">
 {% endblock %}
 
 {% block title %}heiNEws online{% endblock %}
@@ -75,10 +76,78 @@
 
 {% if articles %}
     {% if aktuelles|length > 0 %}
-    <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+    <!--<div id="carouselExampleControls" class="carousel carousel-dark slide" data-bs-ride="carousel">
         <div class="carousel-inner">
             <div class="carousel-item active">
-                <div class="card-container" style="display: flex;">
+                <div class="card-container" style="display: flex; justify-content: space-evenly;">
+                {% for i in range(0, category|length, 4) %} the 3 is the "step" argument, basically the equivalent of "i += 3" in a java for loop
+                {# the list likely won't be dividable by three, so this if statement is needed to not get any IndexOutOfBoundsExceptions #}
+                {% if category[i] %}
+                <div class="card card-block border-1 border-secondary" style="width: calc(100%/4)">
+                    <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(article.id)) }}">
+                        <img src="{{ article.primary_image }}" style="max-height: 200px;" class="card-img-top" alt="">
+                        <div class="card-body text-center py-4">
+                            <h4 class="card-title">{{ article.title }}</h4>
+                            <p class="lead card-subtitle">{{ article.description }}</p>
+                        </div>
+                    </a>    
+                </div>
+                {% endif %}
+
+                {% if category[i + 1] %}
+                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/4)">
+                        <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(article.id)) }}">
+                            <img src="{{ article.primary_image }}" style="max-height: 200px;" class="card-img-top" alt="">
+                            <div class="card-body text-center py-4">
+                                <h4 class="card-title">{{ article.title }}</h4>
+                                <p class="lead card-subtitle">{{ article.description }}</p>
+                            </div>
+                        </a>    
+                    </div>
+                {% endif %}
+
+                {% if category[i + 2] %}
+                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/4)">
+                        <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(article.id)) }}">
+                            <img src="{{ article.primary_image }}" style="max-height: 200px;" class="card-img-top" alt="">
+                            <div class="card-body text-center py-4">
+                                <h4 class="card-title">{{ article.title }}</h4>
+                                <p class="lead card-subtitle">{{ article.description }}</p>
+                            </div>
+                        </a>    
+                    </div>
+                {% endif %}
+
+                {% if category[i + 3] %}
+                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/4)">
+                        <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(article.id)) }}">
+                            <img src="{{ article.primary_image }}" style="max-height: 200px;" class="card-img-top" alt="">
+                            <div class="card-body text-center py-4">
+                                <h4 class="card-title">{{ article.title }}</h4>
+                                <p class="lead card-subtitle">{{ article.description }}</p>
+                            </div>
+                        </a>    
+                    </div>
+                {% endif %}
+                </div>
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+</div>
+
+{% endfor %}
+-->
+    <div id="carouselExampleControls" class="carousel carousel-dark slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <div class="card-container" style="display: flex; justify-content: space-evenly;">
                     {% for article in aktuelles %}
                     <div class="card card-block border-1 border-secondary" style="width: calc(100%/4)">
                         <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(article.id)) }}">
