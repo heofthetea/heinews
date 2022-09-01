@@ -3,64 +3,100 @@
 {% block title %}Suche{% endblock %}
 
 {% block content %}
-    <h1>Suchergebnisse für "{{ search }}"</h1>
-
-    <!--The indicees (e.g. `[0]`) are needed, because the SQLAlchemy queries return the columns as lists-->
-    {% if tags|length > 0 %}
-    <h4>Passende Tags:</h4>
-    {% for tag in tags %}
-        {{ tag[0] }}
+    <div class="container-xl">
         <br>
-        <!--@Finn please turn the shit until the next comment into a drop down menu-->
-        {% for article in five_articles_for_tag[tag[0]] %}
-            {% if article.validated or get_user_role(current_user).can_validate %}
-                <a href="{{ url_for('articles.find_article', path=article.id + '.html') }}">{{ article.title }}</a>
+        <h2><i>Suchergebnisse für</i> "<b>{{ search }}</b>"</h3>
+        <hr>
+        <br>
+
+        <!--The indicees (e.g. `[0]`) are needed, because the SQLAlchemy queries return the columns as lists-->
+        <!-- Tags -->
+        {% if tags|length > 0 %}
+            <h4>Passende Tags</h4>
+            {% for tag in tags %}
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                        {{ tag[0] }}
+                    </button>
+
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        {% for article in five_articles_for_tag[tag[0]] %}
+                            {% if article.validated or get_user_role(current_user).can_validate %}
+                                <li><a href="{{ url_for('articles.find_article', path=article.id + '.html') }}"><b>{{ article.title }}</b></a></li>
+                            {% endif %}
+                        {% endfor %}
+                        <hr>
+                        <li><a href="{{ url_for('tag.articles_by_tag', tag=tag[0].replace('#', '')) }}">alle</a></li>
+                    </ul>
+                </div>
+                <br>
+            {% endfor %}
+        {% endif %}
+
+        <!-- Title and description-->
+        {% if titles|length > 0 or descriptions|length > 0 %}
+            {% if titles|length > 0 %}
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                    Passende Artikel
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        {% for article in titles %}
+                            <li><a class="dropdown-item" href="{{ url_for('articles.find_article', path='{0}.html'.format(article.id)) }}"><b>{{ article[1] }}</b></a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
                 <br>
             {% endif %}
-        {% endfor %}
-        <a href="{{ url_for('tag.articles_by_tag', tag=tag[0].replace('#', '')) }}">alle</a>
-        <br>
+            {% if descriptions|length > 0 %}
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                    Passende Artikelbeschreibung
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        {% for article in descriptions %}
+                            <li><a class="dropdown-item" href="{{ url_for('articles.find_article', path='{0}.html'.format(article.id)) }}"><b>{{ article[1] }}</b></a> / matched description: {{ article[2] }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <br>
+            {% endif %}
+        {% endif %}
+    
+        {% if surveys|length > 0 %}
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                Passende Umfragen
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    {% for survey in surveys %}
+                        <li><a class="dropdown-item" href="{{ url_for('surveys.survey', id=survey[0]) }}"><b>{{ survey[1] }}</b></a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    
+        {% if announcements|length > 0 %}
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                Passende Ankündigungen
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    {% for announcement in announcements %}
+                        <li><a class="dropdown-item" href="{{ url_for('articles.announcement', id=announcement[0]) }}"><b>{{ announcement[1] }}</b></a>(veröffentlicht: {{ announcement[2].date().strftime("%d.%m.%Y") }})</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    
+        {% if pages|length > 0 %}
         <hr>
-        <!--drop down menu of everything above since the last comment-->
-    {% endfor %}
-    {% endif %}
-
-    {% if titles|length > 0 or descriptions|length > 0 %}
-    <hr>
-    {% for article in titles %}
-    <a href="{{ url_for('articles.find_article', path=article[0] + '.html') }}">{{ article[1] }}</a> / matched title
-    <br>
-    {% endfor %}
-    {% for article in descriptions %}
-    <a href="{{ url_for('articles.find_article', path=article[0] + '.html') }}">{{ article[1] }}</a> / matched description: {{ article[2] }}
-    <br>
-    {% endfor %}
-    {% endif %}
-
-    {% if surveys|length > 0 %}
-    <hr>
-    <h4>Passende Umfragen:</h4>
-    {% for survey in surveys %}
-    <a href="{{ url_for('surveys.survey', id=survey[0]) }}">{{ survey[1] }}</a>
-    <br>
-    {% endfor %}
-    {% endif %}
-
-    {% if announcements|length > 0 %}
-    <hr>
-    <h4>Passende Ankündigungen:</h4>
-    {% for announcement in announcements %}
-    <a href="{{ url_for('articles.announcement', id=announcement[0]) }}">{{ announcement[1] }}</a> (veröffentlicht: {{ announcement[2].date().strftime("%d.%m.%Y") }})
-    <br>
-    {% endfor %}
-    {% endif %}
-
-    {% if pages|length > 0 %}
-    <hr>
-    <h4>Vielleicht hilft Dir das weiter?</h4>
-    {% for page in pages %}
-        <a href="{{ page[0] }}">{{ page[1] }}</a>
-        <br>
-    {% endfor %}
-    {% endif %}
+        <h4>Vielleicht hilft Dir das weiter?</h4>
+        {% for page in pages %}
+            <a href="{{ page[0] }}">{{ page[1] }}</a>
+            <br>
+        {% endfor %}
+        {% endif %}
+    </div>
+    
 {% endblock %}
