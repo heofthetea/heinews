@@ -14,7 +14,7 @@ from shutil import rmtree
 dev = Blueprint("dev", __name__)
 #TODO! set timer to reset this to false after certain amount of time (~15 minutes)
 #TODO implement counter for wrong passwords (use url parameter overloading?)
-#TODO also delete the to an article related pictures
+#TODO also delete images related to an article
 authorized = False # used to control if user is allowed to view the panel
 
 
@@ -110,7 +110,6 @@ def check_password():
     )
     
 
-# TODO give yeeted users a ban for a certain amount of time before being able to create a new Account
 @dev.route("yeet_user/<int:id>")
 def delete_user(id):
     user_email = User.query.get(id).email
@@ -194,7 +193,7 @@ def delete_survey(id):
     if session["needs_authorization"]:
         return authorize_dev()
     Survey.query.filter_by(id=id).delete()
-    Answer.query.filter_by(survey_id=id).delete()
+    Answer.query.filter_by(survey=id).delete()
     User_Answer.query.filter_by(survey_id=id).delete()
     db.session.commit()
     flash("Survey deleted successfully!", category="success")

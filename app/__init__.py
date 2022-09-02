@@ -27,7 +27,7 @@ with open("__devs__.txt", "r") as f:
 
 __MAIL_ACCOUNT__  = {
     "email": "emil.schlaeger@gmx.de",
-    "password": "EgidW13.",
+    "password": "",
     "smtp": ("mail.gmx.net", 587)
 }
 

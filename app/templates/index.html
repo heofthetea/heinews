@@ -7,6 +7,7 @@
 {% block title %}heiNEws online{% endblock %}
 
 {% block content %}
+{% if articles %}
 <div class="container" style="margin-left: 5%; margin-right: 5%;">
 
     <div class="container-xl">
@@ -73,22 +74,19 @@
 <br>
 <br>
 
-
-{% if articles %}
     {% if aktuelles|length > 0 %}
-    <!--<div id="carouselExampleControls" class="carousel carousel-dark slide" data-bs-ride="carousel">
+    <!--div id="carouselExampleControls" class="carousel carousel-dark slide" data-bs-ride="carousel">
         <div class="carousel-inner">
             <div class="carousel-item active">
                 <div class="card-container" style="display: flex; justify-content: space-evenly;">
                 {% for i in range(0, category|length, 4) %} the 3 is the "step" argument, basically the equivalent of "i += 3" in a java for loop
-                {# the list likely won't be dividable by three, so this if statement is needed to not get any IndexOutOfBoundsExceptions #}
-                {% if category[i] %}
+                {% if aktuelles[i] %}
                 <div class="card card-block border-1 border-secondary" style="width: calc(100%/4)">
-                    <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(article.id)) }}">
+                    <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(aktuelles[i].id)) }}">
                         <img src="{{ article.primary_image }}" style="max-height: 200px;" class="card-img-top" alt="">
                         <div class="card-body text-center py-4">
-                            <h4 class="card-title">{{ article.title }}</h4>
-                            <p class="lead card-subtitle">{{ article.description }}</p>
+                            <h4 class="card-title">{{ aktuelles[i].title }}</h4>
+                            <p class="lead card-subtitle">{{ aktuelles[i].description }}</p>
                         </div>
                     </a>    
                 </div>
@@ -141,9 +139,9 @@
             <span class="visually-hidden">Next</span>
         </button>
 </div>
-
-{% endfor %}
 -->
+{% endfor %}
+
     <div id="carouselExampleControls" class="carousel carousel-dark slide" data-bs-ride="carousel">
         <div class="carousel-inner">
             <div class="carousel-item active">

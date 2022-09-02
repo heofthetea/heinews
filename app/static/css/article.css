@@ -2,12 +2,13 @@ body {
     word-wrap: break-word;
 }
 
+
 #upvoted {
     background-color: #00f;
 
 }
 
-#article_img {
+#primary-image {
     display: block;
     margin-left: auto;
     margin-right: auto;
@@ -16,9 +17,8 @@ body {
 
 }
 
-.article-image {
+#article-image {
     display: block;
-
 
     min-width: 33%;
     width: min-content;

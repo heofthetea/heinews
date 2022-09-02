@@ -26,6 +26,7 @@ class Category(db.Model):
 
 
 #TODO when new Tag are created and exceed length limit, flash message
+#TODO deal with ominous ''-tag
 class Tag(db.Model):
     tag = db.Column(db.String(32), primary_key=True)
 
