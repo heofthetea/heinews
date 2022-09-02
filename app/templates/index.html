@@ -79,7 +79,11 @@
     <div id="carouselExampleControls" class="carousel carousel-dark slide" data-bs-ride="carousel" style="box-shadow: 5px 5px 5px 5px rgb(134, 134, 134); height: 350px; background-color: rgb(255, 255, 255); vertical-align: center; border-radius: 10px;">
         <div class="carousel-inner">
             {% for i in range(0, aktuelles|length, 3) %} <!--the 3 is the "step" argument, basically the equivalent of "i += 3" in a java for loop-->
-            <div class="carousel-item active" style="margin-top: 20px;">
+            {% if i == 0 %}
+                <div class="carousel-item active" style="margin-top: 20px;">
+            {% else %}
+                <div class="carousel-item" style="margin-top: 20px;">
+            {% endif%}
                 <div class="card-container" style="display: flex; justify-content: center;">
                 {# the list likely won't be dividable by three, so this if statement is needed to not get any IndexOutOfBoundsExceptions #}
                 {% if aktuelles[i] %}
