@@ -92,14 +92,18 @@ def new_article() -> None:
     #handles file upload (including validation checks and docx to html conversion)
     if request.method == 'POST':
         if "create-survey" in request.form:
-            cache["num_answers"] = request.form.get("num-answers")
-            return redirect(url_for("admin.create_survey"))
+            session_id = generate_id(6, table=Survey)
+            cache[f"{session_id}-num_answers"] = request.form.get("num-answers")
+            return redirect(url_for("admin.create_survey", session_id=session_id))
 
         if "create-announcement" in request.form:
             return redirect(url_for("admin.create_announcement"))
 
         #--------------------------------------------------------------------------------------------------------------------------
 
+        # id already has to be declared here, because the cache needs its unique key - otherwise, there won't be more than one person able to 
+        # upload anything
+        session_id = generate_id(6)
         if "upload-article" in request.form:
             # check if the post request has the file part
             if 'file' not in request.files:
@@ -124,12 +128,12 @@ def new_article() -> None:
 
                 file_content : str = replace_links(file_content)
                 # caching all data necessary to use in next step (and setting up image cache)
-                cache["uploaded_content"] = file_content
-                cache["num_images"] = int(request.form.get("num-images"))
-                cache["images"] = []
-                if cache["num_images"] == 0:
-                    return redirect(url_for("admin.edit_article", article_id=generate_id(6)))
-                return redirect(url_for("admin.add_images", article_id=generate_id(6)))
+                cache[f"{session_id}-uploaded_content"] = file_content
+                cache[f"{session_id}-num_images"] = int(request.form.get("num-images"))
+                cache[f"{session_id}-images"] = []
+                if cache[f"{session_id}-num_images"] == 0:
+                    return redirect(url_for("admin.edit_article", article_id=session_id))
+                return redirect(url_for("admin.add_images", article_id=session_id))
             
     return render_template("upload/upload.html")
 
@@ -140,7 +144,7 @@ def new_article() -> None:
 def add_images(article_id):
     if request.method == "POST":
         img_folder = path.join(IMAGE_FOLDER, article_id)
-        for i in range(cache["num_images"]):
+        for i in range(cache[f"{article_id}-num_images"]):
             if f"image-{i}" not in request.files:
                 flash("Bitte wähle für jedes Feld ein Bild aus", category="error")
                 return redirect(request.url)
@@ -156,13 +160,13 @@ def add_images(article_id):
                 filename = secure_filename(image.filename)
                 img_location = path.join(img_folder, filename)
                 image.save("app" + img_location)
-                cache["images"].append(img_location)
+                cache[f"{article_id}-images"].append(img_location)
 
         return redirect(url_for("admin.edit_article", article_id=article_id))
 
     return render_template(
         "upload/upload_images.html",
-        num_images=cache["num_images"]
+        num_images=cache[f"{article_id}-num_images"]
         )
 
 
@@ -173,7 +177,7 @@ def edit_article(article_id):
 
     if request.method == "POST":
         # receiving data cached in "new" phase
-        content = cache["uploaded_content"]
+        content = cache[f"{article_id}-uploaded_content"]
 
 
         # replacing placeholders created in conversion with values entered manually in panel form
@@ -183,7 +187,7 @@ def edit_article(article_id):
 
         primary_image = request.form.get("primary-img")
         title_image = None # declared as None so that if no primary image is given it will be None in the database
-        for image in cache["images"]:
+        for image in cache[f"{article_id}-images"]:
             image_source = request.form.get(f"{image}_source")
             image_description = request.form.get(f"{image}_description")
 
@@ -230,32 +234,32 @@ def edit_article(article_id):
         flash("Artikel wurde erfolgreich hochgeladen!", category="success")
 
         # removing now unecessary cache
-        cache.pop("uploaded_content")
-        cache.pop("num_images")
-        cache.pop("images")
+        cache.pop(f"{article_id}-uploaded_content")
+        cache.pop(f"{article_id}-num_images")
+        cache.pop(f"{article_id}-images")
         return redirect(url_for("articles.find_article", path=f"{article_id}.html"))
 
     return render_template(
         "upload/upload_panel.html", 
         categories=Category.query.all(), 
         article_id=article_id,
-        images=cache["images"]
+        images=cache[f"{article_id}-images"]
     )
 
 #--------------------------------------------------------------------------------------------------------------------------------------------
 
 # create system to view (results of) survey
 # 
-@admin.route("/newsurvey", methods=["GET", "POST"])
+@admin.route("/newsurvey/<session_id>", methods=["GET", "POST"])
 @login_required
-def create_survey():
-    num_answers = int(cache["num_answers"])
+def create_survey(session_id):
+    num_answers = int(cache[f"{session_id}-num_answers"])
     if request.method == "POST":
         correct_answer = request.form.get("correct-answer")
         print(request.form.get("expiry-date"))
 
         new_survey = Survey(
-            id=generate_id(6, table=Survey),
+            id=session_id,
             title=request.form.get("title"),
             description=request.form.get("description"),
             expiry_date=datetime.now() + timedelta(int(request.form.get("expiry-date")))
@@ -277,7 +281,7 @@ def create_survey():
             )
 
         db.session.commit()
-        cache.pop("num_answers")
+        cache.pop(f"{session_id}-num_answers")
         return redirect(url_for("surveys.survey", id=new_survey.id))
     return render_template("upload/upload_survey.html", num_answers=num_answers)
 
