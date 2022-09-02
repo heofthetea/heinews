@@ -15,6 +15,22 @@ from werkzeug.utils import secure_filename
 ALLOWED_EXTENSIONS = {"txt", "docx", "doc"}
 ALLOWED_IMAGES = {"png", "jpg"}
 
+
+def __IMAGE__(html_source: str, user_source: str, description: str, *, id="article-image") -> str:
+    # these parantheses are important
+    return (
+# write your html into that multiline string
+# css for that html is currently stored in `articles.css`
+f"""
+<figure>
+    <img src="{html_source}" alt="Bild konnte nicht geladen werden" id="{id}">
+    <figcaption id="{id}">
+        <i>Quelle: {user_source}</i> - {description}
+    </figcaption>
+</figure>
+"""
+)
+
 """
 source: https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html#xss-prevention-rules-summary
 &    &amp;
@@ -167,19 +183,17 @@ def edit_article(article_id):
 
         primary_image = request.form.get("primary-img")
         title_image = None # declared as None so that if no primary image is given it will be None in the database
-        for src in cache["images"]:
-            image_sauce = request.form.get(f"{src}_source")
-            image_description = request.form.get(f"{src}_description")
+        for image in cache["images"]:
+            image_source = request.form.get(f"{image}_source")
+            image_description = request.form.get(f"{image}_description")
 
             # TODO make images children of respective divs
-            if src == primary_image:
-                content = f"<figcaption id='primary-image'>{image_sauce}: {image_description}</figcaption>\n</figcaption>\n" + content
-                content = f"<figure>\n<img src='{src}' alt='some image lul u stupid' id='article_img'>\n" + content
-                title_image = src
+            if image == primary_image:
+                content = __IMAGE__(image, image_source, image_description, id="primary-image") + content
+                title_image = image
             else:
                 #TODO rework to actually display in right place
-                content += f"<figure>\n<div class='article-image'>\n<img src='{src}' alt='some image lul u stupid' id='article_img'>\n"
-                content += f"<figcaption>{image_sauce}: {image_description}</figcaption>\n</div>\n</figure>\n"
+                content += __IMAGE__(image, image_source, image_description)
 
         tags = request.form.get("tags")
 
