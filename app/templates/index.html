@@ -93,7 +93,9 @@
                                     <img src="{{ aktuelles[i].primary_image }}" style="max-height: 200px;" class="card-img-top" alt="">
                                     <div class="card-body text-center py-4">
                                         <h4 class="card-title">{{ aktuelles[i].title }}</h4>
-                                        <p class="lead card-subtitle">{{ aktuelles[i].description }}</p>
+                                        <p class="lead card-subtitle">
+                                            {{ aktuelles[i].description }}
+                                        </p>
                                         <br>
                                         <br>
                                         <p>{{ aktuelles[i].date_created.date().strftime("%d.%m.%Y") }}</p>
