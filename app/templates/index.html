@@ -584,7 +584,7 @@
                                 {# the list likely won't be dividable by three, so this if statement is needed to not get any IndexOutOfBoundsExceptions #}
                                 {% if surveys[i] %}
                                     <div class="card card-block border-1 border-secondary" style="width: calc(100%/4)">
-                                        <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(surveys[i].id)) }}">
+                                        <a style="text-decoration: none;" href="{{ url_for('surveys.survey', id=survey.id) }}">
                                             <img src="../static/img/placeholder.png" style="max-height: 200px;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
                                                 <h4 class="card-title">{{ surveys[i].title }}</h4>
@@ -598,7 +598,7 @@
 
                                 {% if surveys[i + 1] %}
                                     <div class="card card-block border-1 border-secondary" style="width: calc(100%/4); margin-left: 2%;">
-                                        <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(surveys[i + 1].id)) }}">
+                                        <a style="text-decoration: none;" href="{{ url_for('surveys.survey', id=survey.id) }}">
                                             <img src="../static/img/placeholder.png" style="max-height: 200px;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
                                                 <h4 class="card-title">{{ surveys[i + 1].title }}</h4>
@@ -610,7 +610,7 @@
 
                                 {% if surveys[i + 2] %}
                                     <div class="card card-block border-1 border-secondary" style="width: calc(100%/4); margin-left: 2%">
-                                        <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(surveys[i + 2].id)) }}">
+                                        <a style="text-decoration: none;" href="{{ url_for('surveys.survey', id=survey.id) }}">
                                             <img src="../static/img/placeholder.png" style="max-height: 200px;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
                                                 <h4 class="card-title">{{ surveys[i + 2].title }}</h4>
