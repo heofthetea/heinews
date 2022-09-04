@@ -102,6 +102,14 @@ def create_app(host: tuple=None) -> Flask:
     def inject_httperror():
         return dict(abort=abort)
 
+    # injects functions the frontend may need for article previews etc
+    @app.context_processor
+    def article_functions():
+        return dict(
+            cap_text=cap_text,
+            title_image_or_placeholder=lambda a: a.primary_image if a.primary_image is not None else "../static/img/placeholder.png"
+        )
+
     @app.errorhandler(404)
     def page_not_found(error):
         return ErrorPages.__404__()
@@ -135,3 +143,7 @@ def create_database(app : Flask) -> None:
 
 def user_loggedin(current_user):
     return not isinstance(current_user, AnonymousUserMixin)
+
+
+def cap_text(text: str, *, cap: int=24, end: str="...") -> str:
+    return text[:cap] + end

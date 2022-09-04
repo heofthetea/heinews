@@ -8,15 +8,6 @@ from random import choice
 
 views = Blueprint("views", __name__)
 
-
-def title_image_or_placeholder(article):
-    return article.primary_image if article.primary_image is not None else "../static/img/placeholder.png"
-
-
-@views.context_processor
-def inject_title_image():
-    return dict(title_image_or_placeholder=title_image_or_placeholder)
-
 @views.route('/')
 def index() -> str:
     most_upvoted = Article.__validated_articles__(Article).order_by(desc(Article.upvotes)).first()
