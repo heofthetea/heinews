@@ -75,7 +75,7 @@ def admin_index():
     except AttributeError:
         abort(403)
     invalidated_articles = Article.query.filter_by(validated=False)
-    return render_template("admin.html", invalidated_articles=invalidated_articles.order_by(asc(Article.date_created)))
+    return render_template("admin.html", invalidated_articles=invalidated_articles.order_by(asc(Article.date_created)).all())
 
 
 #TODO split this up to 2 functions
