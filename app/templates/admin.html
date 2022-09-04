@@ -4,32 +4,54 @@
 <link rel="stylesheet" href="/static/css/index.css">
 {% endblock %}
 
-{% block title %}Admin Panel{% endblock %}
+{% block title %}<h1 style="color:rgb(13, 110, 253)">Admin Panel</h1>{% endblock %}
 
 {% block content %}
 <div style="margin-left: 5%; margin-right:5%">
     <br>
-    <h1>Admin-Panel</h1>
     <br>
-    <div class="container-fluid">
-        <div class="row my-5 flex-row flex-nowrap">
-            {% for article in invalidated_articles %}
-                <div class="col-sm-3">
-                    <div class="card card-block border-1 border-secondary">
-                        <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(article.id)) }}">
-                            <img src="{{ article.primary_image }}" style="max-height: 200px;" class="card-img-top" alt="">
-                            <div class="card-body text-center py-4">
-                                <h4 class="card-title">{{ article.title }}</h4>
-                                <p class="lead card-subtitle">{{ article.description }}</p>
-                                <br>
-                                <p>Hochgeladen am {{ article.date_created.date().strftime("%d.%m.%Y") }}</p>
+    <div id="carouselExampleControls" class="carousel carousel-dark slide" data-bs-ride="carousel" style="border: 2px solid; border-color:rgb(12, 12, 90); height: 440px; background-color: rgb(255, 255, 255); vertical-align: center; border-radius: 10px;">
+        <div class="carousel-inner">
+            {% for i in range(0, invalidated_articles|length, 3) %} <!--the 3 is the "step" argument, basically the equivalent of "i += 3" in a java for loop-->
+                {% if i == 0 %}
+                    <div class="carousel-item active" style="margin-top: 20px;">
+                {% else %}
+                    <div class="carousel-item" style="margin-top: 20px;">
+                {% endif%}
+                    <div class="card-container" style="display: flex; justify-content: center;">
+                        {# the list likely won't be dividable by three, so this if statement is needed to not get any IndexOutOfBoundsExceptions #}
+                        {% for article in invalidated_articles %}
+                            <div class="card card-block border-1 border-secondary" style="width: calc(100%/4)">
+                                <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(article.id)) }}">
+                                    <img src="{{ title_image_or_placeholder(most_recent_article) }}" style="max-height: 200px;" class="card-img-top" alt="">
+                                    <div class="card-body text-center py-4">
+                                        <h4 class="card-title">{{ article.title }}</h4>
+                                        <p class="lead card-subtitle">
+                                            {{ article.description }}
+                                        </p>
+                                        <br>
+                                        <br>
+                                        <p>Hochgeladen am {{ article.date_created.date().strftime("%d.%m.%Y") }}</p>
+                                    </div>
+                                </a>    
                             </div>
-                        </a>    
+                        {% endfor %}
                     </div>
                 </div>
             {% endfor %}
         </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
     </div>
+    <br>
+    <br>
+    <br>
     <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
         <div class="carousel-inner">
           <div class="carousel-item active">
