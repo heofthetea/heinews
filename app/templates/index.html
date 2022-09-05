@@ -80,7 +80,7 @@
         {% if aktuelles|length > 0 %}
             <h2 style="color:rgb(13, 110, 253)">Aktuelles</h2>
             <br>
-            <div id="carouselExampleControls" class="carousel carousel-dark slide" data-bs-ride="carousel" style="border: 2px solid; border-color:rgb(12, 12, 90); height: 440px; background-color: rgb(255, 255, 255); vertical-align: center; border-radius: 10px;">
+            <div id="carouselExampleControls" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); height: 445px; background-color: rgb(255, 255, 255); vertical-align: center; border-radius: 10px;">
                 <div class="carousel-inner">
                     {% for i in range(0, aktuelles|length, 3) %} <!--the 3 is the "step" argument, basically the equivalent of "i += 3" in a java for loop-->
                         {% if i == 0 %}
@@ -93,11 +93,11 @@
                                 {% if aktuelles[i] %}
                                     <div class="card card-block border-1 border-secondary" style="width: calc(100%/4)">
                                         <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(aktuelles[i].id)) }}">
-                                            <img src="{{ title_image_or_placeholder(aktuelles[i]) }}" style="max-height: 200px;" class="card-img-top" alt="">
+                                            <img src="{{ title_image_or_placeholder(aktuelles[i]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
                                                 <h4 class="card-title">{{ aktuelles[i].title }}</h4>
                                                 <p class="lead card-subtitle">
-                                                    {{ aktuelles[i].description }}
+                                                    {{aktuelles[i].description}}
                                                 </p>
                                                 <br>
                                                 <br>
@@ -110,7 +110,7 @@
                                 {% if aktuelles[i + 1] %}
                                     <div class="card card-block border-1 border-secondary" style="width: calc(100%/4); margin-left: 2%;">
                                         <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(aktuelles[i + 1].id)) }}">
-                                            <img src="{{ title_image_or_placeholder(aktuelles[i + 1]) }}" style="max-height: 200px;" class="card-img-top" alt="">
+                                            <img src="{{ title_image_or_placeholder(aktuelles[i + 1]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
                                                 <h4 class="card-title">{{ aktuelles[i + 1].title }}</h4>
                                                 <p class="lead card-subtitle">{{ aktuelles[i + 1].description }}</p>
@@ -125,7 +125,7 @@
                                 {% if aktuelles[i + 2] %}
                                     <div class="card card-block border-1 border-secondary" style="width: calc(100%/4); margin-left: 2%">
                                         <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(aktuelles[i + 2].id)) }}">
-                                            <img src="{{ title_image_or_placeholder(aktuelles[i + 2]) }}" style="max-height: 200px;" class="card-img-top" alt="">
+                                            <img src="{{ title_image_or_placeholder(aktuelles[i + 2]) }}" style="height: 200px;  object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
                                                 <h4 class="card-title">{{ aktuelles[i + 2].title }}</h4>
                                                 <p class="lead card-subtitle">{{ aktuelles[i + 2].description }}</p>
@@ -162,7 +162,7 @@
         {% if wissen|length > 0 %}
             <h2 style="color:rgb(13, 110, 253)">Wissen</h2>
             <br>
-            <div id="carouselExampleControls" class="carousel carousel-dark slide" data-bs-ride="carousel" style="border: 2px solid; border-color:rgb(12, 12, 90); height: 440px; background-color: rgb(255, 255, 255); vertical-align: center; border-radius: 10px;">
+            <div id="carouselExampleControls" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); height: 445px; background-color: rgb(255, 255, 255); vertical-align: center; border-radius: 10px;">
                 <div class="carousel-inner">
                     {% for i in range(0, wissen|length, 3) %} <!--the 3 is the "step" argument, basically the equivalent of "i += 3" in a java for loop-->
                         {% if i == 0 %}
@@ -175,7 +175,7 @@
                                 {% if wissen[i] %}
                                     <div class="card card-block border-1 border-secondary" style="width: calc(100%/4)">
                                         <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(wissen[i].id)) }}">
-                                            <img src="{{ title_image_or_placeholder(wissen[i]) }}" style="max-height: 200px;" class="card-img-top" alt="">
+                                            <img src="{{ title_image_or_placeholder(wissen[i]) }}" style="height: 200px ;  object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
                                                 <h4 class="card-title">{{ wissen[i].title }}</h4>
                                                 <p class="lead card-subtitle">
@@ -192,7 +192,7 @@
                                 {% if wissen[i + 1] %}
                                     <div class="card card-block border-1 border-secondary" style="width: calc(100%/4); margin-left: 2%;">
                                         <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(wissen[i + 1].id)) }}">
-                                            <img src="{{ title_image_or_placeholder(wissen[i + 1]) }}" style="max-height: 200px;" class="card-img-top" alt="">
+                                            <img src="{{ title_image_or_placeholder(wissen[i + 1]) }}" style="height: 200px;  object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
                                                 <h4 class="card-title">{{ wissen[i + 1].title }}</h4>
                                                 <p class="lead card-subtitle">{{ wissen[i + 1].description }}</p>
@@ -207,7 +207,7 @@
                                 {% if wissen[i + 2] %}
                                     <div class="card card-block border-1 border-secondary" style="width: calc(100%/4); margin-left: 2%">
                                         <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(wissen[i + 2].id)) }}">
-                                            <img src="{{ title_image_or_placeholder(wissen[i + 2]) }}" style="max-height: 200px;" class="card-img-top" alt="">
+                                            <img src="{{ title_image_or_placeholder(wissen[i + 2]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
                                                 <h4 class="card-title">{{ wissen[i + 2].title }}</h4>
                                                 <p class="lead card-subtitle">{{ wissen[i + 2].description }}</p>
@@ -244,7 +244,7 @@
         {% if schulleben|length > 0 %}
             <h2 style="color:rgb(13, 110, 253)">Schulleben</h2>
             <br>
-            <div id="carouselExampleControls" class="carousel carousel-dark slide" data-bs-ride="carousel" style="border: 2px solid; border-color:rgb(12, 12, 90); height: 440px; background-color: rgb(255, 255, 255); vertical-align: center; border-radius: 10px;">
+            <div id="carouselExampleControls" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); height: 445px; background-color: rgb(255, 255, 255); vertical-align: center; border-radius: 10px;">
                 <div class="carousel-inner">
                     {% for i in range(0, schulleben|length, 3) %} <!--the 3 is the "step" argument, basically the equivalent of "i += 3" in a java for loop-->
                         {% if i == 0 %}
@@ -257,7 +257,7 @@
                                 {% if schulleben[i] %}
                                     <div class="card card-block border-1 border-secondary" style="width: calc(100%/4)">
                                         <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(schulleben[i].id)) }}">
-                                            <img src="{{ title_image_or_placeholder(schulleben[i]) }}" style="max-height: 200px;" class="card-img-top" alt="">
+                                            <img src="{{ title_image_or_placeholder(schulleben[i]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
                                                 <h4 class="card-title">{{ schulleben[i].title }}</h4>
                                                 <p class="lead card-subtitle">
@@ -274,7 +274,7 @@
                                 {% if schulleben[i + 1] %}
                                     <div class="card card-block border-1 border-secondary" style="width: calc(100%/4); margin-left: 2%;">
                                         <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(schulleben[i + 1].id)) }}">
-                                            <img src="{{ title_image_or_placeholder(schulleben[i + 1]) }}" style="max-height: 200px;" class="card-img-top" alt="">
+                                            <img src="{{ title_image_or_placeholder(schulleben[i + 1]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
                                                 <h4 class="card-title">{{ schulleben[i + 1].title }}</h4>
                                                 <p class="lead card-subtitle">{{ schulleben[i + 1].description }}</p>
@@ -289,7 +289,7 @@
                                 {% if schulleben[i + 2] %}
                                     <div class="card card-block border-1 border-secondary" style="width: calc(100%/4); margin-left: 2%">
                                         <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(schulleben[i + 2].id)) }}">
-                                            <img src="{{ title_image_or_placeholder(schulleben[i + 2]) }}" style="max-height: 200px;" class="card-img-top" alt="">
+                                            <img src="{{ title_image_or_placeholder(schulleben[i + 2]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
                                                 <h4 class="card-title">{{ schulleben[i + 2].title }}</h4>
                                                 <p class="lead card-subtitle">{{ schulleben[i + 2].description }}</p>
@@ -326,7 +326,7 @@
         {% if lifestyle|length > 0 %}
             <h2 style="color:rgb(13, 110, 253)">Lifestyle</h2>
             <br>
-            <div id="carouselExampleControls" class="carousel carousel-dark slide" data-bs-ride="carousel" style="border: 2px solid; border-color:rgb(12, 12, 90); height: 440px; background-color: rgb(255, 255, 255); vertical-align: center; border-radius: 10px;">
+            <div id="carouselExampleControls" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); height: 445px; background-color: rgb(255, 255, 255); vertical-align: center; border-radius: 10px;">
                 <div class="carousel-inner">
                     {% for i in range(0, lifestyle|length, 3) %} <!--the 3 is the "step" argument, basically the equivalent of "i += 3" in a java for loop-->
                         {% if i == 0 %}
@@ -339,7 +339,7 @@
                                 {% if lifestyle[i] %}
                                     <div class="card card-block border-1 border-secondary" style="width: calc(100%/4)">
                                         <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(lifestyle[i].id)) }}">
-                                            <img src="{{ title_image_or_placeholder(lifestyle[i]) }}" style="max-height: 200px;" class="card-img-top" alt="">
+                                            <img src="{{ title_image_or_placeholder(lifestyle[i]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
                                                 <h4 class="card-title">{{ lifestyle[i].title }}</h4>
                                                 <p class="lead card-subtitle">
@@ -356,7 +356,7 @@
                                 {% if lifestyle[i + 1] %}
                                     <div class="card card-block border-1 border-secondary" style="width: calc(100%/4); margin-left: 2%;">
                                         <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(lifestyle[i + 1].id)) }}">
-                                            <img src="{{ title_image_or_placeholder(lifestyle[i + 1]) }}" style="max-height: 200px;" class="card-img-top" alt="">
+                                            <img src="{{ title_image_or_placeholder(lifestyle[i + 1]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
                                                 <h4 class="card-title">{{ lifestyle[i + 1].title }}</h4>
                                                 <p class="lead card-subtitle">{{ lifestyle[i + 1].description }}</p>
@@ -371,7 +371,7 @@
                                 {% if lifestyle[i + 2] %}
                                     <div class="card card-block border-1 border-secondary" style="width: calc(100%/4); margin-left: 2%">
                                         <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(lifestyle[i + 2].id)) }}">
-                                            <img src="{{ title_image_or_placeholder(lifestyle[i + 2]) }}" style="max-height: 200px;" class="card-img-top" alt="">
+                                            <img src="{{ title_image_or_placeholder(lifestyle[i + 2]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
                                                 <h4 class="card-title">{{ lifestyle[i + 2].title }}</h4>
                                                 <p class="lead card-subtitle">{{ lifestyle[i + 2].description }}</p>
@@ -408,7 +408,7 @@
         {% if unterhaltung|length > 0 %}
             <h2 style="color:rgb(13, 110, 253)">Unterhaltung</h2>
             <br>
-            <div id="carouselExampleControls" class="carousel carousel-dark slide" data-bs-ride="carousel" style="border: 2px solid; border-color:rgb(12, 12, 90); height: 440px; background-color: rgb(255, 255, 255); vertical-align: center; border-radius: 10px;">
+            <div id="carouselExampleControls" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); height: 445px; background-color: rgb(255, 255, 255); vertical-align: center; border-radius: 10px;">
                 <div class="carousel-inner">
                     {% for i in range(0, unterhaltung|length, 3) %} <!--the 3 is the "step" argument, basically the equivalent of "i += 3" in a java for loop-->
                         {% if i == 0 %}
@@ -421,7 +421,7 @@
                                 {% if unterhaltung[i] %}
                                     <div class="card card-block border-1 border-secondary" style="width: calc(100%/4)">
                                         <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(unterhaltung[i].id)) }}">
-                                            <img src="{{ title_image_or_placeholder(unterhaltung[i]) }}" style="max-height: 200px;" class="card-img-top" alt="">
+                                            <img src="{{ title_image_or_placeholder(unterhaltung[i]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
                                                 <h4 class="card-title">{{ unterhaltung[i].title }}</h4>
                                                 <p class="lead card-subtitle">
@@ -438,7 +438,7 @@
                                 {% if unterhaltung[i + 1] %}
                                     <div class="card card-block border-1 border-secondary" style="width: calc(100%/4); margin-left: 2%;">
                                         <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(unterhaltung[i + 1].id)) }}">
-                                            <img src="{{ title_image_or_placeholder(unterhaltung[i + 1]) }}" style="max-height: 200px;" class="card-img-top" alt="">
+                                            <img src="{{ title_image_or_placeholder(unterhaltung[i + 1]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
                                                 <h4 class="card-title">{{ unterhaltung[i + 1].title }}</h4>
                                                 <p class="lead card-subtitle">{{ unterhaltung[i + 1].description }}</p>
@@ -453,7 +453,7 @@
                                 {% if unterhaltung[i + 2] %}
                                     <div class="card card-block border-1 border-secondary" style="width: calc(100%/4); margin-left: 2%">
                                         <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(unterhaltung[i + 2].id)) }}">
-                                            <img src="{{ title_image_or_placeholder(unterhaltung[i + 2]) }}" style="max-height: 200px;" class="card-img-top" alt="">
+                                            <img src="{{ title_image_or_placeholder(unterhaltung[i + 2]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
                                                 <h4 class="card-title">{{ unterhaltung[i + 2].title }}</h4>
                                                 <p class="lead card-subtitle">{{ unterhaltung[i + 2].description }}</p>
@@ -490,7 +490,7 @@
         {% if kreatives|length > 0 %}
             <h2 style="color:rgb(13, 110, 253)">Kreatives</h2>
             <br>
-            <div id="carouselExampleControls" class="carousel carousel-dark slide" data-bs-ride="carousel" style="border: 2px solid; border-color:rgb(12, 12, 90); height: 440px; background-color: rgb(255, 255, 255); vertical-align: center; border-radius: 10px;">
+            <div id="carouselExampleControls" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); height: 445px; background-color: rgb(255, 255, 255); vertical-align: center; border-radius: 10px;">
                 <div class="carousel-inner">
                     {% for i in range(0, kreatives|length, 3) %} <!--the 3 is the "step" argument, basically the equivalent of "i += 3" in a java for loop-->
                         {% if i == 0 %}
@@ -503,7 +503,7 @@
                                 {% if kreatives[i] %}
                                     <div class="card card-block border-1 border-secondary" style="width: calc(100%/4)">
                                         <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(kreatives[i].id)) }}">
-                                            <img src="{{ title_image_or_placeholder(kreatives[i]) }}" style="max-height: 200px;" class="card-img-top" alt="">
+                                            <img src="{{ title_image_or_placeholder(kreatives[i]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
                                                 <h4 class="card-title">{{ kreatives[i].title }}</h4>
                                                 <p class="lead card-subtitle">
@@ -520,7 +520,7 @@
                                 {% if kreatives[i + 1] %}
                                     <div class="card card-block border-1 border-secondary" style="width: calc(100%/4); margin-left: 2%;">
                                         <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(kreatives[i + 1].id)) }}">
-                                            <img src="{{ title_image_or_placeholder(kreatives[i + 1]) }}" style="max-height: 200px;" class="card-img-top" alt="">
+                                            <img src="{{ title_image_or_placeholder(kreatives[i + 1]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
                                                 <h4 class="card-title">{{ kreatives[i + 1].title }}</h4>
                                                 <p class="lead card-subtitle">{{ kreatives[i + 1].description }}</p>
@@ -535,7 +535,7 @@
                                 {% if kreatives[i + 2] %}
                                     <div class="card card-block border-1 border-secondary" style="width: calc(100%/4); margin-left: 2%">
                                         <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(kreatives[i + 2].id)) }}">
-                                            <img src="{{ title_image_or_placeholder(kreatives[i + 2]) }}" style="max-height: 200px;" class="card-img-top" alt="">
+                                            <img src="{{ title_image_or_placeholder(kreatives[i + 2]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
                                                 <h4 class="card-title">{{ kreatives[i + 2].title }}</h4>
                                                 <p class="lead card-subtitle">{{ kreatives[i + 2].description }}</p>
@@ -572,7 +572,7 @@
         {% if surveys|length > 0 %}
             <h2 style="color:rgb(13, 110, 253)">Umfragen</h2>
             <br>
-            <div id="carouselExampleControls" class="carousel carousel-dark slide" data-bs-ride="carousel" style="border: 2px solid; border-color:rgb(12, 12, 90); height: 335px; background-color: rgb(255, 255, 255); vertical-align: center; border-radius: 10px;">
+            <div id="carouselExampleControls" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); height: 335px; background-color: rgb(255, 255, 255); vertical-align: center; border-radius: 10px;">
                 <div class="carousel-inner">
                     {% for i in range(0, surveys|length, 3) %} <!--the 3 is the "step" argument, basically the equivalent of "i += 3" in a java for loop-->
                         {% if i == 0 %}
@@ -585,7 +585,7 @@
                                 {% if surveys[i] %}
                                     <div class="card card-block border-1 border-secondary" style="width: calc(100%/4)">
                                         <a style="text-decoration: none;" href="">
-                                            <img src="../static/img/placeholder.png" style="max-height: 200px;" class="card-img-top" alt="">
+                                            <img src="../static/img/placeholder.png" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
                                                 <h4 class="card-title">{{ surveys[i].title }}</h4>
                                                 <p class="lead card-subtitle">
@@ -599,7 +599,7 @@
                                 {% if surveys[i + 1] %}
                                     <div class="card card-block border-1 border-secondary" style="width: calc(100%/4); margin-left: 2%;">
                                         <a style="text-decoration: none;" href="">
-                                            <img src="../static/img/placeholder.png" style="max-height: 200px;" class="card-img-top" alt="">
+                                            <img src="../static/img/placeholder.png" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
                                                 <h4 class="card-title">{{ surveys[i + 1].title }}</h4>
                                                 <p class="lead card-subtitle">{{ surveys[i + 1].description }}</p>
@@ -611,7 +611,7 @@
                                 {% if surveys[i + 2] %}
                                     <div class="card card-block border-1 border-secondary" style="width: calc(100%/4); margin-left: 2%">
                                         <a style="text-decoration: none;" href="">
-                                            <img src="../static/img/placeholder.png" style="max-height: 200px;" class="card-img-top" alt="">
+                                            <img src="../static/img/placeholder.png" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
                                                 <h4 class="card-title">{{ surveys[i + 2].title }}</h4>
                                                 <p class="lead card-subtitle">{{ surveys[i + 2].description }}</p>

@@ -23,7 +23,7 @@
                         {% for article in invalidated_articles %}
                             <div class="card card-block border-1 border-secondary" style="width: calc(100%/4)">
                                 <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(article.id)) }}">
-                                    <img src="{{ title_image_or_placeholder(most_recent_article) }}" style="max-height: 200px;" class="card-img-top" alt="">
+                                    <img src="{{ title_image_or_placeholder(article) }}" style="max-height: 200px;" class="card-img-top" alt="">
                                     <div class="card-body text-center py-4">
                                         <h4 class="card-title">{{ article.title }}</h4>
                                         <p class="lead card-subtitle">
