@@ -113,7 +113,7 @@
                                             <img src="{{ title_image_or_placeholder(aktuelles[i + 1]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
                                                 <h4 class="card-title">{{ aktuelles[i + 1].title }}</h4>
-                                                <p class="lead card-subtitle">{{ aktuelles[i + 1].description }}</p>
+                                                <p class="lead card-subtitle">{{ cap_text(aktuelles[i + 1].description) }}</p>
                                                 <br>
                                                 <br>
                                                 <p>{{ aktuelles[i].date_created.date().strftime("%d.%m.%Y") }}</p>
@@ -128,7 +128,7 @@
                                             <img src="{{ title_image_or_placeholder(aktuelles[i + 2]) }}" style="height: 200px;  object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
                                                 <h4 class="card-title">{{ aktuelles[i + 2].title }}</h4>
-                                                <p class="lead card-subtitle">{{ aktuelles[i + 2].description }}</p>
+                                                <p class="lead card-subtitle">{{ cap_text(aktuelles[i + 2].description) }}</p>
                                                 <br>
                                                 <br>
                                                 <p>{{ aktuelles[i].date_created.date().strftime("%d.%m.%Y") }}</p>
@@ -179,7 +179,7 @@
                                             <div class="card-body text-center py-4">
                                                 <h4 class="card-title">{{ wissen[i].title }}</h4>
                                                 <p class="lead card-subtitle">
-                                                    {{ wissen[i].description }}
+                                                    {{ cap_text(wissen[i].description) }}
                                                 </p>
                                                 <br>
                                                 <br>
@@ -195,7 +195,7 @@
                                             <img src="{{ title_image_or_placeholder(wissen[i + 1]) }}" style="height: 200px;  object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
                                                 <h4 class="card-title">{{ wissen[i + 1].title }}</h4>
-                                                <p class="lead card-subtitle">{{ wissen[i + 1].description }}</p>
+                                                <p class="lead card-subtitle">{{ cap_text(wissen[i + 1].description) }}</p>
                                                 <br>
                                                 <br>
                                                 <p>{{ wissen[i].date_created.date().strftime("%d.%m.%Y") }}</p>
@@ -210,7 +210,7 @@
                                             <img src="{{ title_image_or_placeholder(wissen[i + 2]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
                                                 <h4 class="card-title">{{ wissen[i + 2].title }}</h4>
-                                                <p class="lead card-subtitle">{{ wissen[i + 2].description }}</p>
+                                                <p class="lead card-subtitle">{{ cap_text(wissen[i + 2].description) }}}</p>
                                                 <br>
                                                 <br>
                                                 <p>{{ wissen[i].date_created.date().strftime("%d.%m.%Y") }}</p>
@@ -261,7 +261,7 @@
                                             <div class="card-body text-center py-4">
                                                 <h4 class="card-title">{{ schulleben[i].title }}</h4>
                                                 <p class="lead card-subtitle">
-                                                    {{ schulleben[i].description }}
+                                                    {{ cap_text(schulleben[i].description) }}
                                                 </p>
                                                 <br>
                                                 <br>
@@ -277,7 +277,7 @@
                                             <img src="{{ title_image_or_placeholder(schulleben[i + 1]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
                                                 <h4 class="card-title">{{ schulleben[i + 1].title }}</h4>
-                                                <p class="lead card-subtitle">{{ schulleben[i + 1].description }}</p>
+                                                <p class="lead card-subtitle">{{ cap_text(schulleben[i + 1].description) }}}</p>
                                                 <br>
                                                 <br>
                                                 <p>{{ schulleben[i].date_created.date().strftime("%d.%m.%Y") }}</p>
@@ -292,7 +292,7 @@
                                             <img src="{{ title_image_or_placeholder(schulleben[i + 2]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
                                                 <h4 class="card-title">{{ schulleben[i + 2].title }}</h4>
-                                                <p class="lead card-subtitle">{{ schulleben[i + 2].description }}</p>
+                                                <p class="lead card-subtitle">{{ cap_text(schulleben[i + 2].description) }}</p>
                                                 <br>
                                                 <br>
                                                 <p>{{ schulleben[i].date_created.date().strftime("%d.%m.%Y") }}</p>
@@ -343,7 +343,7 @@
                                             <div class="card-body text-center py-4">
                                                 <h4 class="card-title">{{ lifestyle[i].title }}</h4>
                                                 <p class="lead card-subtitle">
-                                                    {{ lifestyle[i].description }}
+                                                    {{ cap_text(lifestyle[i].description) }}
                                                 </p>
                                                 <br>
                                                 <br>
@@ -359,7 +359,7 @@
                                             <img src="{{ title_image_or_placeholder(lifestyle[i + 1]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
                                                 <h4 class="card-title">{{ lifestyle[i + 1].title }}</h4>
-                                                <p class="lead card-subtitle">{{ lifestyle[i + 1].description }}</p>
+                                                <p class="lead card-subtitle">{{ cap_text(lifestyle[i + 1].description) }}</p>
                                                 <br>
                                                 <br>
                                                 <p>{{ lifestyle[i].date_created.date().strftime("%d.%m.%Y") }}</p>
@@ -374,7 +374,7 @@
                                             <img src="{{ title_image_or_placeholder(lifestyle[i + 2]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
                                                 <h4 class="card-title">{{ lifestyle[i + 2].title }}</h4>
-                                                <p class="lead card-subtitle">{{ lifestyle[i + 2].description }}</p>
+                                                <p class="lead card-subtitle">{{ cap_text(lifestyle[i + 2].description) }}</p>
                                                 <br>
                                                 <br>
                                                 <p>{{ lifestyle[i].date_created.date().strftime("%d.%m.%Y") }}</p>
@@ -425,7 +425,7 @@
                                             <div class="card-body text-center py-4">
                                                 <h4 class="card-title">{{ unterhaltung[i].title }}</h4>
                                                 <p class="lead card-subtitle">
-                                                    {{ unterhaltung[i].description }}
+                                                    {{ cap_text(unterhaltung[i].description) }}
                                                 </p>
                                                 <br>
                                                 <br>
@@ -441,7 +441,7 @@
                                             <img src="{{ title_image_or_placeholder(unterhaltung[i + 1]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
                                                 <h4 class="card-title">{{ unterhaltung[i + 1].title }}</h4>
-                                                <p class="lead card-subtitle">{{ unterhaltung[i + 1].description }}</p>
+                                                <p class="lead card-subtitle">{{ cap_text(unterhaltung[i + 1].description) }}</p>
                                                 <br>
                                                 <br>
                                                 <p>{{ unterhaltung[i].date_created.date().strftime("%d.%m.%Y") }}</p>
@@ -456,7 +456,7 @@
                                             <img src="{{ title_image_or_placeholder(unterhaltung[i + 2]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
                                                 <h4 class="card-title">{{ unterhaltung[i + 2].title }}</h4>
-                                                <p class="lead card-subtitle">{{ unterhaltung[i + 2].description }}</p>
+                                                <p class="lead card-subtitle">{{ cap_text(unterhaltung[i + 2].description) }}</p>
                                                 <br>
                                                 <br>
                                                 <p>{{ unterhaltung[i].date_created.date().strftime("%d.%m.%Y") }}</p>
@@ -507,7 +507,7 @@
                                             <div class="card-body text-center py-4">
                                                 <h4 class="card-title">{{ kreatives[i].title }}</h4>
                                                 <p class="lead card-subtitle">
-                                                    {{ kreatives[i].description }}
+                                                    {{ cap_text(kreatives[i].description) }}
                                                 </p>
                                                 <br>
                                                 <br>
@@ -523,7 +523,7 @@
                                             <img src="{{ title_image_or_placeholder(kreatives[i + 1]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
                                                 <h4 class="card-title">{{ kreatives[i + 1].title }}</h4>
-                                                <p class="lead card-subtitle">{{ kreatives[i + 1].description }}</p>
+                                                <p class="lead card-subtitle">{{ cap_text(kreatives[i + 1].description) }}</p>
                                                 <br>
                                                 <br>
                                                 <p>{{ kreatives[i].date_created.date().strftime("%d.%m.%Y") }}</p>
@@ -538,7 +538,7 @@
                                             <img src="{{ title_image_or_placeholder(kreatives[i + 2]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
                                                 <h4 class="card-title">{{ kreatives[i + 2].title }}</h4>
-                                                <p class="lead card-subtitle">{{ kreatives[i + 2].description }}</p>
+                                                <p class="lead card-subtitle">{{ cap_text(kreatives[i + 2].description) }}</p>
                                                 <br>
                                                 <br>
                                                 <p>{{ kreatives[i].date_created.date().strftime("%d.%m.%Y") }}</p>
@@ -589,7 +589,7 @@
                                             <div class="card-body text-center py-4">
                                                 <h4 class="card-title">{{ surveys[i].title }}</h4>
                                                 <p class="lead card-subtitle">
-                                                    {{ surveys[i].description }}
+                                                    {{ cap_text(survey[i].description) }}
                                                 </p>
                                             </div>
                                         </a>    
@@ -602,7 +602,7 @@
                                             <img src="../static/img/placeholder.png" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
                                                 <h4 class="card-title">{{ surveys[i + 1].title }}</h4>
-                                                <p class="lead card-subtitle">{{ surveys[i + 1].description }}</p>
+                                                <p class="lead card-subtitle">{{ cap_text(survey[i + 1].description) }}</p>
                                             </div>
                                         </a>    
                                     </div>
@@ -614,7 +614,7 @@
                                             <img src="../static/img/placeholder.png" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
                                                 <h4 class="card-title">{{ surveys[i + 2].title }}</h4>
-                                                <p class="lead card-subtitle">{{ surveys[i + 2].description }}</p>
+                                                <p class="lead card-subtitle">{{ cap_text(survey[i + 2].description) }}</p>
                                             </div>
                                         </a>    
                                     </div>

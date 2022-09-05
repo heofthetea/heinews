@@ -27,7 +27,7 @@
                                     <div class="card-body text-center py-4">
                                         <h4 class="card-title">{{ article.title }}</h4>
                                         <p class="lead card-subtitle">
-                                            {{ article.description }}
+                                            {{ cap_text(article.description) }}
                                         </p>
                                         <br>
                                         <br>
@@ -49,40 +49,6 @@
             <span class="visually-hidden">Next</span>
         </button>
     </div>
-    <br>
-    <br>
-    <br>
-    <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
-        <div class="carousel-inner">
-          <div class="carousel-item active">
-            <div class="cards-wrapper">
-            {% for article in invalidated_articles %}
-            <div class="col-sm-3">
-                <div class="card card-block border-1 border-secondary d-none d-md-block">
-                    <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(article.id)) }}">
-                        <img src="{{ article.primary_image }}" style="max-height: 200px;" class="card-img-top" alt="">
-                        <div class="card-body text-center py-4">
-                            <h4 class="card-title">{{ article.title }}</h4>
-                            <p class="lead card-subtitle">{{ article.description }}</p>
-                            <br>
-                            <p>Hochgeladen am {{ article.date_created.date().strftime("%d.%m.%Y") }}</p>
-                        </div>
-                    </a>
-                </div>
-            </div>
-            {% endfor %}
-          </div>
-        </div>
-        <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
-          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span class="sr-only">Previous</span>
-        </a>
-        <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
-          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-          <span class="sr-only">Next</span>
-        </a>
-      </div>
-</div>
 {% endblock %}
 
 
