@@ -145,5 +145,5 @@ def user_loggedin(current_user):
     return not isinstance(current_user, AnonymousUserMixin)
 
 
-def cap_text(text: str, *, cap: int=24, end: str="...") -> str:
-    return text[:cap] + end
+def cap_text(text: str, *, cap: int=27  , end: str="...") -> str:
+    return text[:cap] + end if len(text) > (cap+3) else text
