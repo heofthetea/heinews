@@ -9,7 +9,7 @@ from datetime import timedelta, datetime
 class Article(db.Model):
     id = db.Column(db.String(6), primary_key=True)
     title = db.Column(db.String(128))
-    description = db.Column(db.String(256))
+    description = db.Column(db.String(512))
     date_created = db.Column(db.DateTime(timezone=True), default=datetime.now())
     validated = db.Column(db.Boolean(), default=False)
     upvotes = db.Column(db.Integer, nullable=False, default=0)
@@ -91,7 +91,7 @@ class Announcement(db.Model):
 class Survey(db.Model):
     id = db.Column(db.String(6), primary_key=True)
     title = db.Column(db.String(128))
-    description = db.Column(db.String(256))
+    description = db.Column(db.String(512))
     expiry_date = db.Column(db.DateTime())
 
     def total_votes(self):

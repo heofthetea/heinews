@@ -5,7 +5,7 @@ from ._lib.send_mail import send_mail
 from .models import Article, User, Verify_Email, Password_Reset, Tag, Article_Tag, Role, Survey, Answer, User_Answer, Banned_User, Announcement, get_users_to_notify
 from .articles import get_article_location
 from .auth import is_eternal_dev
-from .mail_contents import account_yeeted, announcement as announcement_mail
+from ._lib.mail_contents import account_yeeted, announcement as announcement_mail
 from . import db, send_database, __MAIL_ACCOUNT__
 from os import remove
 from os.path import exists, isdir

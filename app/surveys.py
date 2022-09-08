@@ -43,7 +43,7 @@ def vote(survey_id):
     if User_Answer.query.filter_by(survey_id=survey_id).filter_by(user_id=current_user.id).first():
         flash("Du hast bereits abgestimmt!", category="error")
     elif not current_user.email_confirmed:
-        flash("Hierfür musst du erst deine Email verifizieren! Schau mal in deinem Email-Postfach nach :)", category="error")
+        flash("Hierfür musst Du erst Deine Email verifizieren! Schau mal in Deinem Email-Postfach nach :)", category="error")
     else:
         db.session.add(
             User_Answer(

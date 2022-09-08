@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from .models import User, Password_Reset, Verify_Email, Delete_Account, User_Answer, User_Upvote, Banned_User, generate_id
-from .mail_contents import verification, reset, delete
+from ._lib.mail_contents import verification, reset, delete
 from . import db, __DEVELOPERS__, __HOST__, __MAIL_ACCOUNT__
 from ._lib.send_mail import send_mail
 from flask_login import login_user, login_required, logout_user, current_user
@@ -108,7 +108,7 @@ def reset_password(reset_id):
     Password_Reset.query.filter_by(id=reset_id).delete()
 
     if datetime.now() > reset_token.expiry_date:
-        flash("Dein Reset Token ist abgelaufen! Auf deinem Profil kannst du einen neuen anfordern!", category="error")
+        flash("Dein Reset Token ist abgelaufen! Auf Deinem Profil kannst Du einen neuen anfordern!", category="error")
         db.session.commit()
         return redirect(url_for("views.profile"))
 
@@ -126,7 +126,7 @@ def reset_password(reset_id):
         if password1 != password2:
             flash("Passwörter stimmen nicht überein", category="error")
         elif check_password_hash(user.password, password1):
-            flash("Herzlichen Glückwunsch, du hast dein altes Passwort erraten :)", category="success")
+            flash("Herzlichen Glückwunsch, Du hast Dein altes Passwort erraten :)", category="success")
         else:
             user.password = generate_password_hash(password1, method="sha256")
             db.session.commit()
@@ -143,7 +143,7 @@ def delete_account(delete_id):
     Delete_Account.query.filter_by(id=delete_id).delete()
 
     if datetime.now() > delete_token.expiry_date:
-        flash("Dein Deletion Token ist abgelaufen! Auf deinem Profil kannst du einen neuen anfordern!", category="error")
+        flash("Dein Deletion Token ist abgelaufen! Auf Deinem Profil kannst Du einen neuen anfordern!", category="error")
         db.session.commit()
         return redirect(url_for("views.profile"))
 
@@ -181,7 +181,7 @@ def verify_email(verify_id):
     verification_token = Verify_Email.query.get(verify_id)
 
     if datetime.now() > verification_token.expiry_date:
-        flash("Dein Verification Token ist abgelaufen! Auf deinem Profil kannst du einen neuen anfordern!", category="error")
+        flash("Dein Verification Token ist abgelaufen! Auf Deinem Profil kannst Du einen neuen anfordern!", category="error")
         Verify_Email.query.filter_by(id=verify_id).delete()
         db.session.commit()
         return redirect(url_for("views.profile"))
@@ -192,7 +192,7 @@ def verify_email(verify_id):
     Verify_Email.query.filter_by(id=verify_id).delete()
     db.session.commit()
 
-    flash("Deine Email wurde erfolgreich verifiziert! Jetzt verfügst du über alle dir zustehenden Freiheiten!", category="success")
+    flash("Deine Email wurde erfolgreich verifiziert! Jetzt verfügst Du über alle dir zustehenden Freiheiten!", category="success")
     return redirect(url_for("views.profile"))
 
 
@@ -252,7 +252,7 @@ def send_verification_email(email: str) -> None:
             )
         )
         db.session.commit()
-        flash("Du erhältst demnächst eine Email mit Verifizierungscode. Sobald wir deine Email-Addresse verifiziert haben, hast du \
+        flash("Du erhältst demnächst eine Email mit Verifizierungscode. Sobald wir Deine Email-Addresse verifiziert haben, hast Du \
                 Zugriff auf Aktionen wie Upvoten.", category="info")
     else:
         flash("Whoops... Da ist wohl was schief gelaufen! Wir konnten dir keine Mail senden :/", category="error")
@@ -289,7 +289,7 @@ def send_reset_mail(user_id):
                 )
             )
             db.session.commit()
-            flash("Dir wurde eine Mail mit einem Link gesendet, unter dem du dein Passwort zurücksetzen kannst.", category="info")
+            flash("Dir wurde eine Mail mit einem Link gesendet, unter dem Du Dein Passwort zurücksetzen kannst.", category="info")
         else:
             flash("Whoops... Da ist wohl was schief gelaufen! Wir konnten dir keine Mail senden :/", category="error")
 
@@ -321,7 +321,7 @@ def send_delete_mail(user_id):
                 )
             )
             db.session.commit()
-            flash("Dir wurde eine Mail mit einem Link gesendet, unter dem du deinen Account löschen kannst.", category="info")
+            flash("Dir wurde eine Mail mit einem Link gesendet, unter dem Du Deinen Account löschen kannst.", category="info")
         else:
             flash("Whoops... Da ist wohl was schief gelaufen! Wir konnten dir keine Mail senden :/", category="error")
     return redirect(url_for('views.profile'))

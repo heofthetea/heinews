@@ -56,7 +56,7 @@
 
         {# same if-statement as in the label tag, you see the potential benefits of one giant if-else?#}
         {% if not user_answer == none or survey_expired %}
-        <i>Die Option, für die du abgestimmt hast, ist unterstrichen.</i>
+        <i>Die Option, für die Du abgestimmt hast, ist unterstrichen.</i>
             {% if not correct_answer == none %}
                 {% if user_answer.answer_id == correct_answer.id %}
                     <h3>Deine Antwort ist korrekt!</h3>

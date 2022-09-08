@@ -56,6 +56,7 @@ input {
             name="title" 
             placeholder="supertoller Artikel"
             required
+            maxlength="128"
         />
     </div>
     <br>
@@ -67,6 +68,7 @@ input {
             id="description" 
             name="description" 
             placeholder="Deshalb solltet Ihr diesen Artikel  u n b e d i n g t  lesen"
+            maxlength="512"
         />
     </div>
     <br>
@@ -107,10 +109,10 @@ input {
                 </td>
                 <td>
                     <label for="description"><b>Beschreibung</b></label>
-                    <input type="text" class="form-control" name="{{ image }}_description" placeholder="Das ist ein wunderschönes Bild">
+                    <input type="text" class="form-control" name="{{ image }}_description" placeholder="Das ist ein wunderschönes Bild" maxlength="124">
                     <br>
                     <label for="source"><b>Quelle</b> *</label>
-                    <input type="source" class="form-control" name="{{ image }}_source" placeholder="Hab' ich selbst gemalt" required>
+                    <input type="source" class="form-control" name="{{ image }}_source" placeholder="Hab' ich selbst gemalt" required maxlength="64">
                 </td>
             </tr>
             <br>

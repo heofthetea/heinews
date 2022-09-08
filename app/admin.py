@@ -70,7 +70,7 @@ def admin_index():
         if current_user.role != "validate" and current_user.role != "developer":
             abort(403)
         if not current_user.email_confirmed:
-            flash("Hierfür musst du erst deine Email verifizieren! Schau mal in deinem Email-Postfach nach :)", category="error")
+            flash("Hierfür musst Du erst Deine Email verifizieren! Schau mal in Deinem Email-Postfach nach :)", category="error")
             return redirect(redirect(request.url))
     except AttributeError:
         abort(403)
@@ -86,7 +86,7 @@ def new_article() -> None:
     if not Role.query.get(current_user.role).can_upload:
         abort(403)
     if not current_user.email_confirmed:
-        flash("Hierfür musst du erst deine Email verifizieren! Schau mal in deinem Email-Postfach nach :)", category="error")
+        flash("Hierfür musst Du erst Deine Email verifizieren! Schau mal in Deinem Email-Postfach nach :)", category="error")
         return redirect("/admin")
 
     #handles file upload (including validation checks and docx to html conversion)

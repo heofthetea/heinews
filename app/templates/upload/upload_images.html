@@ -6,9 +6,9 @@
 {% if get_user_role(current_user).can_upload %}
 <div class="container-xl">
     <br>
-    <h1>Gib deinem Artikel Bilder</h1>
+    <h1>Gib Deinem Artikel Bilder</h1>
     <br>
-    <i>In der Reihenfolge, in der du sie hochlädst, sind sie dann übrigens auch im Text zu finden. Also das erste Bild am obersten usw.</i>
+    <i>In der Reihenfolge, in der Du sie hochlädst, sind sie dann übrigens auch im Text zu finden. Also das erste Bild am obersten usw.</i>
     <form method="POST" enctype="multipart/form-data">
         {% for i in range(num_images) %}
             <label for="image-{{ i }}">{{ i + 1 }}. Bild:</label>

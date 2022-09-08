@@ -1,8 +1,10 @@
 from flask import Blueprint, render_template, abort, redirect, url_for, flash, request
 from jinja2.exceptions import TemplateNotFound
-from flask_login import current_user, AnonymousUserMixin
-from .models import Article, User, Role, Tag, User_Upvote, Announcement, get_tags, get_articles, get_User_Upvote, get_user_role
-from . import db, user_loggedin
+from flask_login import current_user, AnonymousUserMixin, login_required
+from .models import Article, User, Role, Tag, User_Upvote, Announcement, get_tags, get_articles, get_User_Upvote, get_user_role, get_users_to_notify
+from . import db, user_loggedin, __MAIL_ACCOUNT__
+from ._lib.send_mail import send_mail
+from ._lib.mail_contents import article as article_notification
 
 
 # TODO change phone number in footer
@@ -73,7 +75,7 @@ def by_category(category: str):
 def upvote(id):
     try:
         if not current_user.email_confirmed:
-            flash("Hierfür musst du erst deine Email verifizieren! Schau mal in deinem Email-Postfach nach :)", category="error")
+            flash("Hierfür musst Du erst Deine Email verifizieren! Schau mal in Deinem Email-Postfach nach :)", category="error")
             abort(403)
         db.session.add(
             User_Upvote(
@@ -101,22 +103,36 @@ def remove_upvote(id):
 #---------------------------------------------------------------------------------------------------------------------------------------------
 
 @articles.route("/feedback/<id>")
+@login_required
 def feedback(id):
     if not current_user.email_confirmed:
-        flash("Hierfür musst du erst deine Email verifizieren! Schau mal in deinem Email-Postfach nach :)", category="error")
+        flash("Hierfür musst Du erst Deine Email verifizieren! Schau mal in Deinem Email-Postfach nach :)", category="error")
         abort(403)
     article = Article.query.get(id)
     return redirect(f"mailto:{article.creator_email}")
 
 
 @articles.route("/approve/<id>")
+@login_required
 def approve(id):
     if not current_user.email_confirmed:
-        flash("Hierfür musst du erst deine Email verifizieren! Schau mal in deinem Email-Postfach nach :)", category="error")
+        flash("Hierfür musst Du erst Deine Email verifizieren! Schau mal in Deinem Email-Postfach nach :)", category="error")
         abort(403)
     article = Article.query.get(id)
     article.validated = True
     db.session.commit()
+
+    content = article_notification(article.title, article.description, article.id)
+    if send_mail(
+        from_email=__MAIL_ACCOUNT__["email"],
+        password=__MAIL_ACCOUNT__["password"],
+        recipients=get_users_to_notify(),
+        subject=content["head"],
+        content=content["body"],
+        smtp=__MAIL_ACCOUNT__["smtp"][0],
+        port=__MAIL_ACCOUNT__["smtp"][1]
+    ):
+        pass
     flash("Artikel wurde erfolgreich validiert!", category="success")
     return redirect(url_for("articles.find_article", path=id+".html"))
 
