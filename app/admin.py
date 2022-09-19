@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, url_for, redirect, flash, abort, request
 from flask_login import current_user, login_required
-from ._lib.docx_to_html import Tag, convert, htmlify, replace_links, create_image_placeholders, fill_image_placeholders
+from ._lib.docx_to_html import Tag, __IMAGE__, convert, htmlify, replace_links, create_image_placeholders, fill_image_placeholders
 from .models import Article, Role, Category, Tag, Article_Tag, Survey, Answer, User_Answer, Announcement, generate_id
 from .articles import get_article_location
 from . import db, IMAGE_FOLDER, WORKING_DIR
@@ -14,22 +14,6 @@ from werkzeug.utils import secure_filename
 
 ALLOWED_EXTENSIONS = {"txt", "docx", "doc"}
 ALLOWED_IMAGES = {"png", "jpg"}
-
-
-def __IMAGE__(html_source: str, user_source: str, description: str, *, id="article-image") -> str:
-    # these parantheses are important
-    return (
-# write your html into that multiline string
-# css for that html is currently stored in `articles.css`
-f"""
-<figure>
-    <img src="{html_source}" alt="Bild konnte nicht geladen werden" id="{id}">
-    <figcaption id="{id}">
-        <i>Quelle: {user_source}</i> - {description}
-    </figcaption>
-</figure>
-"""
-)
 
 """
 source: https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html#xss-prevention-rules-summary
@@ -176,8 +160,7 @@ def edit_article(article_id):
     # contains all necessary operations when article is completely finished (all needed additional arguments are given)
 
     if request.method == "POST":
-        # receiving data cached in "new" phase
-        content = cache[f"{article_id}-uploaded_content"]
+        content = create_image_placeholders(cache[f"{article_id}-uploaded_content"])
 
 
         # replacing placeholders created in conversion with values entered manually in panel form
@@ -187,23 +170,32 @@ def edit_article(article_id):
 
         primary_image = request.form.get("primary-img")
         title_image = None # declared as None so that if no primary image is given it will be None in the database
+        image_data: list[tuple[str, str]] = []
+        # loops over uploaded images
         for image in cache[f"{article_id}-images"]:
-            image_source = request.form.get(f"{image}_source")
-            image_description = request.form.get(f"{image}_description")
 
-            # TODO make images children of respective divs
             if image == primary_image:
-                content = __IMAGE__(image, image_source, image_description, id="primary-image") + content
+                content = __IMAGE__(
+                    image, request.form.get(f"{image}_source"), 
+                    request.form.get(f"{image}_description"), 
+                    id="primary-image") \
+                + content
                 title_image = image
+                cache[f"{article_id}-num_images"] -= 1 # necessary to not place title image twice in article
             else:
-                #TODO rework to actually display in right place
-                content += __IMAGE__(image, image_source, image_description)
+                image_data.append((
+                    image,
+                    request.form.get(f"{image}_source"), 
+                    request.form.get(f"{image}_description"))
+                )
 
+        content = fill_image_placeholders(content, image_data)
         tags = request.form.get("tags")
 
         for tag in tags.split(" "):
             if not Tag.query.get(tag): # if tag doesn't already exist
                 db.session.add(Tag(tag=tag))
+
             db.session.add(
                 Article_Tag(
                     article_id=article_id, 
@@ -213,7 +205,6 @@ def edit_article(article_id):
         db.session.commit()
 
         # creating entry in database
-        
         new_article = Article(
             id=article_id,
             title=title,
