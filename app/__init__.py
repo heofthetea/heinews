@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, current_user, AnonymousUserMixin
 from os import path
 from werkzeug.security import generate_password_hash as hash
+from werkzeug.exceptions import HTTPException
 from os import getcwd
 
 # declare database for usage
@@ -110,13 +111,13 @@ def create_app(host: tuple=None) -> Flask:
             title_image_or_placeholder=lambda a: a.primary_image if a.primary_image is not None else "../static/img/placeholder.png"
         )
 
-    @app.errorhandler(404)
-    def page_not_found(error):
-        return ErrorPages.__404__()
-
-    @app.errorhandler(403)
-    def forbidden(error):
-        return ErrorPages.__403__()
+    @app.errorhandler(Exception)
+    def handle_http(error):
+        if isinstance(error, HTTPException):
+            if error.code in (403, 404, 500):
+                return ErrorPages.__special__(error)
+            return ErrorPages.__generic__(error)
+    
     
     return app
 

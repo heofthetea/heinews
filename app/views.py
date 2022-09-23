@@ -209,9 +209,46 @@ def profile():
 
 
 class ErrorPages:
-    def __404__():
-        return render_template("error/404.html")
+   
 
-    def __403__():
-        return render_template("error/403.html")
+    # used for uncommon Errors that should rarely ever occur
+    def __generic__(e):
+        return render_template(
+            "error/error.html",
+            error = {
+                "code": e.code,
+                "name": e.name
+            }
+        )
+
+    # used for common errors the user is more likely to stumble upon and it's worth further customizing the page
+    def __special__(e):
+        error = {
+            "code": e.code,
+            "name": e.name
+        }
+        
+        if e.code == 403:
+            error["description"] = \
+"Du bist nicht berechtigt dazu, diese Seite zu besuchen oder diese Aktion durchzuführen. Vielleicht ist Deine Email noch nicht verifiziert, oder Du musst einfach in Die Schülerzeitung kommen :)"
+            
+
+        elif e.code == 404:
+            error["description"] = \
+"Die Seite, die Du besuchen willst, existiert nicht. Vielleicht wurde der Artikel gelöscht, oder Du hast dich vertippt."
+
+        elif e.code == 418:
+            error["description"] = e.description
+            error["image"] = "teapot"
+
+        elif e.code == 500:
+            error["description"] = \
+                "Da ist was hinter den Kulissen zusammengebrochen... Wenn Du diesen exakten Error sehr häufig bekommst, wende Dich doch mal an uns. Vielleicht hilfst Du uns dadurch, Fehler zu entdecken :)"
+        
+        
+        return render_template(
+            "error/error.html",
+            error=error
+        )
+
 

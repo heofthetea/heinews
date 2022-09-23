@@ -1,15 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block error %}{% endblock %}</title>
-</head>
-<body>
-    {% block content %}
+{% extends "base.html" %}
 
-    {% endblock %}
+{% block css %}
+<style>
+    img {
+        max-width: 50%;
+        max-height: 50%;
+    }
+</style>
+{% endblock %}
+
+{% block title %}
+ERROR {{ error["code"] }}
+{% endblock %}
+
+{% block content %}
+{% block error_code %}
+<h1 color="#f00">ERROR {{ error["code"] }}: {{ error["name"]}}</h1>
+{% endblock %}
+
+{% block description %}
+{% if error["description"] %}
+{{ error["description"] }}
+{% else %}
+Da lief wohl etwas schief. Wenn Du diesen exakten Error sehr häufig bekommst, wende Dich doch mal an uns. Vielleicht hilfst Du uns dadurch, Fehler zu entdecken :)
+{% endif %}
+{% endblock %}
+
+{% if error["image"] == "teapot" %}
+<img src="/static/img/teapot.png" alt="That's supposed to be a teapot. If you see this instead, the server must be that pissed to not even show it to you.">
+{% else %}
+<img src="/static/img/error.png" alt="Whoops... Da lief wohl etwas so gehörig schief, dass wir Dir nicht mal ein lustiges Bildchen zeigen können - Aber es sei dir versichert, dass unser Künstler trotzdem einen guten Job gemacht hat.">
+{% endif %}
+
+
+<a href="/">
+    Hier geht's zurück zur Homepage!
+</a>
+
+{% endblock %}
     
 </body>
 </html>
