@@ -10,11 +10,11 @@ ERROR {{ error["code"] }}
 {% block content %}
 <div class="container-xl">
     <br>
-{% block error_code %}
-<h1 color="#f00">ERROR {{ error["code"] }}: {{ error["name"]}}</h1>
-{% endblock %}
+    {% block error_code %}
+    <h1 color="#f00">ERROR {{ error["code"] }}: {{ error["name"]}}</h1>
+    {% endblock %}
 
-<br>
+    <br>
 
 <div class="container">
     <div class="row">
@@ -41,9 +41,6 @@ ERROR {{ error["code"] }}
         </div>
     </div>
 </div>
-
+</div>
 
 {% endblock %}
-</div>
-</body>
-</html>
