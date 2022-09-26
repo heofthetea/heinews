@@ -114,7 +114,7 @@ def create_app(host: tuple=None) -> Flask:
     @app.errorhandler(Exception)
     def handle_http(error):
         if isinstance(error, HTTPException):
-            if error.code in (403, 404, 500):
+            if error.code in (403, 404, 418, 500):
                 return ErrorPages.__special__(error)
             return ErrorPages.__generic__(error)
     

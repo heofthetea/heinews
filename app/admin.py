@@ -244,12 +244,14 @@ def edit_article(article_id):
 @admin.route("/newsurvey/<session_id>", methods=["GET", "POST"])
 @login_required
 def create_survey(session_id):
+    if Survey.query.get(session_id).first():
+        abort(409)
     num_answers = int(cache[f"{session_id}-num_answers"])
     if request.method == "POST":
         correct_answer = request.form.get("correct-answer")
         print(request.form.get("expiry-date"))
 
-        new_survey = Survey(
+        new_survey = Survey (
             id=session_id,
             title=request.form.get("title"),
             description=request.form.get("description"),

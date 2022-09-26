@@ -44,6 +44,10 @@ def index() -> str:
     )
 
 
+@views.route("/imprint")
+def imprint():
+    return render_template("imprint.html")
+
 """
 Enables the user to search through the entire content of the website. Searched are:
     i) Articles:
@@ -214,7 +218,7 @@ class ErrorPages:
     # used for uncommon Errors that should rarely ever occur
     def __generic__(e):
         return render_template(
-            "error/error.html",
+            "error.html",
             error = {
                 "code": e.code,
                 "name": e.name
@@ -247,7 +251,7 @@ class ErrorPages:
         
         
         return render_template(
-            "error/error.html",
+            "error.html",
             error=error
         )
 
