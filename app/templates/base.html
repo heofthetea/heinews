@@ -23,7 +23,7 @@
     <nav class="navbar navbar-expand-md navbar-dark bg-dark d-none d-lg-block">
       <div class="container-fluid">
         <a href="/" class="navbar-brand">
-          <img src="/static/img/Logo.png" alt="HEINEWS" width="50" height="50" class="d-inline-block">
+          <img src="/static/img/Logo.png" alt="HEINEWS" width="60" height="50" class="d-inline-block">
         </a>
 
         <!-- navbar links -->
@@ -93,8 +93,8 @@
           	
           <ul class="navbar-nav mw-5 mt-1 mb-2 mb-lg-0">
             <li class="navbar-item dropdown">
-              <a class="nav-link me-2" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" data-toggle="dropdown">
-                <h2><i class="bi bi-person-circle"></i></h2>
+              <a class="nav-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" data-toggle="dropdown">
+                <img src="/static/img/profile.png" alt="Profil" width="50" height="50" class="d-inline-block ">
               </a>
               <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="dropdownMenuButton">
                 <li><a class="dropdown-item " href="{{ url_for('views.profile') }}">Profil</a></li>
@@ -192,7 +192,7 @@
 
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-person-circle"></i>
+                  <img src="/static/img/profile.png" alt="Profil" width="50" height="50" class="d-inline-block">
                 </a>
                 <ul class="dropdown-menu dropdown-menu-dark">
                     {% block profil %}
