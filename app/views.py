@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, flash, url_for, request
+from flask import Blueprint, render_template, redirect, flash, url_for, send_from_directory, request
 from flask_login import login_required, current_user
 from .models import Article, Tag, User_Upvote, Password_Reset, Delete_Account, Survey, User_Answer, Answer, Announcement, get_user_role, get_articles
 from .auth import send_verification_email
@@ -42,6 +42,10 @@ def index() -> str:
 
         articles=len(Article.__validated_articles__(Article).all()) > 0
     )
+
+@views.route("/imprint")
+def imprint():
+    return render_template("imprint.html")
 
 
 @views.route("/imprint")
