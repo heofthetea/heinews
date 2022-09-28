@@ -10,37 +10,43 @@ ERROR {{ error["code"] }}
 {% block content %}
 <div class="container-xl">
     <br>
-    {% block error_code %}
-    <h1 color="#f00">ERROR {{ error["code"] }}: {{ error["name"]}}</h1>
-    {% endblock %}
-
-    <br>
-
-<div class="container">
-    <div class="row">
-        <div class="col-3">
-            <div class="div" style=" margin-top: 150px; margin-bottom: auto">
-                {% block description %}
-                    {% if error["description"] %}
-                        {{ error["description"] }}
-                    {% else %}
-                        Da lief wohl etwas schief. Wenn Du diesen exakten Error sehr häufig bekommst, wende Dich doch mal an uns. Vielleicht hilfst Du uns dadurch, Fehler zu entdecken :)
-                    {% endif %}
-                {% endblock %}
+    <div class="container">
+        <div class="row">
+            <br>
+            {% block error_code %}
+                <h1>HEINEWS</h1>
                 <br>
                 <br>
-                <a href="/" type="button" class="btn btn-primary">Zurück zur Homepage</a>
+            {% endblock %}
+        
+            <br>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div class="div" style=" margin-top: 100px; margin-bottom: auto">
+                    <h2 color="#f00">ERROR {{ error["code"] }}: {{ error["name"]}}</h1>
+                    <br>
+                    {% block description %}
+                        {% if error["description"] %}
+                            {{ error["description"] }}
+                        {% else %}
+                            Da lief wohl etwas schief. Wenn Du diesen exakten Error sehr häufig bekommst, wende Dich doch mal an uns. Vielleicht hilfst Du uns dadurch, Fehler zu entdecken :)
+                        {% endif %}
+                    {% endblock %}
+                    <br>
+                    <br>
+                    <a href="/" type="button" class="btn btn-primary">Zurück zur Homepage</a>
+                </div>
+            </div>
+            <div class="col-6">
+                {% if error["image"] == "teapot" %}
+                    <img src="/static/img/teapot.png" alt="That's supposed to be a teapot. If you see this instead, the server must be that pissed to not even show it to you.">
+                {% else %}
+                    <img style="height: 500px; display: block; margin-left: auto; margin-right: auto" src="/static/img/error.png" alt="Whoops... Da lief wohl etwas so gehörig schief, dass wir Dir nicht mal ein lustiges Bildchen zeigen können - Aber es sei dir versichert, dass unser Künstler trotzdem einen guten Job gemacht hat.">
+                {% endif %}
             </div>
         </div>
-        <div class="col-7">
-            {% if error["image"] == "teapot" %}
-                <img src="/static/img/teapot.png" alt="That's supposed to be a teapot. If you see this instead, the server must be that pissed to not even show it to you.">
-            {% else %}
-                <img style="height: 400px; display: block; margin-left: auto; margin-right: auto" src="/static/img/error.png" alt="Whoops... Da lief wohl etwas so gehörig schief, dass wir Dir nicht mal ein lustiges Bildchen zeigen können - Aber es sei dir versichert, dass unser Künstler trotzdem einen guten Job gemacht hat.">
-            {% endif %}
-        </div>
     </div>
-</div>
 </div>
 
 {% endblock %}
