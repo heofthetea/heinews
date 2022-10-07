@@ -15,9 +15,70 @@
     {% if description != none %}
         <h4>{{ db_entry.description }}</h4>
     {% endif %}
-    <h4>Läuft ab am {{ db_entry.expiry_date.strftime("%d.%m.%Y um %H:%M")}}</h4>
+    <h6>Läuft ab am {{ db_entry.expiry_date.strftime("%d.%m.%Y um %H:%M")}}</h6>
+
+    {# rendering the results page first #}
+    {% if not user_answer == none or survey_expired %}
+
+        {% if db_entry.results_visible or get_user_role(current_user).can_upload %}
+            {% if not db_entry.results_visible %}
+            <span class="bi bi-exclamation-circle">
+                Du siehst die Ergebnisse nur, weil Du Mitglied der Schülerzeitung bist. Für Nutzer sind die Ergebnisse versteckt.
+            </span>
+            {% endif %}
+
+            <ul>
+            {% for answer in answers %}
+                {# checking for absolute boolean values because if a value v is `None`, the statement `not v` equates to true #}
+                {# I apologize for this if statement being confusing but it's the easiest way to do it xd #}
+                {% if answer.correct == true %}
+                    <li style="color: #0f0;">
+                {% elif answer.correct == false %}
+                    <li style="color: #f00;">
+                {% else %}
+                    <li>
+                {% endif %}
+                
+                    {% if user_answer.answer_id == answer.id %}
+                        <u>{{ answer.value }} ({{ answer.votes }} Stimmen)</u>
+                    {% else %}
+                        {{ answer.value }} ({{ answer.votes }} Stimmen)
+                    {% endif %}
+                    </li>
+            {% endfor %}
+            </ul>
+            {% else %} 
+            {# if the user is not allowed to view the results #}
+            <span class="bi bi-exclamation-circle">
+                Das Ergebnis dieser Umfrage wird in der nächsten HEINEWS-Druckausgabe veröffentlicht!
+            </span>
+            <ul>
+                {% for answer in answers %}
+                    <li>
+                    {% if user_answer.answer_id == answer.id %}
+                        <u>{{ answer.value }}</u>
+                    {% else %}
+                        {{ answer.value }}
+                    {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+            {% endif %}
 
 
+        <span class="bi bi-exclamation-circle">
+            Die Option, für die Du abgestimmt hast, ist unterstrichen.
+        </span>
+        {% if not correct_answer == none %}
+            {% if user_answer.answer_id == correct_answer.id %}
+                <h3>Deine Antwort ist korrekt!</h3>
+            {% else %}
+                <h3>Deine Antwort ist leider nicht korrekt. Besseres Glück nächstes Mal :)</h3>
+            {% endif %}
+        {% endif %}
+
+    {# now rendering the page users can actually vote on #}
+    {% else %}
     <form action="{{ url_for('surveys.vote', survey_id=db_entry.id) }}" method="POST">
         <!-- TODO make the results page look a little bit prettier maybe? (pre-select radio buttons and stuff - maybe even have one giant if-statement and render two entirely seperate pages?)-->
         <!-- see line 56-->
@@ -29,48 +90,16 @@
                 value="{{ answer.id }}"
                 required
             />
+
             <label for="{{ answer.id }}">
-                {% if not user_answer == none or survey_expired %} <!--if user has already voted on this survey -->
-                    {# checking for absolute boolean values because if a value v is `None`, the statement `not v` equates to true  #}
-                    {# I apologize for this if statement being confusing but it's the easiest way to do it xd #}
-                    {% if answer.correct == true %}
-                        <p style="color: #0f0;">
-                    {% elif answer.correct == false %}
-                        <p style="color: #f00;">
-                    {% else %}
-                        <p>
-                    {% endif %}
-                    
-                        {% if user_answer.answer_id == answer.id %}
-                            <u>{{ answer.value }} ({{ answer.votes }} Stimmen)</u>
-                        {% else %}
-                            {{ answer.value }} ({{ answer.votes }} Stimmen)
-                        {% endif %}
-                        </p>
-                {% else %}
-                    {{ answer.value }}
-                {% endif %}
-                </label>
-                <br>
+                {{ answer.id }}
+            </label>
+            <br>
         {% endfor %}
-
-        {# same if-statement as in the label tag, you see the potential benefits of one giant if-else?#}
-        {% if not user_answer == none or survey_expired %}
-        <i>Die Option, für die Du abgestimmt hast, ist unterstrichen.</i>
-            {% if not correct_answer == none %}
-                {% if user_answer.answer_id == correct_answer.id %}
-                    <h3>Deine Antwort ist korrekt!</h3>
-                {% else %}
-                    <h3>Deine Antwort ist leider nicht korrekt. Besseres Glück nächstes Mal :)</h3>
-                {% endif %}
-            {% endif %}
-
-        {% else %}
             <br>
             <button type="submit" class="btn btn-primary">Antwort abschicken</button>
-
-        {% endif %}
     </form>
+    {% endif %}
 </div>
 
 {% endblock %}

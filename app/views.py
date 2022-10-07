@@ -47,11 +47,6 @@ def index() -> str:
 def imprint():
     return render_template("imprint.html")
 
-
-@views.route("/imprint")
-def imprint():
-    return render_template("imprint.html")
-
 """
 Enables the user to search through the entire content of the website. Searched are:
     i) Articles:

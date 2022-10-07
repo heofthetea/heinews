@@ -3,6 +3,7 @@ from flask_login import current_user, login_required
 from ._lib.docx_to_html import Tag, __IMAGE__, convert, htmlify, replace_links, create_image_placeholders, fill_image_placeholders
 from .models import Article, Role, Category, Tag, Article_Tag, Survey, Answer, User_Answer, Announcement, generate_id
 from .articles import get_article_location
+from .auth import get_checkbutton
 from . import db, IMAGE_FOLDER, WORKING_DIR
 from datetime import datetime, timedelta
 from sqlalchemy import asc
@@ -244,18 +245,18 @@ def edit_article(article_id):
 @admin.route("/newsurvey/<session_id>", methods=["GET", "POST"])
 @login_required
 def create_survey(session_id):
-    if Survey.query.get(session_id).first():
+    if Survey.query.get(session_id):
         abort(409)
     num_answers = int(cache[f"{session_id}-num_answers"])
     if request.method == "POST":
         correct_answer = request.form.get("correct-answer")
-        print(request.form.get("expiry-date"))
 
         new_survey = Survey (
             id=session_id,
             title=request.form.get("title"),
             description=request.form.get("description"),
-            expiry_date=datetime.now() + timedelta(int(request.form.get("expiry-date")))
+            expiry_date=datetime.now() + timedelta(int(request.form.get("expiry-date"))),
+            results_visible=get_checkbutton(request.form.get("results-visible"))
         )
         db.session.add(new_survey)
 

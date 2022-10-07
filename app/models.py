@@ -93,6 +93,7 @@ class Survey(db.Model):
     title = db.Column(db.String(128))
     description = db.Column(db.String(512))
     expiry_date = db.Column(db.DateTime())
+    results_visible = db.Column(db.Boolean(), default=False)
 
     def total_votes(self):
         votes = 0
@@ -108,13 +109,6 @@ class Answer(db.Model):
     correct = db.Column(db.Boolean, default=None)
     survey = db.Column(db.String, db.ForeignKey("survey.id"))
 
-
-class User_Answer(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    answer_id = db.Column(db.Integer, db.ForeignKey("answer.id"))  
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-    # slight data redundancy but makes things a lot easier and should not lead to any inconsistancies (id should never be changed)
-    survey_id = db.Column(db.String, db.ForeignKey("survey.id")) 
 
 #-----------------------------------------------------------------------------------------------------------------------------------
 
@@ -153,6 +147,14 @@ class User_Upvote(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     article_id = db.Column(db.String(6), db.ForeignKey("article.id"))
+
+
+class User_Answer(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    answer_id = db.Column(db.Integer, db.ForeignKey("answer.id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    # slight data redundancy but makes things a lot easier and should not lead to any inconsistancies (id should never be changed)
+    survey_id = db.Column(db.String, db.ForeignKey("survey.id"))
 
 
 #-----------------------------------------------------------------------------------------------------------------------------------
