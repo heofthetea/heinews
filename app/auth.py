@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from werkzeug.security import generate_password_hash, check_password_hash
-from .models import User, Password_Reset, Verify_Email, Delete_Account, User_Answer, User_Upvote, Banned_User, generate_id
+from .models import User, Password_Reset, Verify_Email, Delete_Account, User_Answer, User_Upvote, Banned_User, Promotion_Key, generate_id
 from ._lib.mail_contents import verification, reset, delete
 from . import db, __DEVELOPERS__, __HOST__, __MAIL_ACCOUNT__
 from ._lib.send_mail import send_mail
@@ -199,14 +199,16 @@ def verify_email(verify_id):
 @auth.route("/promote", methods=["POST"])
 @login_required
 def promote():
-    admin_password = request.form.get("admin_password")
+    promotion_key = request.form.get("promotion_key")
 
     if current_user.role != "user":
         flash("Du kannst dich nur als User selbst befördern!", category="error")
-    elif check_admin_password(admin_password): #TODO implement a counter to a maximum of tries, otherwise some trolls will crash the database
+    elif check_promotion_key(promotion_key): #TODO implement a counter to a maximum of tries, otherwise some trolls will crash the database
         current_user.role = "upload"
         db.session.commit()
         flash("Herzlichen Glückwunsch! Du bist nun berechtigt, Artikel etc. hochzuladen!", category="success")
+    else:
+        flash("Du hast entweder einen falschen Code eingegeben, oder Dein Code ist abgelaufen. Wende dich an die Leiter der Schülerzeitung, um einen Code zu bekommen!", category="error")
     return redirect(url_for("views.profile"))
 
 
@@ -329,9 +331,11 @@ def send_delete_mail(user_id):
 
 #----------------------------------------------------------------------------------------------------------------------------
 
-def check_admin_password(pw: str) -> bool:
-    with open("__admin__.txt", "r") as f:
-        if check_password_hash(f.readline(), pw):
+def check_promotion_key(t_key: str) -> bool:
+    found_key = Promotion_Key.query.get(t_key)
+    if found_key:
+        Promotion_Key.query.filter_by(key=t_key).delete()
+        if not datetime.now() > found_key.expiry_date:
             return True
     return False
 

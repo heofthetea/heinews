@@ -301,14 +301,16 @@ DEV Panel in Dark-Mode? class="table table-dark"
     <table class="table">
         <tr>
             <th>
-                <h5>Change Admin Password</h5>
+                <h5>Generate Promotion Key</h5>
+                <span class="bi bi-exclamation-circle">
+                    Generates a one-time key which can be used by someone to promote himself to 'upload' role.
+                </span>
             </th>
         </tr>
         <tr>
             <td>
-                <form action="{{ url_for('dev.authorize_to_change_admin_password') }}" method="POST">
-                    <input type="password" name="admin_password" id="admin_password" placeholder="New Admin Password">
-                    <button class="btn btn-warning" type="submit">Change Password</button>
+                <form action="{{ url_for('dev.authorize_to_generate_promotion_key') }}" method="POST">
+                    <button class="btn btn-warning" type="submit">Generate Promotion Key</button>
                 </form>
             </td>
             <td style="text-align:right">

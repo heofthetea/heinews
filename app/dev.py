@@ -2,11 +2,11 @@ from flask import Blueprint, render_template, render_template_string,  redirect,
 from flask_login import login_required, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
 from ._lib.send_mail import send_mail
-from .models import Article, User, Verify_Email, Password_Reset, Tag, Article_Tag, Role, Survey, Answer, User_Answer, Banned_User, Announcement, get_users_to_notify
+from .models import Article, User, Verify_Email, Password_Reset, Tag, Article_Tag, Role, Survey, Answer, User_Answer, Banned_User, Announcement, Promotion_Key, get_users_to_notify
 from .articles import get_article_location
 from .auth import is_eternal_dev
 from ._lib.mail_contents import account_yeeted, announcement as announcement_mail
-from . import db, send_database, __MAIL_ACCOUNT__
+from . import db, send_database, generate_key, __MAIL_ACCOUNT__
 from os import remove
 from os.path import exists, isdir
 from shutil import rmtree
@@ -37,6 +37,7 @@ def dev_panel() -> None:
     articles = Article.query.order_by(Article.validated).order_by(Article.title)
     announcements = Announcement.query.order_by(Announcement.validated).order_by(Announcement.date_created)
     filtered = False
+
     if request.method == "POST":
         if request.form.get("backup"):
             return send_database()
@@ -217,18 +218,20 @@ def delete_tag(tag):
 
 
 @dev.route("/change-admin-password")
-def change_admin_password():
+def generate_promotion_key():
     if session["needs_authorization"]:
         return authorize_dev()
-    new_password = session["new_admin_password"]
-    if len(new_password) < 4:
-        flash("Password must be at least 4 characters long", category="error")
-    else:
-        with open("__admin__.txt", "w+") as f:
-            f.write(generate_password_hash(new_password))
-        flash("Admin Password changed successfully!", category="success")
-    
-    session.pop("new_admin_password")
+    new_key = generate_key(16, bounds=(65, 91))
+    while Promotion_Key.query.get(new_key):
+        new_key = generate_key(16, bounds=(65, 91))
+
+    db.session.add(
+        Promotion_Key(
+            key=new_key
+        )
+    )
+    db.session.commit()
+    flash(f"generated new editor code: {new_key}", category="info")
     return redirect("/dev")
 
 
@@ -327,10 +330,10 @@ def authorize_to_delete_tag(tag):
 
 
 @dev.route("/change-admin-password/authorize", methods=["POST"])
-def authorize_to_change_admin_password():
-    session["new_admin_password"] = request.form.get("admin_password")
+def authorize_to_generate_promotion_key():
+    session["new_promotion_key"] = request.form.get("promotion_key")
     session["needs_authorization"] = True
-    return redirect(url_for("dev.change_admin_password"))
+    return redirect(url_for("dev.generate_promotion_key"))
 
 
 @dev.route("/unban/<int:id>/athorize")

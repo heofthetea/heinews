@@ -129,6 +129,12 @@ class Delete_Account(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), unique=True)
     expiry_date = db.Column(db.DateTime(), default=datetime.now() + timedelta(days=1))
 
+
+# used to store temporary passwords, a user can promote himself to developer
+# keys don't get hashed due to their comparitively low importance relative to the small risk of actually being stolen
+class Promotion_Key(db.Model):
+    key = db.Column(db.String(16), primary_key=True)
+    expiry_date = db.Column(db.DateTime(), default=datetime.now() + timedelta(days=1))
 #-----------------------------------------------------------------------------------------------------------------------------------
 # @REGION connections
 
@@ -171,7 +177,7 @@ event.listen(Role.__table__, "after_create",
         "VALUES ('user', 0, False, False), \
                 ('upload', 1, True, False), \
                 ('validate', 2, False, True), \
-                ('vamosi', 3, False, True) \
+                ('vamosi', 3, False, True), \
                 ('developer', 69, True, True)"
         ))
 

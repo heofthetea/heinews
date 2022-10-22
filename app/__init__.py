@@ -126,12 +126,10 @@ def create_app(host: tuple=None) -> Flask:
 """
 generates random string used as a secure private key
 """
-def generate_key(len=256) -> str:
+def generate_key(len=256, bounds=(32, 126)) -> str:
     from random import choice
 
-    chars, key = range(32, 126), ""
-    for _ in range(len):
-        key += chr(choice(chars))
+    key = ''.join([chr(choice(range(bounds[0], bounds[1]))) for _ in range(len)])
     return key
 
 
