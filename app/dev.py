@@ -11,6 +11,11 @@ from os import remove
 from os.path import exists, isdir
 from shutil import rmtree
 
+#TODO!! change admin password automatically after usage
+#TODO change source of images in articles
+#TODO!! FINALLY FUCKING RESIZE IMAGES
+#TODO!! validation on surveys
+
 dev = Blueprint("dev", __name__)
 #TODO! set timer to reset this to false after certain amount of time (~15 minutes)
 #TODO implement counter for wrong passwords (use url parameter overloading?)

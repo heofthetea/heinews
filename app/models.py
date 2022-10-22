@@ -166,8 +166,14 @@ event.listen(Category.__table__, "after_create",
         DDL("INSERT INTO category (name) VALUES ('aktuelles'), ('wissen'), ('schulleben'), ('lifestyle'), ('unterhaltung'), ('kreatives')"))
 
 event.listen(Role.__table__, "after_create",
-        DDL("INSERT INTO role (name, hierarchy, can_upload, can_validate) "
-        "VALUES ('user', 0, False, False), ('upload', 1, True, False), ('validate', 2, False, True), ('developer', 69, True, True)"))
+        DDL(
+        "INSERT INTO role (name, hierarchy, can_upload, can_validate) "
+        "VALUES ('user', 0, False, False), \
+                ('upload', 1, True, False), \
+                ('validate', 2, False, True), \
+                ('vamosi', 3, False, True) \
+                ('developer', 69, True, True)"
+        ))
 
 
 """
