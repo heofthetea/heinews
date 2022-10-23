@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Create Survey{% endblock %}
+{% block css %}
+<style>
+    #preview {
+        width: 288px;
+        height: 162px;
+    }
+
+    hr {
+        height: 3px;
+        fill: #000;
+    }
+
+
+    table {
+        margin-top: -75px;
+        width: 50%;
+        height: 300px;
+        vertical-align: left;
+    }
+
+    td {
+        margin-top: -300px;
+        width: 400px;
+        height: 300px;
+    }
+
+    input {
+        width: 300px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-xl">
+    <form method="POST">
+        <br>
+        <h1>Neue Ankündigung</h1>
+        <br>
+        <div class="form-group">
+            <label for="title"><b>Titel</b> *</label>
+            <input type="title" class="form-control" id="title" name="title"
+                placeholder="Großartige Neuigkeiten! Die Website ist endlich fertig!" required maxlength="128"/>
+        </div>
+
+        <div class="form-group">
+            <b><label for="content">Inhalt *</label></b>
+            <textarea class="form-control" id="content" name="content" maxlength="2048" placeholder="Nach mehr als einem halben Jahr arbeit, über 20 Energy-Drinks, 5 schlaflosen Nächten ..." required></textarea>
+        </div>
+
+        <br>
+        <span class="bi bi-exclamation-circle">Alle Felder, die mit einem * gekennzeichnet sind, müssen ausgefüllt werden</span>
+        <br>
+        <br>
+        <button type="submit" class="btn btn-primary">Abschicken</button>
+    </form>
+</div>
+
+{% endblock %}

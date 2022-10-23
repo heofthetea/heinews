@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}Upload{% endblock %}
+
+{% block content %}
+{% if get_user_role(current_user).can_upload %}
+<div class="container-xl">
+    <br>
+    <h1>Artikel hochladen</h1>
+    <br>
+    <form method="POST" enctype="multipart/form-data">
+        <table>
+            <tr>
+                <td scope="col" class="col-2">
+                    <label for="num-images">Wähle aus, wie viele Bilder Dein Artikel haben soll *</label>
+                    <select id="num-images" name="num-images" required>
+                        <option value="0" selected>0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                    </select>
+                </td>
+                <td scope="col" class="col-2">
+                    <label for="file">Lade hier Deine Artikeldatei hoch: *</label>
+                    <input type="file" name="file">
+                </td>
+            </tr>
+        </table>
+        <br>
+        <button name="upload-article" class="btn btn-primary">Hochladen</button> 
+    </form>
+
+    <br>
+    Eine Übersicht darüber, wie Dein Artikel formattiert sein sollte, findest Du <a href="/article-formatting">hier.</a>
+    <hr>
+    <br>
+
+    <!---------------------------------------------------------------------------------------------------------------------->
+    
+    <h1>Neue Umfrage</h1>
+    <br>
+    <form method="POST">
+        <div class="slider-wrapper" style="width: 75%">
+            <input 
+                style="width: 100%" 
+                type="range" 
+                name="num-answers"
+                list="values" 
+                min="2" 
+                max="10" 
+                step="1" 
+                value="2"
+                oninput="this.nextElementSibling.value = this.value"
+            />
+            Wähle aus, wie viele Antwortmöglichkeiten Du haben willst: <output style="font-weight: bold">2</output>
+            <datalist id="values" style="display: value;">
+                <option value="2" label="2">
+                <option value="3" label="3">
+                <option value="4" label="4">
+                <option value="5" label="5">
+                <option value="6" label="6">
+                <option value="7" label="7">
+                <option value="8" label="8">
+                <option value="9" label="9">
+                <option value="10" label="10">
+            </datalist>
+        </div>
+        <br>
+        <button name="create-survey" type="submit" class="btn btn-primary">Umfrage erstellen</button>
+    </form>
+    <br>
+    <hr>
+    <br>
+
+    <!---------------------------------------------------------------------------------------------------------------------->
+
+    <h1>Neue Ankündigung</h1>
+    <br>
+    <form method="POST">
+        <button name="create-announcement" type="submit" class="btn btn-primary">Neue Ankündigung</button>
+    </form>
+
+{% else %}
+    <h2 style="text-align: center">Du darfst keine Atikel hochladen - Komme in die Schülerzeitung oder warte, bis das Feature auch für 
+        Nicht-Mitglieder eingebaut wird :)
+    </h2>
+    <a href="/">Homepage</a>
+</div>
+
+{% endif %}
+{% endblock %}
+
+{% block upload %}
+    <li><a class="dropdown-item fw-bold" href="{{ url_for('admin.new_article') }}">Hochladen</a></li>
+{% endblock %}
