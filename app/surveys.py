@@ -1,6 +1,6 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request
-from flask_login import current_user
-from .models import Survey, Answer, User_Answer
+from flask import Blueprint, render_template, redirect, url_for, flash, abort, request
+from flask_login import current_user, login_required
+from .models import Survey, Answer, User_Answer, get_user_role
 from . import db, user_loggedin
 
 surveys = Blueprint("surveys", __name__)
@@ -14,6 +14,9 @@ def all_surveys():
 @surveys.route("/<id>")
 def survey(id):
     db_entry = Survey.query.get(id)
+
+    if not db_entry.validated and not get_user_role(current_user).can_validate:
+        abort(403)
 
     user_answer = None
     answers = Answer.query.filter_by(survey=db_entry.id)
@@ -56,3 +59,26 @@ def vote(survey_id):
         db.session.commit()
         
     return redirect(url_for("surveys.survey", id=survey_id))
+
+
+@surveys.route("/approve/<id>")
+@login_required
+def approve(id):
+    if not current_user.email_confirmed:
+        flash("Hierfür musst Du erst Deine Email verifizieren! Schau mal in Deinem Email-Postfach nach :)", category="error")
+        abort(403)
+    Survey.query.get(id).validated = True
+    db.session.commit()
+
+    flash("Die Umfrage wurde erfolgreich validiert!", category="success")
+    return redirect(url_for("surveys.survey", id=id))
+
+
+@surveys.route("/feedback/<id>")
+@login_required
+def feedback(id):
+    if not current_user.email_confirmed:
+        flash("Hierfür musst Du erst Deine Email verifizieren! Schau mal in Deinem Email-Postfach nach :)", category="error")
+        abort(403)
+    survey = Survey.query.get(id)
+    return redirect(f"mailto:{survey.creator_email}")
