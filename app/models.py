@@ -92,6 +92,7 @@ class Survey(db.Model):
     id = db.Column(db.String(6), primary_key=True)
     title = db.Column(db.String(128))
     description = db.Column(db.String(512))
+    validated = db.Column(db.Boolean(), default=False)
     expiry_date = db.Column(db.DateTime())
     results_visible = db.Column(db.Boolean(), default=False)
 
