@@ -107,7 +107,7 @@
     <table class="table">
         <tr>
             <td scope="col-6">
-                <form action="{{ url_for('articles.feedback', id=db_entry.id) }}">
+                <form action="{{ url_for('surveys.feedback', id=db_entry.id) }}">
                     <div class="form-group">
                         <label for="cancel"></label>
                         <button class="btn btn-danger" style="float: left;">Feedback geben</button>
@@ -115,7 +115,7 @@
                 </form>
             </td>
             <td scope="col-6">
-                <form action="{{ url_for('articles.approve', id=db_entry.id) }}">
+                <form action="{{ url_for('surveys.approve', id=db_entry.id) }}">
                     <div class="form-group">
                         <label for="approve"></label>
                         <button class="btn btn-success" style="float: right;">Bestätigen</button>
