@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="/static/css/article.css">
+{% endblock %}
+{% block title %}{{ db_entry.title }}{% endblock %}
+
+{% block content %}
+<div class="container-xl">
+    <br>
+    <h1>
+        {{ db_entry.title }}
+    </h1>
+    <br>
+    {% if description != none %}
+    <h4>{{ db_entry.description }}</h4>
+    {% endif %}
+    <h6>Läuft ab am {{ db_entry.expiry_date.strftime("%d.%m.%Y um %H:%M")}}</h6>
+
+    <!------------------------------------------------------------------------------------------------->
+
+    <form action="{{ url_for('surveys.text_answer', survey_id=db_entry.id) }}" , method="POST">
+        <div class="form-group">
+            <b><label for="content">Antwort *</label></b>
+            <textarea class="form-control" id="content" name="content" maxlength="2048"
+                placeholder="Hot Take: Ich persönlich finde Metallica overrated." required></textarea>
+        </div>
+        <br>
+        <button type="submit" class="btn btn-primary">Antwort abschicken</button>
+    </form>
+</div>
+
+{% endblock %}

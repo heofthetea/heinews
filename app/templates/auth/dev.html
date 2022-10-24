@@ -65,8 +65,8 @@ DEV Panel in Dark-Mode? class="table table-dark"
                         Email
                         <input type="text" name="email" id="email" class="form-control" placeholder="search">
                     </th>
-                    <th scope="col" class="col-2" style="vertical-align: top">Role</th>
-                    <th scope="col" class="col-1" style="vertical-align: top">Email verified</th>
+                    <th scope="col" class="col-2" style="vertical-align: top">role</th>
+                    <th scope="col" class="col-1" style="vertical-align: top">email verified</th>
                     <th scope="col" style="text-align: right; vertical-align: top;">yeet</th>
                     <!--rendering the actual submit button first makes pressing enter execute with corresponding filtering-->
                     <!-- -> resetting form only when the button actually is pressed-->
@@ -121,7 +121,7 @@ DEV Panel in Dark-Mode? class="table table-dark"
         <tr>
             <thead>
                 <th scope="col" class="col-1">ID</th>
-                <th scope="col" class="col-3">Title</th>
+                <th scope="col" class="col-3">title</th>
                 <th scope="col" class="col-3">author email</th>
                 <th scope="col" class="col-1">validated</th>
                 <th scope="col" class="col-1">date created</th>
@@ -164,7 +164,9 @@ DEV Panel in Dark-Mode? class="table table-dark"
         <tr>
             <thead>
                 <th scope="col" class="col-1">ID</th>
-                <th scope="col" class="col-7">Title</th>
+                <th scope="col" class="col-3">title</th>
+                <th scope="col" class="col-3">type</th>
+                <th scope="col" class="col-1">validated</th>
                 <th scope="col" class="col-1">expiry date</th>
                 <th scope="col">total votes</th>
                 <th scope="col" style="text-align: right">yeet</th>
@@ -179,6 +181,14 @@ DEV Panel in Dark-Mode? class="table table-dark"
                         {{ survey.title }}
                     </a>
                 </td>
+                <td>
+                    {% if survey.text_answer %}
+                        text answer
+                    {% else %}
+                        multiple choice
+                    {% endif %}
+                </td>
+                <td>{{ survey.validated }}</td>
                 <td>{{ survey.expiry_date.strftime("%d.%m.%Y: %H:%M") }}</td>
                 <td>{{ survey.total_votes() }}</td>
                 <td style="text-align: right">
@@ -201,8 +211,8 @@ DEV Panel in Dark-Mode? class="table table-dark"
         <tr>
             <thead>
                 <th scope="col" class="col-1">ID</th>
-                <th scope="col" class="col-6">Title</th>
-                <th scope="col" class="col-1">Validated</th>
+                <th scope="col" class="col-6">title</th>
+                <th scope="col" class="col-1">validated</th>
                 <th scope="col" class="col-1">date submitted</th>
                 <th scope="col">creator</th>
                 <th scope="col" style="text-align: right">yeet</th>

@@ -92,15 +92,19 @@ class Survey(db.Model):
     id = db.Column(db.String(6), primary_key=True)
     title = db.Column(db.String(128))
     description = db.Column(db.String(512))
+    text_answer = db.Column(db.Boolean(), default=False)
     validated = db.Column(db.Boolean(), default=False)
     expiry_date = db.Column(db.DateTime())
     results_visible = db.Column(db.Boolean(), default=False)
 
     def total_votes(self):
-        votes = 0
-        for answer in Answer.query.filter_by(survey=self.id).all():
-            votes += answer.votes
-        return votes
+        if self.text_answer:
+            return db.session.query(Text_Answer).filter(Text_Answer.survey == self.id).count()
+        else:
+            return db.session.query(Answer).filter(Answer.survey == self.id).count()
+
+    def expired(self):
+        return datetime.now() > self.expiry_date
 
 
 class Answer(db.Model):
@@ -110,6 +114,12 @@ class Answer(db.Model):
     correct = db.Column(db.Boolean, default=None)
     survey = db.Column(db.String, db.ForeignKey("survey.id"))
 
+
+class Text_Answer(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    value = db.Column(db.String(256), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    survey = db.Column(db.String, db.ForeignKey("survey.id"))
 
 #-----------------------------------------------------------------------------------------------------------------------------------
 

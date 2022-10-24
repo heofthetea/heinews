@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="/static/css/article.css">
+{% endblock %}
+{% block title %}{{ db_entry.title }}{% endblock %}
+
+{% block content %}
+<div class="container-xl">
+    <br>
+    <h1>
+        {{ db_entry.title }}
+    </h1>
+    <br>
+    {% if description != none %}
+        <h4>{{ db_entry.description }}</h4>
+    {% endif %}
+    <h6>Umfrageschluss: {{ db_entry.expiry_date.strftime("%d.%m.%Y um %H:%M")}}</h6>
+
+    <!--------------------------------------------------------------------------------------------->
+
+    {# rendering the results page first #}
+    
+    {% if db_entry.results_visible or get_user_role(current_user).can_upload %}
+        {% if not db_entry.results_visible %}
+            <span class="bi bi-exclamation-circle">
+                Du siehst die Ergebnisse nur, weil Du Mitglied der Schülerzeitung bist. Für Nutzer sind die Ergebnisse
+                versteckt.
+            </span>
+        {% endif %}
+        
+        {% if not db_entry.text_answer %}
+            <ul>
+                {% for answer in answers %}
+                    {# checking for absolute boolean values because if a value v is `None`, the statement `not v` equates to true #}
+                    {# I apologize for this if statement being confusing but it's the easiest way to do it xd #}
+                    {% if answer.correct == true %}
+                            <li style="color: #0f0;">
+                        {% elif answer.correct == false %}
+                            <li style="color: #f00;">
+                        {% else %}
+                            <li>
+                        {% endif %}
+                
+                        {% if user_answer.answer_id == answer.id %}
+                            <u>{{ answer.value }} ({{ answer.votes }} Stimmen)</u>
+                        {% else %}
+                            {{ answer.value }} ({{ answer.votes }} Stimmen)
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        <!------------------------------------------------------------------------------------>
+        {% elif db_entry.text_answer %}
+            {% if user_answer %}
+                <p>
+                Deine Antwort:
+                <br>
+                <b>{{ user_answer.value }}</b>
+            </p>
+            {% endif %}
+        {% endif %}
+
+    <!------------------------------------------------------------------------------------->
+    {# if the user is not allowed to view the results #}
+    {% else %}
+        <span class="bi bi-exclamation-circle">
+            Das Ergebnis dieser Umfrage wird in der nächsten HEINEWS-Druckausgabe veröffentlicht!
+        </span>
+        <ul>
+            {% for answer in answers %}
+            <li>
+                {% if user_answer.answer_id == answer.id %}
+                    <u>{{ answer.value }}</u>
+                {% else %}
+                    {{ answer.value }}
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    
+    
+    <span class="bi bi-exclamation-circle">
+        Die Option, für die Du abgestimmt hast, ist unterstrichen.
+    </span>
+    {% if not correct_answer == none %}
+        {% if user_answer.answer_id == correct_answer.id %}
+            <h3>Deine Antwort ist korrekt!</h3>
+        {% else %}
+            <h3>Deine Antwort ist leider nicht korrekt. Besseres Glück nächstes Mal :)</h3>
+        {% endif %}
+    {% endif %}
+
+</div>
+
+{% endblock %}

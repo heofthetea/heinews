@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="/static/css/article.css">
+{% endblock %}
+{% block title %}{{ db_entry.title }}{% endblock %}
+
+{% block content%}
+<div class="container-xl">
+    <br>
+    <h1>
+        {{ db_entry.title }}
+    </h1>
+    <br>
+    {% if description != none %}
+    <h4>{{ db_entry.description }}</h4>
+    {% endif %}
+    <h6>Läuft ab am {{ db_entry.expiry_date.strftime("%d.%m.%Y um %H:%M")}}</h6>
+    
+    <!----------------------------------------------------------------------------------------------->
+    
+    <form action="{{ url_for('surveys.vote', survey_id=db_entry.id) }}" method="POST">
+        {% for answer in answers %}
+        <input type="radio" name="answer" id="{{ answer.id }}" value="{{ answer.id }}" required />
+
+        <label for="{{ answer.id }}">
+            {{ answer.value }}
+        </label>
+        <br>
+        {% endfor %}
+        <br>
+        <button type="submit" class="btn btn-primary">Antwort abschicken</button>
+    </form>
+
+    {% if get_user_role(current_user).can_validate and not db_entry.validated %}
+    <br>
+    <br>
+    <table class="table">
+        <tr>
+            <td scope="col-6">
+                <form action="{{ url_for('surveys.feedback', id=db_entry.id) }}">
+                    <div class="form-group">
+                        <label for="cancel"></label>
+                        <button class="btn btn-danger" style="float: left;">Feedback geben</button>
+                    </div>
+                </form>
+            </td>
+            <td scope="col-6">
+                <form action="{{ url_for('surveys.approve', id=db_entry.id) }}">
+                    <div class="form-group">
+                        <label for="approve"></label>
+                        <button class="btn btn-success" style="float: right;">Bestätigen</button>
+                    </div>
+                </form>
+            </td>
+        </tr>
+    </table>
+    {% endif %}
+</div>
+
+{% endblock %}

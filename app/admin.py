@@ -78,7 +78,10 @@ def new_article() -> None:
     if request.method == 'POST':
         if "create-survey" in request.form:
             session_id = generate_id(6, table=Survey)
-            cache[f"{session_id}-num_answers"] = request.form.get("num-answers")
+            if get_checkbutton(request.form.get("text-answer")):
+                cache[f"{session_id}-num_answers"] = 1
+            else:
+                cache[f"{session_id}-num_answers"] = request.form.get("num-answers")
             return redirect(url_for("admin.create_survey", session_id=session_id))
 
         if "create-announcement" in request.form:
@@ -250,34 +253,35 @@ def create_survey(session_id):
     num_answers = int(cache[f"{session_id}-num_answers"])
     if request.method == "POST":
         correct_answer = request.form.get("correct-answer")
-
+        
         new_survey = Survey (
             id=session_id,
             title=request.form.get("title"),
             description=request.form.get("description"),
+            text_answer=(num_answers == 1),
             expiry_date=datetime.now() + timedelta(int(request.form.get("expiry-date"))),
             results_visible=get_checkbutton(request.form.get("results-visible"))
         )
         db.session.add(new_survey)
+        if num_answers > 1: # survey works with non-text answers
+            for i in range(num_answers):
+                if correct_answer is None:
+                    correct = None
+                else:
+                    correct = True if i == int(correct_answer) else False
 
-        for i in range(num_answers):
-            if correct_answer is None:
-                correct = None
-            else:
-                correct = True if i == int(correct_answer) else False
-
-            db.session.add(
-                Answer(
-                    value=request.form.get(f"answer-{i}"),
-                    correct=correct,
-                    survey=new_survey.id
+                db.session.add(
+                    Answer(
+                        value=request.form.get(f"answer-{i}"),
+                        correct=correct,
+                        survey=new_survey.id
+                    )
                 )
-            )
 
         db.session.commit()
         cache.pop(f"{session_id}-num_answers")
         return redirect(url_for("surveys.survey", id=new_survey.id))
-    return render_template("upload/upload_survey.html", num_answers=num_answers)
+    return render_template("upload/upload_survey.html", num_answers=num_answers, text_answer=num_answers == 1)
 
 
 @admin.route("/newannouncement", methods=["GET", "POST"])

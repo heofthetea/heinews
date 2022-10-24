@@ -5,6 +5,7 @@ from .auth import send_verification_email
 from . import db
 from sqlalchemy import desc, or_
 from random import choice
+from datetime import datetime
 
 views = Blueprint("views", __name__)
 
@@ -25,6 +26,7 @@ def index() -> str:
         random_article = choice(Article.__validated_articles__(Article).all())
     except IndexError:
         random_article = []
+
     return render_template(
         "index.html",
         announcements=announcements,

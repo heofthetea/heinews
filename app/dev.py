@@ -11,8 +11,7 @@ from os import remove
 from os.path import exists, isdir
 from shutil import rmtree
 
-#TODO change source of images in articles
-#TODO!! validation on surveys
+#TODO edit source of images in articles
 
 dev = Blueprint("dev", __name__)
 #TODO! set timer to reset this to false after certain amount of time (~15 minutes)
@@ -52,6 +51,8 @@ def dev_panel() -> None:
         elif request.form.get("email"):
             users = User.query.filter(User.email.like(f"{request.form.get('email')}"))
             filtered = True
+
+    print(Survey.query.first().total_votes())
     return render_template(
         "auth/dev.html",
         users=users,
@@ -85,7 +86,7 @@ def check_password():
             authorized = True
             session["needs_authorization"] = False # session variable used to not "unauthorize" user every time password is required
             
-            # gets url stored as session variable, then deletes it to free up space
+            # gets url stored as session variable, then deletes it to text up space
             redirect_to = session["request_url"]
             session.pop("request_url")
             return redirect(redirect_to)
