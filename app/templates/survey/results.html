@@ -22,13 +22,7 @@
     {# rendering the results page first #}
     
     {% if db_entry.results_visible or get_user_role(current_user).can_upload %}
-        {% if not db_entry.results_visible %}
-            <span class="bi bi-exclamation-circle">
-                Du siehst die Ergebnisse nur, weil Du Mitglied der Schülerzeitung bist. Für Nutzer sind die Ergebnisse
-                versteckt.
-            </span>
-        {% endif %}
-        
+       
         {% if not db_entry.text_answer %}
             <ul>
                 {% for answer in answers %}
@@ -50,6 +44,17 @@
                     </li>
                 {% endfor %}
             </ul>
+
+            <span class="bi bi-exclamation-circle">
+                Die Option, für die Du abgestimmt hast, ist unterstrichen.
+            </span>
+            {% if not correct_answer == none %}
+                {% if user_answer.answer_id == correct_answer.id %}
+                    <h3>Deine Antwort ist korrekt!</h3>
+                {% else %}
+                    <h3>Deine Antwort ist leider nicht korrekt. Besseres Glück nächstes Mal :)</h3>
+                {% endif %}
+            {% endif %}
         <!------------------------------------------------------------------------------------>
         {% elif db_entry.text_answer %}
             {% if user_answer %}
@@ -58,6 +63,28 @@
                 <br>
                 <b>{{ user_answer.value }}</b>
             </p>
+            {% endif %}
+
+            {% if get_user_role(current_user).can_upload %}
+            <h3>Alle eingereichten Antworten (sortiert aufsteigend nach Datum):</h3>
+            <table class="table">
+                    <tr>
+                        <thead>
+                            <th scope="col" class="col-2">Eingereicht:</th>
+                            <th scope="col" class="col">Inhalt</th>
+                        </thead>
+                    </tr>
+                    {% for answer in answers %}
+                        <td>
+                            {{ answer.date_submitted.strftime("%d.%m.%Y um %H:%M") }}
+                        </td>
+                        <td>
+                            {{ answer.value }}
+                        </td>
+                    {% endfor %}
+            
+            </table>
+
             {% endif %}
         {% endif %}
 
@@ -79,17 +106,12 @@
             {% endfor %}
         </ul>
     {% endif %}
-    
-    
+
+    {% if not db_entry.results_visible %}
     <span class="bi bi-exclamation-circle">
-        Die Option, für die Du abgestimmt hast, ist unterstrichen.
+        Du siehst die Ergebnisse nur, weil Du Mitglied der Schülerzeitung bist. Für Nutzer sind die Ergebnisse
+        versteckt.
     </span>
-    {% if not correct_answer == none %}
-        {% if user_answer.answer_id == correct_answer.id %}
-            <h3>Deine Antwort ist korrekt!</h3>
-        {% else %}
-            <h3>Deine Antwort ist leider nicht korrekt. Besseres Glück nächstes Mal :)</h3>
-        {% endif %}
     {% endif %}
 
 </div>

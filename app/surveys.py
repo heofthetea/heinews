@@ -32,6 +32,9 @@ def survey(id):
 
     if db_entry.text_answer:
         template = "survey/open_survey.html"
+        # only getting all submitted answers if they're actually rendered, which is only when upload role is viewing
+        if get_user_role(current_user).can_upload:
+            answers = Text_Answer.query.filter_by(survey=db_entry.id).order_by(Text_Answer.date_submitted.asc())
 
     if db_entry.expired() or user_answer:
         template = "survey/results.html"

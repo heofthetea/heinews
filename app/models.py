@@ -118,6 +118,7 @@ class Answer(db.Model):
 class Text_Answer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     value = db.Column(db.String(256), nullable=False)
+    date_submitted = db.Column(db.DateTime(), default=datetime.now())
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     survey = db.Column(db.String, db.ForeignKey("survey.id"))
 

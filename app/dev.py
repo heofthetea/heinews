@@ -52,7 +52,6 @@ def dev_panel() -> None:
             users = User.query.filter(User.email.like(f"{request.form.get('email')}"))
             filtered = True
 
-    print(Survey.query.first().total_votes())
     return render_template(
         "auth/dev.html",
         users=users,
