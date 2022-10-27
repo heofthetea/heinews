@@ -12,35 +12,58 @@
         <table>
             <tr>
                 <td scope="col" class="col-2">
-                    <label for="num-images">Wähle aus, wie viele Bilder Dein Artikel haben soll *</label>
-                    <select id="num-images" name="num-images" required>
-                        <option value="0" selected>0</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
-                        <option value="10">10</option>
-                    </select>
+                    <div class="container" style="border-radius: 1rem; background-color:rgb(243, 243, 243)">
+                        <br>
+                        <div class="row">
+                            <div class="col-6" style="margin-left: 2%">
+                                <label for="num-images">Wähle aus, wie viele Bilder Dein Artikel haben soll *</label>
+                            </div>
+                            <div class="col-5">
+                                <select id="num-images" name="num-images" required>
+                                    <option value="0" selected>0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                </select>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-6" style="margin-left: 2%">
+                                <label for="file">Lade hier Deine Artikeldatei hoch: *</label>
+                            </div>
+                            <div class="col-5">
+                                <input type="file" name="file" style="font-weight: bold;">
+                                <br>
+                                <br>
+                            </div>  
+                        </div>
+                    </div>
                 </td>
-                <tr>
-                    <td scope="col" class="col-2">
-                        <label for="file">Lade hier Deine Artikeldatei hoch: *</label>
-                        <input type="file" name="file">
-                    </td>
-                </tr>
             </tr>
         </table>
         <br>
-        <button name="upload-article" class="btn btn-primary">Hochladen</button> 
+        <div class="container">
+            <div class="row">
+                <div class="col-6">
+                    <button name="upload-article" class="btn btn-primary" style="margin-left: 1%">Hochladen</button>
+                </div>
+                <div class="col-6" style="text-align: right">
+                    Eine Übersicht darüber, wie Dein Artikel formattiert sein sollte, findest Du <a href="/article-formatting">hier.</a>
+                </div>
+            </div>
+        </div> 
     </form>
 
     <br>
-    Eine Übersicht darüber, wie Dein Artikel formattiert sein sollte, findest Du <a href="/article-formatting">hier.</a>
+    
     <hr>
     <br>
 
