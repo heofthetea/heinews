@@ -34,8 +34,10 @@
                         <div class="carousel-item active">
                             <img style="height: 600px; object-fit: cover;" src="../static/img/placeholder.png" class="d-block w-100" alt="...">
                             <div class="carousel-caption d-none d-md-block">
-                                <h5>@Fidex schreib hier rein was auch immer da stehen soll wenn es noch keine Ankündigungen gibt</h5>
-                                <p>Some representative placeholder content for the first slide.</p>
+                                <h5>Es gibt aktuell noch keine Ankündigungen</h5>
+                                <p> Wenn du bei der Schülerzeitung mithelfen möchtest, dann wende dich gerne an jemanden von uns. <br>
+                                    Die Kontaktdaten findest du unten im Impressum.
+                                </p>
                             </div>
                         </div>
                     {% endif %}
@@ -77,7 +79,7 @@
 
         <!--Aktuelles-->
         {% if aktuelles|length > 0 %}
-            <h2 style="color:rgb(13, 110, 253)">Aktuelles</h2>
+            <h2><a id="title-link" href="/article/category/aktuelles">Aktuelles</a></h2> <!--Alternative: 1. blue tone 4, 20, 43 2. triangle <h2>Aktuelles▼</h2>-->
             <br>
             <div id="carouselExampleControls" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); height: 445px; background-color: rgb(255, 255, 255); vertical-align: center; border-radius: 10px;">
                 <div class="carousel-inner">
@@ -95,12 +97,12 @@
                                             <img src="{{ title_image_or_placeholder(aktuelles[i]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
                                                 <h4 class="card-title">{{ aktuelles[i].title }}</h4>
-                                                <p class="lead card-subtitle">
+                                                <p id="card-subtitle" class="lead card-subtitle">
                                                     {{ cap_text(aktuelles[i].description) }}
                                                 </p>
                                                 <br>
                                                 <br>
-                                                <p>{{ aktuelles[i].date_created.date().strftime("%d.%m.%Y") }}</p>
+                                                <p id="card-date">{{ aktuelles[i].date_created.date().strftime("%d.%m.%Y") }}</p>
                                             </div>
                                         </a>    
                                     </div>
@@ -115,7 +117,7 @@
                                                 <p class="lead card-subtitle">{{ cap_text(aktuelles[i + 1].description) }}</p>
                                                 <br>
                                                 <br>
-                                                <p>{{ aktuelles[i].date_created.date().strftime("%d.%m.%Y") }}</p>
+                                                <p id="card-date">{{ aktuelles[i].date_created.date().strftime("%d.%m.%Y") }}</p>
                                             </div>
                                         </a>    
                                     </div>
@@ -130,7 +132,7 @@
                                                 <p class="lead card-subtitle">{{ cap_text(aktuelles[i + 2].description) }}</p>
                                                 <br>
                                                 <br>
-                                                <p>{{ aktuelles[i].date_created.date().strftime("%d.%m.%Y") }}</p>
+                                                <p id="card-date">{{ aktuelles[i].date_created.date().strftime("%d.%m.%Y") }}</p>
                                             </div>
                                         </a>    
                                     </div>
@@ -159,7 +161,7 @@
 
         <!--Wissen-->
         {% if wissen|length > 0 %}
-            <h2 style="color:rgb(13, 110, 253)">Wissen</h2>
+            <h2><a id="title-link" href="/article/category/wissen">Wissen</a></h2>
             <br>
             <div id="carouselExampleControls" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); height: 445px; background-color: rgb(255, 255, 255); vertical-align: center; border-radius: 10px;">
                 <div class="carousel-inner">
@@ -182,7 +184,7 @@
                                                 </p>
                                                 <br>
                                                 <br>
-                                                <p>{{ wissen[i].date_created.date().strftime("%d.%m.%Y") }}</p>
+                                                <p id="card-date">{{ wissen[i].date_created.date().strftime("%d.%m.%Y") }}</p>
                                             </div>
                                         </a>    
                                     </div>
@@ -197,7 +199,7 @@
                                                 <p class="lead card-subtitle">{{ cap_text(wissen[i + 1].description) }}</p>
                                                 <br>
                                                 <br>
-                                                <p>{{ wissen[i].date_created.date().strftime("%d.%m.%Y") }}</p>
+                                                <p id="card-date">{{ wissen[i].date_created.date().strftime("%d.%m.%Y") }}</p>
                                             </div>
                                         </a>    
                                     </div>
@@ -212,7 +214,7 @@
                                                 <p class="lead card-subtitle">{{ cap_text(wissen[i + 2].description) }}}</p>
                                                 <br>
                                                 <br>
-                                                <p>{{ wissen[i].date_created.date().strftime("%d.%m.%Y") }}</p>
+                                                <p id="card-date">{{ wissen[i].date_created.date().strftime("%d.%m.%Y") }}</p>
                                             </div>
                                         </a>    
                                     </div>
@@ -241,7 +243,7 @@
 
         <!--Schulleben-->
         {% if schulleben|length > 0 %}
-            <h2 style="color:rgb(13, 110, 253)">Schulleben</h2>
+            <h2><a id="title-link" href="/article/category/schulleben">Schulleben</a></h2>
             <br>
             <div id="carouselExampleControls" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); height: 445px; background-color: rgb(255, 255, 255); vertical-align: center; border-radius: 10px;">
                 <div class="carousel-inner">
@@ -264,7 +266,7 @@
                                                 </p>
                                                 <br>
                                                 <br>
-                                                <p>{{ schulleben[i].date_created.date().strftime("%d.%m.%Y") }}</p>
+                                                <p id="card-date">{{ schulleben[i].date_created.date().strftime("%d.%m.%Y") }}</p>
                                             </div>
                                         </a>    
                                     </div>
@@ -279,7 +281,7 @@
                                                 <p class="lead card-subtitle">{{ cap_text(schulleben[i + 1].description) }}}</p>
                                                 <br>
                                                 <br>
-                                                <p>{{ schulleben[i].date_created.date().strftime("%d.%m.%Y") }}</p>
+                                                <p id="card-date">{{ schulleben[i].date_created.date().strftime("%d.%m.%Y") }}</p>
                                             </div>
                                         </a>    
                                     </div>
@@ -294,7 +296,7 @@
                                                 <p class="lead card-subtitle">{{ cap_text(schulleben[i + 2].description) }}</p>
                                                 <br>
                                                 <br>
-                                                <p>{{ schulleben[i].date_created.date().strftime("%d.%m.%Y") }}</p>
+                                                <p id="card-date">{{ schulleben[i].date_created.date().strftime("%d.%m.%Y") }}</p>
                                             </div>
                                         </a>    
                                     </div>
@@ -323,7 +325,7 @@
         
         <!--Lifestyle-->
         {% if lifestyle|length > 0 %}
-            <h2 style="color:rgb(13, 110, 253)">Lifestyle</h2>
+            <h2><a id="title-link" href="/article/category/lifestyle">Lifestyle</a></h2>
             <br>
             <div id="carouselExampleControls" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); height: 445px; background-color: rgb(255, 255, 255); vertical-align: center; border-radius: 10px;">
                 <div class="carousel-inner">
@@ -346,7 +348,7 @@
                                                 </p>
                                                 <br>
                                                 <br>
-                                                <p>{{ lifestyle[i].date_created.date().strftime("%d.%m.%Y") }}</p>
+                                                <p id="card-date">{{ lifestyle[i].date_created.date().strftime("%d.%m.%Y") }}</p>
                                             </div>
                                         </a>    
                                     </div>
@@ -361,7 +363,7 @@
                                                 <p class="lead card-subtitle">{{ cap_text(lifestyle[i + 1].description) }}</p>
                                                 <br>
                                                 <br>
-                                                <p>{{ lifestyle[i].date_created.date().strftime("%d.%m.%Y") }}</p>
+                                                <p id="card-date">{{ lifestyle[i].date_created.date().strftime("%d.%m.%Y") }}</p>
                                             </div>
                                         </a>    
                                     </div>
@@ -376,7 +378,7 @@
                                                 <p class="lead card-subtitle">{{ cap_text(lifestyle[i + 2].description) }}</p>
                                                 <br>
                                                 <br>
-                                                <p>{{ lifestyle[i].date_created.date().strftime("%d.%m.%Y") }}</p>
+                                                <p id="card-date">{{ lifestyle[i].date_created.date().strftime("%d.%m.%Y") }}</p>
                                             </div>
                                         </a>    
                                     </div>
@@ -405,7 +407,7 @@
 
         <!--Unterhaltung-->
         {% if unterhaltung|length > 0 %}
-            <h2 style="color:rgb(13, 110, 253)">Unterhaltung</h2>
+            <h2><a id="title-link" href="/article/category/unterhaltung">Unterhaltung</a></h2>
             <br>
             <div id="carouselExampleControls" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); height: 445px; background-color: rgb(255, 255, 255); vertical-align: center; border-radius: 10px;">
                 <div class="carousel-inner">
@@ -428,7 +430,7 @@
                                                 </p>
                                                 <br>
                                                 <br>
-                                                <p>{{ unterhaltung[i].date_created.date().strftime("%d.%m.%Y") }}</p>
+                                                <p id="card-date">{{ unterhaltung[i].date_created.date().strftime("%d.%m.%Y") }}</p>
                                             </div>
                                         </a>    
                                     </div>
@@ -443,7 +445,7 @@
                                                 <p class="lead card-subtitle">{{ cap_text(unterhaltung[i + 1].description) }}</p>
                                                 <br>
                                                 <br>
-                                                <p>{{ unterhaltung[i].date_created.date().strftime("%d.%m.%Y") }}</p>
+                                                <p id="card-date">{{ unterhaltung[i].date_created.date().strftime("%d.%m.%Y") }}</p>
                                             </div>
                                         </a>    
                                     </div>
@@ -458,7 +460,7 @@
                                                 <p class="lead card-subtitle">{{ cap_text(unterhaltung[i + 2].description) }}</p>
                                                 <br>
                                                 <br>
-                                                <p>{{ unterhaltung[i].date_created.date().strftime("%d.%m.%Y") }}</p>
+                                                <p id="card-date">{{ unterhaltung[i].date_created.date().strftime("%d.%m.%Y") }}</p>
                                             </div>
                                         </a>    
                                     </div>
@@ -487,7 +489,7 @@
         
         <!--Kreatives-->
         {% if kreatives|length > 0 %}
-            <h2 style="color:rgb(13, 110, 253)">Kreatives</h2>
+            <h2><a id="title-link" href="/article/category/kreatives">Kreatives</a></h2>
             <br>
             <div id="carouselExampleControls" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); height: 445px; background-color: rgb(255, 255, 255); vertical-align: center; border-radius: 10px;">
                 <div class="carousel-inner">
@@ -510,7 +512,7 @@
                                                 </p>
                                                 <br>
                                                 <br>
-                                                <p>{{ kreatives[i].date_created.date().strftime("%d.%m.%Y") }}</p>
+                                                <p id="card-date">{{ kreatives[i].date_created.date().strftime("%d.%m.%Y") }}</p>
                                             </div>
                                         </a>    
                                     </div>
@@ -525,7 +527,7 @@
                                                 <p class="lead card-subtitle">{{ cap_text(kreatives[i + 1].description) }}</p>
                                                 <br>
                                                 <br>
-                                                <p>{{ kreatives[i].date_created.date().strftime("%d.%m.%Y") }}</p>
+                                                <p id="card-date">{{ kreatives[i].date_created.date().strftime("%d.%m.%Y") }}</p>
                                             </div>
                                         </a>    
                                     </div>
@@ -540,7 +542,7 @@
                                                 <p class="lead card-subtitle">{{ cap_text(kreatives[i + 2].description) }}</p>
                                                 <br>
                                                 <br>
-                                                <p>{{ kreatives[i].date_created.date().strftime("%d.%m.%Y") }}</p>
+                                                <p id="card-date">{{ kreatives[i].date_created.date().strftime("%d.%m.%Y") }}</p>
                                             </div>
                                         </a>    
                                     </div>
@@ -569,7 +571,7 @@
         
         <!--Umfragen-->
         {% if surveys|length > 0 %}
-            <h2 style="color:rgb(13, 110, 253)">Umfragen</h2>
+            <h2><a id="title-link" href="{{ url_for('surveys.all_surveys') }}">Umfragen</a></h2>
             <br>
             <div id="carouselExampleControls" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); height: 335px; background-color: rgb(255, 255, 255); vertical-align: center; border-radius: 10px;">
                 <div class="carousel-inner">
@@ -639,7 +641,11 @@
         {% endif %}
 
     {% else %}
-        <h5>there's no articles... yet</h5>
+        <h5>Aktuell gibt es noch keine Artikel auf dieser Website</h5>
+        <br>
+        <h4> Wenn du das ändern willst dann werde Teil der Schülerzeitung. Wir freuen uns auf dich! <br>
+            Unsere Kontaktdaten findest du unten im Impressum.
+        </h4>
     </div>
     {% endif %}
 {% endblock %}

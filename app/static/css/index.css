@@ -1,4 +1,37 @@
+/* Cards */
+
 .cards-container {
     display: flex;
     justify-content: space-between;
   }
+
+h2 { /* if necessary (if there are any other h2 besides the card ones): give all h2 from cards an extra ID instead */
+  color: rgb(12, 12, 90);
+}
+
+.card-title {
+  color:rgb(12, 12, 90);
+}
+
+#card-subtitle {
+  color: #005aa7;
+}
+
+#card-date {
+  color: #1c92d4;
+}
+
+/* Links */
+
+#title-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Doesn't work because Navbar is part of it as well
+a, a:hover, a:visited, a:active {
+  color: inherit;
+  text-decoration: none;
+}
+
+*/
