@@ -34,48 +34,6 @@
                 <a href="{{ url_for('articles.all_articles') }}" class="nav-link">Alle Artikel</a>
               </li>
             {% endblock %}
-
-            {% block aktuelles %}
-              <li class="nav-item">
-                <a href="/article/category/aktuelles" class="nav-link">Aktuelles</a>
-              </li>
-            {% endblock %}
-
-            {% block wissen %}
-              <li class="nav-item">
-                <a href="/article/category/wissen" class="nav-link">Wissen</a>
-              </li>
-            {% endblock %}
-
-            {% block schulleben %}
-              <li class="nav-item">
-                <a href="/article/category/schulleben" class="nav-link">Schulleben</a>
-              </li>
-            {% endblock %}
-
-            {% block lifestyle %}
-              <li class="nav-item">
-                <a href="/article/category/lifestyle" class="nav-link">Lifestyle</a>
-              </li>
-            {% endblock %}
-
-            {% block unterhaltung %}
-              <li class="nav-item">
-                <a href="/article/category/unterhaltung" class="nav-link">Unterhaltung</a>
-              </li>
-            {% endblock %}
-
-            {% block kreatives %}
-              <li class="nav-item">
-                <a href="/article/category/kreatives" class="nav-link">Kreatives</a>
-              </li>
-            {% endblock %}
-
-            {% block umfragen %}
-              <li class="nav-item">
-                <a href="{{ url_for('surveys.all_surveys') }}" class="nav-link">Umfragen</a>
-              </li>
-            {% endblock %}
           </ul>
 
           <form class="d-flex nav-item me-2" action="{{ url_for('views.search') }}" method="POST">
