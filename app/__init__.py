@@ -16,7 +16,7 @@ def send_database() -> SQLAlchemy:
 
 
 WORKING_DIR = getcwd()
-IMAGE_FOLDER = "/static/img/articles"
+IMAGE_FOLDER = ("static", "img", "articles")
 __HOST__ = None
 
 """

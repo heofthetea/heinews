@@ -10,6 +10,8 @@ from sqlalchemy import asc
 from os import path, mkdir
 from werkzeug.utils import secure_filename
 
+from glob import glob
+
 
 #TODO! find places in articles for images
 
@@ -131,7 +133,7 @@ def new_article() -> None:
 @login_required
 def add_images(article_id):
     if request.method == "POST":
-        img_folder = path.join(IMAGE_FOLDER, article_id)
+        img_folder = path.join(f"/{'/'.join(IMAGE_FOLDER)}", article_id)
         for i in range(cache[f"{article_id}-num_images"]):
             if f"image-{i}" not in request.files:
                 flash("Bitte wähle für jedes Feld ein Bild aus", category="error")
@@ -141,13 +143,17 @@ def add_images(article_id):
             if not allowed_file(image.filename, ext_dict=ALLOWED_IMAGES):
                 flash("Dateityp nicht unterstützt (Unterstützt wird: .png, .jpg)")
             if image and allowed_file(image.filename, ext_dict=ALLOWED_IMAGES):
-                if not path.isdir(path.join(WORKING_DIR, "app" + img_folder)):
-                    mkdir("app" + img_folder)
+
+                if not path.isdir(path.join(WORKING_DIR, f"app/{'/'.join(IMAGE_FOLDER)}")):
+                    mkdir(path.join(WORKING_DIR, f"app/{'/'.join(IMAGE_FOLDER)}"))
+                if not path.isdir(path.join(WORKING_DIR, f"app/{'/'.join(IMAGE_FOLDER)}/{article_id}")):
+                    mkdir(path.join(WORKING_DIR, f"app/{'/'.join(IMAGE_FOLDER)}/{article_id}"))
 
                 image.filename = f"{generate_id(8)}.{image.filename.rsplit('.', 1)[1].lower()}"
                 filename = secure_filename(image.filename)
                 img_location = path.join(img_folder, filename)
-                image.save("app" + img_location)
+                print(img_location)
+                image.save("app/" + img_location)
                 cache[f"{article_id}-images"].append(img_location)
 
         return redirect(url_for("admin.edit_article", article_id=article_id))
