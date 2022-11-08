@@ -24,7 +24,7 @@
                     <a href="{{ url_for('articles.announcement', id=announcements[0].id) }}">
                         <div class="carousel-item active">
                             <img style="height: 600px; object-fit: cover; opacity: 1  ;" src="../static/img/placeholder.png" class="d-block w-100" alt="...">
-                            <div class="carousel-caption d-none d-md-block">
+                            <div class="carousel-caption ">
                             <h5>{{ announcements[0].title }}</h5>
                             <p>{{ announcements[0].content }}</p>
                         </div>
@@ -33,7 +33,7 @@
                     {% else %}<!--No announcements yet-->
                         <div class="carousel-item active">
                             <img style="height: 600px; object-fit: cover;" src="../static/img/placeholder.png" class="d-block w-100" alt="...">
-                            <div class="carousel-caption d-none d-md-block">
+                            <div class="carousel-caption ">
                                 <h5>Es gibt aktuell noch keine Ankündigungen</h5>
                                 <p> Wenn du bei der Schülerzeitung mithelfen möchtest, dann wende dich gerne an jemanden von uns. <br>
                                     Die Kontaktdaten findest du unten im Impressum.
@@ -46,7 +46,7 @@
                     <a href="{{ url_for('articles.find_article', path=most_upvoted_article.id + '.html') }}">
                         <div class="carousel-item">
                             <img style="height: 600px; object-fit: cover; opacity: 0.6;" src="{{ title_image_or_placeholder(most_upvoted_article) }}" class="d-block w-100" alt="...">
-                            <div class="carousel-caption d-none d-md-block">
+                            <div class="carousel-caption ">
                                 <h5>{{ most_upvoted_article.title }}</h5>
                                 <p>{{ most_upvoted_article.description }}</p>
                             </div>
@@ -56,7 +56,7 @@
                     <a href="{{ url_for('articles.find_article', path=most_recent_article.id + '.html') }}">
                         <div class="carousel-item">
                             <img style="height: 600px; object-fit: cover; opacity: 0.6;" src="{{ title_image_or_placeholder(most_recent_article) }}" class="d-block w-100" alt="...">
-                            <div class="carousel-caption d-none d-md-block">
+                            <div class="carousel-caption ">
                                 <h5>{{ most_recent_article.title }}</h5>
                                 <p>{{ most_recent_article.description }}</p>
                             </div>
@@ -81,13 +81,13 @@
         {% if aktuelles|length > 0 %}
             <h2><a id="title-link" href="/article/category/aktuelles">Aktuelles</a></h2> <!--Alternative: 1. blue tone 4, 20, 43 2. triangle <h2>Aktuelles▼</h2>-->
             <br>
-            <div id="carouselExampleControls" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); height: 445px; background-color: rgb(255, 255, 255); vertical-align: center; border-radius: 10px;">
+            <div id="carouselExampleControls" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); display: block; overflow: auto; background-color: rgb(255, 255, 255); border-radius: 10px;">
                 <div class="carousel-inner">
                     {% for i in range(0, aktuelles|length, 3) %} <!--the 3 is the "step" argument, basically the equivalent of "i += 3" in a java for loop-->
                         {% if i == 0 %}
-                            <div class="carousel-item active" style="margin-top: 20px;">
+                            <div class="carousel-item active" style="margin-top: 20px; margin-bottom: 20px;">
                         {% else %}
-                            <div class="carousel-item" style="margin-top: 20px;">
+                            <div class="carousel-item" style="margin-top: 20px; margin-bottom: 20px;">
                         {% endif%}
                             <div class="card-container" style="display: flex; justify-content: center;">
                                 {# the list likely won't be dividable by three, so this if statement is needed to not get any IndexOutOfBoundsExceptions #}
@@ -163,7 +163,7 @@
         {% if wissen|length > 0 %}
             <h2><a id="title-link" href="/article/category/wissen">Wissen</a></h2>
             <br>
-            <div id="carouselExampleControls" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); height: 445px; background-color: rgb(255, 255, 255); vertical-align: center; border-radius: 10px;">
+            <div id="carouselExampleControls" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); display: block; overflow: auto; background-color: rgb(255, 255, 255); border-radius: 10px;">
                 <div class="carousel-inner">
                     {% for i in range(0, wissen|length, 3) %} <!--the 3 is the "step" argument, basically the equivalent of "i += 3" in a java for loop-->
                         {% if i == 0 %}
@@ -245,7 +245,7 @@
         {% if schulleben|length > 0 %}
             <h2><a id="title-link" href="/article/category/schulleben">Schulleben</a></h2>
             <br>
-            <div id="carouselExampleControls" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); height: 445px; background-color: rgb(255, 255, 255); vertical-align: center; border-radius: 10px;">
+            <div id="carouselExampleControls" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); display: block; overflow: auto; background-color: rgb(255, 255, 255); border-radius: 10px;">
                 <div class="carousel-inner">
                     {% for i in range(0, schulleben|length, 3) %} <!--the 3 is the "step" argument, basically the equivalent of "i += 3" in a java for loop-->
                         {% if i == 0 %}
@@ -327,7 +327,7 @@
         {% if lifestyle|length > 0 %}
             <h2><a id="title-link" href="/article/category/lifestyle">Lifestyle</a></h2>
             <br>
-            <div id="carouselExampleControls" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); height: 445px; background-color: rgb(255, 255, 255); vertical-align: center; border-radius: 10px;">
+            <div id="carouselExampleControls" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); display: block; overflow: auto; background-color: rgb(255, 255, 255); border-radius: 10px;">
                 <div class="carousel-inner">
                     {% for i in range(0, lifestyle|length, 3) %} <!--the 3 is the "step" argument, basically the equivalent of "i += 3" in a java for loop-->
                         {% if i == 0 %}
@@ -409,7 +409,7 @@
         {% if unterhaltung|length > 0 %}
             <h2><a id="title-link" href="/article/category/unterhaltung">Unterhaltung</a></h2>
             <br>
-            <div id="carouselExampleControls" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); height: 445px; background-color: rgb(255, 255, 255); vertical-align: center; border-radius: 10px;">
+            <div id="carouselExampleControls" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); display: block; overflow: auto; background-color: rgb(255, 255, 255); border-radius: 10px;">
                 <div class="carousel-inner">
                     {% for i in range(0, unterhaltung|length, 3) %} <!--the 3 is the "step" argument, basically the equivalent of "i += 3" in a java for loop-->
                         {% if i == 0 %}
@@ -491,7 +491,7 @@
         {% if kreatives|length > 0 %}
             <h2><a id="title-link" href="/article/category/kreatives">Kreatives</a></h2>
             <br>
-            <div id="carouselExampleControls" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); height: 445px; background-color: rgb(255, 255, 255); vertical-align: center; border-radius: 10px;">
+            <div id="carouselExampleControls" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); display: block; overflow: auto; background-color: rgb(255, 255, 255); border-radius: 10px;">
                 <div class="carousel-inner">
                     {% for i in range(0, kreatives|length, 3) %} <!--the 3 is the "step" argument, basically the equivalent of "i += 3" in a java for loop-->
                         {% if i == 0 %}
@@ -573,7 +573,7 @@
         {% if surveys|length > 0 %}
             <h2><a id="title-link" href="{{ url_for('surveys.all_surveys') }}">Umfragen</a></h2>
             <br>
-            <div id="carouselExampleControls" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); height: 335px; background-color: rgb(255, 255, 255); vertical-align: center; border-radius: 10px;">
+            <div id="carouselExampleControls" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); height: 335px; background-color: rgb(255, 255, 255); border-radius: 10px;">
                 <div class="carousel-inner">
                     {% for i in range(0, surveys|length, 3) %} <!--the 3 is the "step" argument, basically the equivalent of "i += 3" in a java for loop-->
                         {% if i == 0 %}
