@@ -9,7 +9,7 @@
 
 {% block content %}
     {% if articles %}
-        <div class="container">
+        <div class="container-fluid p-0">
             <div class="container-xl">
             <br>
             <div id="carouselExampleDark" class="carousel carousel-dark slide" data-bs-ride="carousel">
@@ -92,7 +92,7 @@
                             <div class="card-container" style="display: flex; justify-content: center;">
                                 {# the list likely won't be dividable by three, so this if statement is needed to not get any IndexOutOfBoundsExceptions #}
                                 {% if aktuelles[i] %}
-                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/4)">
+                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/3)">
                                         <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(aktuelles[i].id)) }}">
                                             <img src="{{ title_image_or_placeholder(aktuelles[i]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
@@ -109,7 +109,7 @@
                                 {% endif %}
 
                                 {% if aktuelles[i + 1] %}
-                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/4); margin-left: 2%;">
+                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/3); margin-left: 2%;">
                                         <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(aktuelles[i + 1].id)) }}">
                                             <img src="{{ title_image_or_placeholder(aktuelles[i + 1]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
@@ -124,7 +124,7 @@
                                 {% endif %}
 
                                 {% if aktuelles[i + 2] %}
-                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/4); margin-left: 2%">
+                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/3); margin-left: 2%">
                                         <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(aktuelles[i + 2].id)) }}">
                                             <img src="{{ title_image_or_placeholder(aktuelles[i + 2]) }}" style="height: 200px;  object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
@@ -167,14 +167,14 @@
                 <div class="carousel-inner">
                     {% for i in range(0, wissen|length, 3) %} <!--the 3 is the "step" argument, basically the equivalent of "i += 3" in a java for loop-->
                         {% if i == 0 %}
-                            <div class="carousel-item active" style="margin-top: 20px;">
+                            <div class="carousel-item active" style="margin-top: 20px; margin-bottom: 20px">
                         {% else %}
-                            <div class="carousel-item" style="margin-top: 20px;">
+                            <div class="carousel-item" style="margin-top: 20px; margin-bottom: 20px">
                         {% endif%}
                             <div class="card-container" style="display: flex; justify-content: center;">
                                 {# the list likely won't be dividable by three, so this if statement is needed to not get any IndexOutOfBoundsExceptions #}
                                 {% if wissen[i] %}
-                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/4)">
+                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/3)">
                                         <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(wissen[i].id)) }}">
                                             <img src="{{ title_image_or_placeholder(wissen[i]) }}" style="height: 200px ;  object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
@@ -191,7 +191,7 @@
                                 {% endif %}
 
                                 {% if wissen[i + 1] %}
-                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/4); margin-left: 2%;">
+                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/3); margin-left: 2%;">
                                         <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(wissen[i + 1].id)) }}">
                                             <img src="{{ title_image_or_placeholder(wissen[i + 1]) }}" style="height: 200px;  object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
@@ -206,7 +206,7 @@
                                 {% endif %}
 
                                 {% if wissen[i + 2] %}
-                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/4); margin-left: 2%">
+                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/3); margin-left: 2%">
                                         <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(wissen[i + 2].id)) }}">
                                             <img src="{{ title_image_or_placeholder(wissen[i + 2]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
@@ -249,14 +249,14 @@
                 <div class="carousel-inner">
                     {% for i in range(0, schulleben|length, 3) %} <!--the 3 is the "step" argument, basically the equivalent of "i += 3" in a java for loop-->
                         {% if i == 0 %}
-                            <div class="carousel-item active" style="margin-top: 20px;">
+                            <div class="carousel-item active" style="margin-top: 20px; margin-bottom: 20px">
                         {% else %}
-                            <div class="carousel-item" style="margin-top: 20px;">
+                            <div class="carousel-item" style="margin-top: 20px; margin-bottom: 20px">
                         {% endif%}
                             <div class="card-container" style="display: flex; justify-content: center;">
                                 {# the list likely won't be dividable by three, so this if statement is needed to not get any IndexOutOfBoundsExceptions #}
                                 {% if schulleben[i] %}
-                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/4)">
+                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/3)">
                                         <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(schulleben[i].id)) }}">
                                             <img src="{{ title_image_or_placeholder(schulleben[i]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
@@ -273,7 +273,7 @@
                                 {% endif %}
 
                                 {% if schulleben[i + 1] %}
-                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/4); margin-left: 2%;">
+                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/3); margin-left: 2%;">
                                         <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(schulleben[i + 1].id)) }}">
                                             <img src="{{ title_image_or_placeholder(schulleben[i + 1]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
@@ -288,7 +288,7 @@
                                 {% endif %}
 
                                 {% if schulleben[i + 2] %}
-                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/4); margin-left: 2%">
+                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/3); margin-left: 2%">
                                         <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(schulleben[i + 2].id)) }}">
                                             <img src="{{ title_image_or_placeholder(schulleben[i + 2]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
@@ -331,14 +331,14 @@
                 <div class="carousel-inner">
                     {% for i in range(0, lifestyle|length, 3) %} <!--the 3 is the "step" argument, basically the equivalent of "i += 3" in a java for loop-->
                         {% if i == 0 %}
-                            <div class="carousel-item active" style="margin-top: 20px;">
+                            <div class="carousel-item active" style="margin-top: 20px; margin-bottom: 20px">
                         {% else %}
-                            <div class="carousel-item" style="margin-top: 20px;">
+                            <div class="carousel-item" style="margin-top: 20px; margin-bottom: 20px">
                         {% endif%}
                             <div class="card-container" style="display: flex; justify-content: center;">
                                 {# the list likely won't be dividable by three, so this if statement is needed to not get any IndexOutOfBoundsExceptions #}
                                 {% if lifestyle[i] %}
-                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/4)">
+                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/3)">
                                         <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(lifestyle[i].id)) }}">
                                             <img src="{{ title_image_or_placeholder(lifestyle[i]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
@@ -355,7 +355,7 @@
                                 {% endif %}
 
                                 {% if lifestyle[i + 1] %}
-                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/4); margin-left: 2%;">
+                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/3); margin-left: 2%;">
                                         <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(lifestyle[i + 1].id)) }}">
                                             <img src="{{ title_image_or_placeholder(lifestyle[i + 1]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
@@ -370,7 +370,7 @@
                                 {% endif %}
 
                                 {% if lifestyle[i + 2] %}
-                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/4); margin-left: 2%">
+                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/3); margin-left: 2%">
                                         <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(lifestyle[i + 2].id)) }}">
                                             <img src="{{ title_image_or_placeholder(lifestyle[i + 2]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
@@ -413,14 +413,14 @@
                 <div class="carousel-inner">
                     {% for i in range(0, unterhaltung|length, 3) %} <!--the 3 is the "step" argument, basically the equivalent of "i += 3" in a java for loop-->
                         {% if i == 0 %}
-                            <div class="carousel-item active" style="margin-top: 20px;">
+                            <div class="carousel-item active" style="margin-top: 20px; margin-bottom: 20px">
                         {% else %}
-                            <div class="carousel-item" style="margin-top: 20px;">
+                            <div class="carousel-item" style="margin-top: 20px; margin-bottom: 20px">
                         {% endif%}
                             <div class="card-container" style="display: flex; justify-content: center;">
                                 {# the list likely won't be dividable by three, so this if statement is needed to not get any IndexOutOfBoundsExceptions #}
                                 {% if unterhaltung[i] %}
-                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/4)">
+                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/3)">
                                         <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(unterhaltung[i].id)) }}">
                                             <img src="{{ title_image_or_placeholder(unterhaltung[i]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
@@ -437,7 +437,7 @@
                                 {% endif %}
 
                                 {% if unterhaltung[i + 1] %}
-                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/4); margin-left: 2%;">
+                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/3); margin-left: 2%;">
                                         <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(unterhaltung[i + 1].id)) }}">
                                             <img src="{{ title_image_or_placeholder(unterhaltung[i + 1]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
@@ -452,7 +452,7 @@
                                 {% endif %}
 
                                 {% if unterhaltung[i + 2] %}
-                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/4); margin-left: 2%">
+                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/3); margin-left: 2%">
                                         <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(unterhaltung[i + 2].id)) }}">
                                             <img src="{{ title_image_or_placeholder(unterhaltung[i + 2]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
@@ -495,14 +495,14 @@
                 <div class="carousel-inner">
                     {% for i in range(0, kreatives|length, 3) %} <!--the 3 is the "step" argument, basically the equivalent of "i += 3" in a java for loop-->
                         {% if i == 0 %}
-                            <div class="carousel-item active" style="margin-top: 20px;">
+                            <div class="carousel-item active" style="margin-top: 20px; margin-bottom: 20px">
                         {% else %}
-                            <div class="carousel-item" style="margin-top: 20px;">
+                            <div class="carousel-item" style="margin-top: 20px; margin-bottom: 20px">
                         {% endif%}
                             <div class="card-container" style="display: flex; justify-content: center;">
                                 {# the list likely won't be dividable by three, so this if statement is needed to not get any IndexOutOfBoundsExceptions #}
                                 {% if kreatives[i] %}
-                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/4)">
+                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/3)">
                                         <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(kreatives[i].id)) }}">
                                             <img src="{{ title_image_or_placeholder(kreatives[i]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
@@ -519,7 +519,7 @@
                                 {% endif %}
 
                                 {% if kreatives[i + 1] %}
-                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/4); margin-left: 2%;">
+                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/3); margin-left: 2%;">
                                         <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(kreatives[i + 1].id)) }}">
                                             <img src="{{ title_image_or_placeholder(kreatives[i + 1]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
@@ -534,7 +534,7 @@
                                 {% endif %}
 
                                 {% if kreatives[i + 2] %}
-                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/4); margin-left: 2%">
+                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/3); margin-left: 2%">
                                         <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(kreatives[i + 2].id)) }}">
                                             <img src="{{ title_image_or_placeholder(kreatives[i + 2]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
@@ -573,18 +573,18 @@
         {% if surveys|length > 0 %}
             <h2><a id="title-link" href="{{ url_for('surveys.all_surveys') }}">Umfragen</a></h2>
             <br>
-            <div id="carouselExampleControls" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); height: 335px; background-color: rgb(255, 255, 255); border-radius: 10px;">
+            <div id="carouselExampleControls" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); display: block; overflow: auto; background-color: rgb(255, 255, 255); border-radius: 10px;">
                 <div class="carousel-inner">
                     {% for i in range(0, surveys|length, 3) %} <!--the 3 is the "step" argument, basically the equivalent of "i += 3" in a java for loop-->
                         {% if i == 0 %}
-                            <div class="carousel-item active" style="margin-top: 20px;">
+                            <div class="carousel-item active" style="margin-top: 20px; margin-bottom: 20px;">
                         {% else %}
-                            <div class="carousel-item" style="margin-top: 20px;">
+                            <div class="carousel-item" style="margin-top: 20px; margin-bottom: 20px;">
                         {% endif%}
                             <div class="card-container" style="display: flex; justify-content: center;">
                                 {# the list likely won't be dividable by three, so this if statement is needed to not get any IndexOutOfBoundsExceptions #}
                                 {% if surveys[i] %}
-                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/4)">
+                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/3)">
                                         <a style="text-decoration: none;" href="{{ url_for('surveys.survey', id=surveys[i].id) }}">
                                             <img src="../static/img/placeholder.png" style="height: 210px; object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
@@ -598,7 +598,7 @@
                                 {% endif %}
 
                                 {% if surveys[i + 1] %}
-                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/4); margin-left: 2%;">
+                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/3); margin-left: 2%;">
                                         <a style="text-decoration: none;" href="{{ url_for('surveys.survey', id=surveys[i + 1].id) }}">
                                             <img src="../static/img/placeholder.png" style="height: 210px; object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
@@ -610,7 +610,7 @@
                                 {% endif %}
 
                                 {% if surveys[i + 2] %}
-                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/4); margin-left: 2%">
+                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/3); margin-left: 2%">
                                         <a style="text-decoration: none;" href="{{ url_for('surveys.survey', id=surveys[i + 2].id) }}">
                                             <img src="../static/img/placeholder.png" style="height: 210px; object-fit: cover;" class="card-img-top" alt="">
                                             <div class="card-body text-center py-4">
@@ -648,4 +648,90 @@
         </h4>
     </div>
     {% endif %}
+{% endblock %}
+
+{% block footer %}
+<!--FUCK YOU BOOTSTRAP WHY IN THE FUCKING WORLD DO YOU JUST NOT WORK ON THIS STUPID ASS PAGE-->
+<div class="position-absolute start-0 end-0">
+<footer class="text-center text-lg-start bg-light text-muted" style="display: block; min-width: 100%;">
+
+    <!-- Instagram + GitHub -->
+    <section class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
+        <!-- Left -->
+        <div class="me-5 d-none d-lg-block"></div>
+
+        <!-- Right -->
+        <div>
+            <a href="https://www.instagram.com/heinews_sz/" class="me-4 text-reset text-decoration-none">
+                <i class="bi bi-instagram"></i>
+            </a>
+            <a href="https://github.com/Gruppe-Ausschussexterner-Programmierer"
+                class="me-4 text-reset text-decoration-none">
+                <i class="bi bi-github"></i>
+            </a>
+        </div>
+    </section>
+    <!-- Impressum  -->
+    <section>
+        <div class="container text-md-start mt-4 mb-4">
+            <div class="row mt-3">
+
+                <div class="col-md-3 col-lg-4 col-xl-3 mx-auto">
+                    <h6 class="text-uppercase fw-bold mb-2">
+                        <i class="bi bi-newspaper me-1"></i>HEINEWS
+                    </h6>
+                    <p>
+                        Diese Website wurde von drei Schülern aus der K2 des HHG Ostfildern entwickelt und designed:
+                        <br>
+                        Emil Schläger (Backend) <br>
+                        Emil Grümer (Frontend) <br>
+                        Finn Österreicher (Frontend)
+                    </p>
+                </div>
+
+                <div class="col-md-2 col-lg-2 col-xl-2 mx-auto">
+                    <!-- Links -->
+                    <h6 class="text-uppercase fw-bold mb-2">
+                        Links
+                    </h6>
+                    <p>
+                        <a href="imprint" class="text-reset btn-link disabled">Impressum</a>
+                    </p>
+                    <p>
+                        <a href="contact" class="text-reset btn-link disabled">Kontakt</a>
+                    </p>
+                </div>
+
+                <div class="col-md-3 col-lg-2 col-xl-2 mx-auto">
+                    <!-- Externe Links -->
+                    <h6 class="text-uppercase fw-bold mb-2">
+                        Externe Links
+                    </h6>
+                    <p>
+                        <a href="https://hhg-ostfildern.de" class="text-reset">HHG Ostfildern</a>
+                    </p>
+                </div>
+
+                <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-0 md-0">
+                    <!-- Kontakt -->
+                    <h6 class="text-uppercase fw-bold mb-2">
+                        Kontakt
+                    </h6>
+                    <p><i class="bi bi-person-fill me-3"></i>Natalie Bachayan</p>
+                    <p><i
+                            class="bi bi-house-fill me-3"></i>Heinrich-Heine-Gymnasium<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In
+                        den Anlagen 11<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;73760 Ostfildern</p>
+                    <p><i class="bi bi-envelope-fill me-3"></i>zeitung@hhg-ostfildern.de</p>
+                    <p><i class="bi bi-telephone-fill me-3"></i>0711 220707-0</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Copyright -->
+    <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
+        © 2022 HEINEWS
+    </div>
+</footer>
+</div>
 {% endblock %}

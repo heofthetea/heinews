@@ -2,12 +2,15 @@
 
 {% block title %}{{ current_user.name }}{% endblock %}
 
+
+
 {% block content %}
-<div style="margin-left: 15%; margin-right: 15%">
+<div class="container-lg" style="margin-left: 15%; margin-right: 15%">
     <br>
     <br>
     <h1>Profil</h1>
     <br>
+    <div class="table-responsive">
     <table class="table">
         <tr>
             <th>Name:</th>
@@ -88,6 +91,7 @@
             </td>
         </tr>
     </table>
+    </div>
     <br>
 
     <!--------------------------------------------------------------------------------------------------------------------------------->
@@ -95,15 +99,63 @@
     <br>
     <table class="table">
         <tr>
-            <th>Upvoted Artikel:</th>
-            <td>{{ upvoted|length }}</td>
+            <th>
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        Upvoted Artikel
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        {% for article in upvoted %}
+                        <li>
+                            <a class="dropdown-item" href="{{ url_for('articles.find_article', path='{0}.html'.format(article.id)) }}">
+                                {{ article.title }}
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </th>
+            <td style="vertical-align: middle;">{{ upvoted|length }}</td>
         </tr>
         <tr>
             
         </tr>
         <tr>
-            <th>Hochgeladene Artikel:</th>
-            <td>{{ uploaded|length }}</td>
+            <th>
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        Hochgeladene Artikel
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        {% for article in uploaded %}
+                        <li><a class="dropdown-item"
+                                href="{{ url_for('articles.find_article', path='{0}.html'.format(article.id)) }}">{{ article.title
+                                }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </th>
+            <td style="vertical-align: middle;">{{ uploaded|length }}</td>
+        </tr>
+
+        <tr>
+            <th>
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        Teilgenommene Umfragen
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        {% for participation in surveys %}
+                        <li><a class="dropdown-item" href="{{ url_for('surveys.survey', id=participation[0].id) }}">{{
+                                participation[0].title }} - Antwort: {{ participation[1].value }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </th>
+            <td style="vertical-align: middle;">{{ surveys|length }}</td>
         </tr>
     </table>
 
@@ -111,44 +163,13 @@
     <table>
         <tr>
             <td>
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                      Hochgeladene Artikel
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                        {% for article in uploaded %}
-                            <li><a class="dropdown-item" href="{{ url_for('articles.find_article', path='{0}.html'.format(article.id)) }}">{{ article.title }}</a></li>
-                        {% endfor %}
-                    </ul>
-                </div>
+                
             </td>
             <td>
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                      Upvoted Artikel
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                        {% for article in upvoted %}
-                            <li>
-                                <a class="dropdown-item" href="{{ url_for('articles.find_article', path='{0}.html'.format(article.id)) }}">
-                                    {{ article.title }}
-                                </a>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </div>
+                
             </td>
             <td>
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                        Teilgenommene Umfragen
-                      </button>
-                      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                          {% for participation in surveys %}
-                              <li><a class="dropdown-item" href="{{ url_for('surveys.survey', id=participation[0].id) }}">{{ participation[0].title }} - Antwort: {{ participation[1].value }}</a></li>
-                          {% endfor %}
-                      </ul>
-                </div>
+                
             </td>
             
         </tr>
