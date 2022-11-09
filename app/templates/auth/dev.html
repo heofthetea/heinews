@@ -49,264 +49,270 @@ DEV Panel in Dark-Mode? class="table table-dark"
 
     <br>
     <h2>Users</h2>
-    <table class="table">
-        <tr>
-            <thead>
-                <form method="POST">
-                    <th scope="col" class="col-1">
-                        ID
-                        <input type="text" name="id" id="id" class="form-control" placeholder="search">
-                    </th>
-                    <th scope="col" class="col-3">
-                        Name
-                        <input type="text" name="name" id="name" class="form-control" placeholder="search">
-                    </th>
-                    <th scope="col" class="col-3">
-                        Email
-                        <input type="text" name="email" id="email" class="form-control" placeholder="search">
-                    </th>
-                    <th scope="col" class="col-2" style="vertical-align: top">role</th>
-                    <th scope="col" class="col-1" style="vertical-align: top">email verified</th>
-                    <th scope="col" style="text-align: right; vertical-align: top;">yeet</th>
-                    <!--rendering the actual submit button first makes pressing enter execute with corresponding filtering-->
-                    <!-- -> resetting form only when the button actually is pressed-->
-                    <button type="submit" style="display: none;"></button>
-                    {% if users_filtered %}
-                        <input type="submit" name="reset_user" value="Reset Filters">
-                    {% endif %}
-                </form>
-            </thead>
-        </tr>
-        {% for user in users %}
-        <tr>
-            <tbody>
-                <td>{{ user.id }}</td>
-                <td>{{ user.name }}</td>
-                <td>{{ user.email }}</td>
-                <td>
-                    <form action="{{ url_for('dev.authorize_to_change_role', user=user.id) }}" method="POST">
-                        <select name="role" id="role" onchange="this.form.submit()">
-                            {% for role in roles %}
-                            {% if role.name == user.role %}
-                                <option value="{{ role.name }}" selected="selected">
-                                        {{ role.name }}
-                                </option>
-                            {% else %}
-                                <option value="{{ role.name }}">
-                                        {{ role.name }}
-                                </option>
-                            {% endif %}
-                            {% endfor %}
-                        </select>
+    <div class="table-responsive" style="background-color: #eee">
+        <table class="table">
+            <tr>
+                <thead>
+                    <form method="POST">
+                        <th scope="col" class="col-1">
+                            ID
+                            <input type="text" name="id" id="id" class="form-control" placeholder="search">
+                        </th>
+                        <th scope="col" class="col-3">
+                            Name
+                            <input type="text" name="name" id="name" class="form-control" placeholder="search">
+                        </th>
+                        <th scope="col" class="col-3">
+                            Email
+                            <input type="text" name="email" id="email" class="form-control" placeholder="search">
+                        </th>
+                        <th scope="col" class="col-2" style="vertical-align: top">role</th>
+                        <th scope="col" class="col-1" style="vertical-align: top">email verified</th>
+                        <th scope="col" style="text-align: right; vertical-align: top;">yeet</th>
+                        <!--rendering the actual submit button first makes pressing enter execute with corresponding filtering-->
+                        <!-- -> resetting form only when the button actually is pressed-->
+                        <button type="submit" style="display: none;"></button>
+                        {% if users_filtered %}
+                            <input type="submit" name="reset_user" value="Reset Filters">
+                        {% endif %}
                     </form>
-                </td>
-                <td>{{ user.email_confirmed }}</td>
-                <td style="text-align: right">
-                    <form action="{{ url_for('dev.authorize_to_delete_user', id=user.id) }}">
-                        <button class="btn btn-danger">&times;</button>
-                    </form>
-                </td>
-            </tbody>
-        </tr>
-        {% endfor %}
+                </thead>
+            </tr>
+            {% for user in users %}
+            <tr>
+                <tbody>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.name }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>
+                        <form action="{{ url_for('dev.authorize_to_change_role', user=user.id) }}" method="POST">
+                            <select name="role" id="role" onchange="this.form.submit()">
+                                {% for role in roles %}
+                                {% if role.name == user.role %}
+                                    <option value="{{ role.name }}" selected="selected">
+                                            {{ role.name }}
+                                    </option>
+                                {% else %}
+                                    <option value="{{ role.name }}">
+                                            {{ role.name }}
+                                    </option>
+                                {% endif %}
+                                {% endfor %}
+                            </select>
+                        </form>
+                    </td>
+                    <td>{{ user.email_confirmed }}</td>
+                    <td style="text-align: right">
+                        <form action="{{ url_for('dev.authorize_to_delete_user', id=user.id) }}">
+                            <button class="btn btn-danger">&times;</button>
+                        </form>
+                    </td>
+                </tbody>
+            </tr>
+            {% endfor %}
 
-    </table>
+        </table>
+    </div>
 
     <!---------------------------------------------------------------------------------------------------------------------->
 
-    <hr>
     <br>
     <h2>Articles</h2>
-    <table class="table">
-        <tr>
-            <thead>
-                <th scope="col" class="col-1">ID</th>
-                <th scope="col" class="col-3">title</th>
-                <th scope="col" class="col-3">author email</th>
-                <th scope="col" class="col-1">validated</th>
-                <th scope="col" class="col-1">date created</th>
-                <th scope="col" class="col-1">upvotes</th>
-                <th scope="col" style="text-align: right">yeet</th>
-            <thead>
-        </tr>
-        {% for article in articles %}
-        <tr>
-            <tbody>
-                <td>{{ article.id }}</td>
-                <td>
-                    <a href="{{ url_for('articles.find_article', path='{0}.html'.format(article.id)) }}">
-                        {{ article.title }}
-                    </a>
-                </td>
-                <td>
-                    <a href="mailto:{{ article.creator_email }}">{{ article.creator_email }}</a>
-                </td>
-                <td>{{ article.validated }}</td>
-                <td>{{ article.date_created.date().strftime("%d.%m.%Y") }}</td>
-                <td>{{ article.upvotes }}</td>
-                <td style="text-align: right">
-                    <form action="{{ url_for('dev.authorize_to_delete_article', id=article.id) }}">
-                        <button class="btn btn-danger">&times;</button>
-                    </form>
-                </td>
-            </tbody>
-        </tr>
-        {% endfor %}
+    <div class="table-responsive" style="background-color: #eee">
+        <table class="table">
+            <tr>
+                <thead>
+                    <th scope="col" class="col-1">ID</th>
+                    <th scope="col" class="col-3">title</th>
+                    <th scope="col" class="col-3">author email</th>
+                    <th scope="col" class="col-1">validated</th>
+                    <th scope="col" class="col-1">date created</th>
+                    <th scope="col" class="col-1">upvotes</th>
+                    <th scope="col" style="text-align: right">yeet</th>
+                <thead>
+            </tr>
+            {% for article in articles %}
+            <tr>
+                <tbody>
+                    <td>{{ article.id }}</td>
+                    <td>
+                        <a href="{{ url_for('articles.find_article', path='{0}.html'.format(article.id)) }}">
+                            {{ article.title }}
+                        </a>
+                    </td>
+                    <td>
+                        <a href="mailto:{{ article.creator_email }}">{{ article.creator_email }}</a>
+                    </td>
+                    <td>{{ article.validated }}</td>
+                    <td>{{ article.date_created.date().strftime("%d.%m.%Y") }}</td>
+                    <td>{{ article.upvotes }}</td>
+                    <td style="text-align: right">
+                        <form action="{{ url_for('dev.authorize_to_delete_article', id=article.id) }}">
+                            <button class="btn btn-danger">&times;</button>
+                        </form>
+                    </td>
+                </tbody>
+            </tr>
+            {% endfor %}
 
-    </table>
+        </table>
+    </div>
 
     <!---------------------------------------------------------------------------------------------------------------------->
 
-    <hr>
     <br>
     <h2>Surveys</h2>
-    <table class="table">
-        <tr>
-            <thead>
-                <th scope="col" class="col-1">ID</th>
-                <th scope="col" class="col-3">title</th>
-                <th scope="col" class="col-3">type</th>
-                <th scope="col" class="col-1">validated</th>
-                <th scope="col" class="col-1">expiry date</th>
-                <th scope="col">total votes</th>
-                <th scope="col" style="text-align: right">yeet</th>
-            </thead>
-        </tr>
-        {% for survey in surveys %}
-        <tr>
-            <tbody>
-                <td>{{ survey.id }}</td>
-                <td>
-                    <a href="{{ url_for('surveys.survey', id=survey.id) }}">
-                        {{ survey.title }}
-                    </a>
-                </td>
-                <td>
-                    {% if survey.text_answer %}
-                        text answer
-                    {% else %}
-                        multiple choice
-                    {% endif %}
-                </td>
-                <td>{{ survey.validated }}</td>
-                <td>{{ survey.expiry_date.strftime("%d.%m.%Y: %H:%M") }}</td>
-                <td>{{ survey.total_votes() }}</td>
-                <td style="text-align: right">
-                    <form action="{{ url_for('dev.authorize_to_delete_survey', id=survey.id) }}">
-                        <button class="btn btn-danger">&times;</button>
-                    </form>
-                </td>
-            </tbody>
-        </tr>
-        {% endfor %}
+    <div class="table-responsive" style="background-color: #eee">
+        <table class="table">
+            <tr>
+                <thead>
+                    <th scope="col" class="col-1">ID</th>
+                    <th scope="col" class="col-3">title</th>
+                    <th scope="col" class="col-3">type</th>
+                    <th scope="col" class="col-1">validated</th>
+                    <th scope="col" class="col-1">expiry date</th>
+                    <th scope="col">total votes</th>
+                    <th scope="col" style="text-align: right">yeet</th>
+                </thead>
+            </tr>
+            {% for survey in surveys %}
+            <tr>
+                <tbody>
+                    <td>{{ survey.id }}</td>
+                    <td>
+                        <a href="{{ url_for('surveys.survey', id=survey.id) }}">
+                            {{ survey.title }}
+                        </a>
+                    </td>
+                    <td>
+                        {% if survey.text_answer %}
+                            text answer
+                        {% else %}
+                            multiple choice
+                        {% endif %}
+                    </td>
+                    <td>{{ survey.validated }}</td>
+                    <td>{{ survey.expiry_date.strftime("%d.%m.%Y: %H:%M") }}</td>
+                    <td>{{ survey.total_votes() }}</td>
+                    <td style="text-align: right">
+                        <form action="{{ url_for('dev.authorize_to_delete_survey', id=survey.id) }}">
+                            <button class="btn btn-danger">&times;</button>
+                        </form>
+                    </td>
+                </tbody>
+            </tr>
+            {% endfor %}
 
-    </table>
+        </table>
+    </div>
 
     <!---------------------------------------------------------------------------------------------------------------------->
     
-    <hr>
     <br>
     <h2>Announcements</h2>
-    <table class="table">
-        <tr>
-            <thead>
-                <th scope="col" class="col-1">ID</th>
-                <th scope="col" class="col-6">title</th>
-                <th scope="col" class="col-1">validated</th>
-                <th scope="col" class="col-1">date submitted</th>
-                <th scope="col">creator</th>
-                <th scope="col" style="text-align: right">yeet</th>
-            </thead>
-        </tr>
-        {% for announcement in announcements %}
-        <tr>
-            <tbody>
-                <td>{{ announcement.id }}</td>
-                <td>
-                    <a href="{{ url_for('articles.announcement', id=announcement.id) }}">
-                        {{ announcement.title }}
-                    </a>
-                </td>
-                <td>{{ announcement.validated }}</td>
-                <td>{{ announcement.date_created.strftime("%d.%m.%Y: %H:%M") }}</td>
-                <td>{{ announcement.creator_email }}</td>
-                <td style="text-align: right">
-                    <form action="{{ url_for('dev.authorize_to_delete_announcement', id=announcement.id) }}">
-                        <button class="btn btn-danger">&times;</button>
-                    </form>
-                </td>
-            </tbody>
-        </tr>
-        {% endfor %}
-    
-    </table>
+    <div class="table-responsive" style="background-color: #eee">
+        <table class="table">
+            <tr>
+                <thead>
+                    <th scope="col" class="col-1">ID</th>
+                    <th scope="col" class="col-6">title</th>
+                    <th scope="col" class="col-1">validated</th>
+                    <th scope="col" class="col-1">date submitted</th>
+                    <th scope="col">creator</th>
+                    <th scope="col" style="text-align: right">yeet</th>
+                </thead>
+            </tr>
+            {% for announcement in announcements %}
+            <tr>
+                <tbody>
+                    <td>{{ announcement.id }}</td>
+                    <td>
+                        <a href="{{ url_for('articles.announcement', id=announcement.id) }}">
+                            {{ announcement.title }}
+                        </a>
+                    </td>
+                    <td>{{ announcement.validated }}</td>
+                    <td>{{ announcement.date_created.strftime("%d.%m.%Y: %H:%M") }}</td>
+                    <td>{{ announcement.creator_email }}</td>
+                    <td style="text-align: right">
+                        <form action="{{ url_for('dev.authorize_to_delete_announcement', id=announcement.id) }}">
+                            <button class="btn btn-danger">&times;</button>
+                        </form>
+                    </td>
+                </tbody>
+            </tr>
+            {% endfor %}
+        
+        </table>
+    </div>
     
     <!---------------------------------------------------------------------------------------------------------------------->
     
     <h2>Tags</h2>
-    <table class="table">
-        <tr>
-            <thead>
-                <th scope="col">tag</th>
-                <th scope="col" style="text-align: right">yeet</th>
-            </thead>
-        </tr>
-        {% for tag in tags %}
-        <tr>
-            <tbody>
-                <td>
-                    <a href="{{ url_for('tag.articles_by_tag', tag=tag.tag.replace('#', '')) }}">
-                        {{ tag.tag }}
-                    </a>
-                </td>
-                <td style="text-align: right">
-                    <form action="{{ url_for('dev.authorize_to_delete_tag', tag=tag.tag) }}">
-                        <button class="btn btn-danger">&times;</button>
-                    </form>
-                </td>
-            </tbody>
-        </tr>
-        {% endfor %}
+    <div class="table-responsive" style="background-color: #eee">
+        <table class="table">
+            <tr>
+                <thead>
+                    <th scope="col">tag</th>
+                    <th scope="col" style="text-align: right">yeet</th>
+                </thead>
+            </tr>
+            {% for tag in tags %}
+            <tr>
+                <tbody>
+                    <td>
+                        <a href="{{ url_for('tag.articles_by_tag', tag=tag.tag.replace('#', '')) }}">
+                            {{ tag.tag }}
+                        </a>
+                    </td>
+                    <td style="text-align: right">
+                        <form action="{{ url_for('dev.authorize_to_delete_tag', tag=tag.tag) }}">
+                            <button class="btn btn-danger">&times;</button>
+                        </form>
+                    </td>
+                </tbody>
+            </tr>
+            {% endfor %}
 
-    </table>
+        </table>
+    </div>
 
 
     <!---------------------------------------------------------------------------------------------------------------------->
 
-    <hr>
     <br>
     <h2>Banned Users</h2>
-    <table class="table">
-        <tr>
-            <thead>
-                <th scope="col">email</th>
-                <th scope="col">ban expires</th>
-                <th scope="col" style="text-align: right">lift ban</th>
-            </thead>
-        </tr>
-        {% for ban in banned_users %}
-        <tr>
-            <tbody>
-                <td>
-                    {{ ban.email }}
-                </td>
-                <td>
-                    {{ ban.expiry_date.strftime("%d.%m.%Y: %H:%M") }}
-                </td>
-                <td style="text-align: right">
-                    <form action="{{ url_for('dev.authorize_to_unban', id=ban.id) }}">
-                        <button class="btn btn-success">&times;</button>
-                    </form>
-                </td>
-            </tbody>
-        </tr>
-        {% endfor %}
-    
-    </table>
+    <div class="table-responsive" style="background-color: #eee">
+        <table class="table">
+            <tr>
+                <thead>
+                    <th scope="col">email</th>
+                    <th scope="col">ban expires</th>
+                    <th scope="col" style="text-align: right">lift ban</th>
+                </thead>
+            </tr>
+            {% for ban in banned_users %}
+            <tr>
+                <tbody>
+                    <td>
+                        {{ ban.email }}
+                    </td>
+                    <td>
+                        {{ ban.expiry_date.strftime("%d.%m.%Y: %H:%M") }}
+                    </td>
+                    <td style="text-align: right">
+                        <form action="{{ url_for('dev.authorize_to_unban', id=ban.id) }}">
+                            <button class="btn btn-success">&times;</button>
+                        </form>
+                    </td>
+                </tbody>
+            </tr>
+            {% endfor %}
+        
+        </table>
+    </div>
 
     <!---------------------------------------------------------------------------------------------------------------------->
-
-    <hr>
     <br>
     <table class="table">
         <tr>
