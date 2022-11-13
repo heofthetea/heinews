@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 
 {% block css %}
+<style>
+    #mobile-error {
+        width: 100%;
+    }
+</style>
 {% endblock %}
 
 {% block title %}
@@ -8,16 +13,14 @@ ERROR {{ error["code"] }}
 {% endblock %}
 
 {% block content %}
-<div class="container-xl">
+<div class="container-lg d-none d-lg-block">
     <br>
     <div class="container">
         <div class="row">
             <br>
-            {% block error_code %}
-                <h1>HEINEWS</h1>
-                <br>
-                <br>
-            {% endblock %}
+            <h1>HEINEWS</h1>
+            <br>
+            <br>
         
             <br>
         </div>
@@ -26,13 +29,11 @@ ERROR {{ error["code"] }}
                 <div class="div" style=" margin-top: 100px; margin-bottom: auto">
                     <h2 color="#f00">ERROR {{ error["code"] }}: {{ error["name"]}}</h1>
                     <br>
-                    {% block description %}
-                        {% if error["description"] %}
-                            {{ error["description"] }}
-                        {% else %}
-                            Da lief wohl etwas schief. Wenn Du diesen exakten Error sehr häufig bekommst, wende Dich doch mal an uns. Vielleicht hilfst Du uns dadurch, Fehler zu entdecken :)
-                        {% endif %}
-                    {% endblock %}
+                    {% if error["description"] %}
+                        {{ error["description"] }}
+                    {% else %}
+                        Da lief wohl etwas schief. Wenn Du diesen exakten Error sehr häufig bekommst, wende Dich doch mal an uns. Vielleicht hilfst Du uns dadurch, Fehler zu entdecken :)
+                    {% endif %}
                     <br>
                     <br>
                     <a href="/" type="button" class="btn btn-primary">Zurück zur Homepage</a>
@@ -40,10 +41,63 @@ ERROR {{ error["code"] }}
             </div>
             <div class="col-6">
                 {% if error["image"] == "teapot" %}
-                    <img src="/static/img/teapot.png" alt="That's supposed to be a teapot. If you see this instead, the server must be that pissed to not even show it to you.">
+                    <img style="height: 500px; display: block; margin-left: auto; margin-right: auto" src="/static/img/teapot.png" alt="That's supposed to be a teapot. If you see this instead, the server must be that pissed to not even show it to you.">
                 {% else %}
                     <img style="height: 500px; display: block; margin-left: auto; margin-right: auto" src="/static/img/error.png" alt="Whoops... Da lief wohl etwas so gehörig schief, dass wir Dir nicht mal ein lustiges Bildchen zeigen können - Aber es sei dir versichert, dass unser Künstler trotzdem einen guten Job gemacht hat.">
                 {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!------------------------------------------------------------------------------------------------------------------------------------------>
+<!------------------------------------------------------------------------------------------------------------------------------------------>
+<!------------------------------------------------------------------------------------------------------------------------------------------>
+<!------------------------------------------------------------------------------------------------------------------------------------------>
+<!--------------------------------------------------------MOBILE VERSION-------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------------------------------------------------------>
+<!------------------------------------------------------------------------------------------------------------------------------------------>
+<!------------------------------------------------------------------------------------------------------------------------------------------>
+<!------------------------------------------------------------------------------------------------------------------------------------------>
+
+<div class="container-lg d-lg-none p-0">
+    <br>
+    <div class="container">
+        <div class="row" style="text-align: center;">
+            <h1>HEINEWS</h1>
+        </div>
+
+        <div class="row">
+            {% if error["image"] == "teapot" %}
+                    <img 
+                        src="/static/img/teapot.png" 
+                        alt="That's supposed to be a teapot. If you see this instead, the server must be that pissed to not even show it to you."
+                        id="mobile-error"
+                    />
+                {% else %}
+                    <img 
+                        src="/static/img/error.png" 
+                        alt="Whoops... Da lief wohl etwas so gehörig schief, dass wir Dir nicht mal ein lustiges Bildchen zeigen können - Aber es sei dir versichert, dass unser Künstler trotzdem einen guten Job gemacht hat."
+                        id="mobile-error"
+                    />
+                {% endif %}
+
+        </div>
+
+        <div class="row">
+            <div class="container-fluid p-1">
+                <div style="text-align: center;">
+                    <h2 color="#f00">ERROR {{ error["code"] }}: {{ error["name"]}}</h1>
+                    <p>
+                        {% if error["description"] %}
+                            {{ error["description"] }}
+                        {% else %}
+                            Da lief wohl etwas schief. Wenn Du diesen exakten Error sehr häufig bekommst, wende Dich doch mal an uns. Vielleicht hilfst Du uns dadurch, Fehler zu entdecken :)
+                        {% endif %}
+                    </p>
+                    <br>
+                    <a href="/" type="button" class="btn btn-primary">Zurück zur Homepage</a>
+                </div>
             </div>
         </div>
     </div>

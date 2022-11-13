@@ -2,162 +2,170 @@
 
 {% block title %}{{ current_user.name }}{% endblock %}
 
-
+{% block css %}
+<style>
+    #profile-data {
+        text-align: right;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="container-lg" style="margin-left: 15%; margin-right: 15%">
+<div class="container p-2">
     <br>
     <br>
     <h1>Profil</h1>
     <br>
     <div class="table-responsive">
-    <table class="table">
-        <tr>
-            <th>Name:</th>
-            <td>{{  current_user.name  }}</td>
-        </tr>
-        <tr>
-            <th>Email:</th>
-            <td>{{  current_user.email  }}</td>
-        </tr>
-        <tr>
-            <th>Rollen:</th>
-            <td>    <!-- TODO: Namen für die Rollen finden  -->
-                {% if current_user.role == "user" %}
-                    Benutzer
-                {% elif current_user.role == "upload"%}
-                    Hochladen
-                {% elif current_user.role == "validate"%}
-                    Überprüfen
-                {% elif current_user.role == "developer"%}
-                    Entwickler
-                {% endif %}
-            </td>
-        </tr>
-        <tr>
-            <th>Email Benachrichtigungen:</th>
-            <td>
-                <form action="{{ url_for('auth.change_notification_settings') }}", method="POST">
-                    <label for="notifications">
-                    <input 
-                        type="checkbox" 
-                        id="notifications" 
-                        name="notifications" 
-                        onchange="this.form.submit()" 
-                        {# I am surprised this way of writing jinja if-statements actually works xd #}
-                        {% if current_user.notifications %}
-                        checked
-                        {% endif %}
-                    />
-                </form>
-                {% if current_user.notifications == true %}
-                    Aktiviert
-                {% else %}
-                    Deaktiviert
-                {% endif %}
-
-            </td>
-        </tr>
-        {% if not current_user.email_confirmed %}
+        <table class="table">
             <tr>
-                <th>Verifizieren:</th>
-                <td>
-                    <b>Dir wurde eine Mail mit Link gesendet</b> <!--TODO option to resend mail-->
+                <th>Name:</th>
+                <td id="profile-data">{{  current_user.name  }}</td>
+            </tr>
+            <tr>
+                <th>Email:</th>
+                <td id="profile-data">{{  current_user.email  }}</td>
+            </tr>
+            <tr>
+                <th>Rollen:</th>
+                <td id="profile-data">    <!-- TODO: Namen für die Rollen finden  -->
+                    {% if current_user.role == "user" %}
+                        Benutzer
+                    {% elif current_user.role == "upload"%}
+                        Hochladen
+                    {% elif current_user.role == "validate"%}
+                        Überprüfen
+                    {% elif current_user.role == "developer"%}
+                        Entwickler
+                    {% endif %}
                 </td>
             </tr>
-        {% endif %}
-        <tr>
-            <th>Passwort zurücksetzen:</th>
-            <td>
-                {% if reset %}
-                    <b>Dir wurde eine Mail mit Link gesendet</b>
-                {% else %}
-                    <form action="{{ url_for('auth.send_reset_mail', user_id=current_user.id) }}">
-                        <button class="btn btn-primary" type="submit">Neues Passwort anfragen</button>
+            <tr>
+                <th>Email Benachrichtigungen:</th>
+                <td id="profile-data">
+                    <form action="{{ url_for('auth.change_notification_settings') }}", method="POST">
+                        <label for="notifications">
+                        <input 
+                            type="checkbox" 
+                            id="notifications" 
+                            name="notifications" 
+                            onchange="this.form.submit()" 
+                            {# I am surprised this way of writing jinja if-statements actually works xd #}
+                            {% if current_user.notifications %}
+                            checked
+                            {% endif %}
+                        />
                     </form>
-                {% endif %}
-            </td>
-        </tr>
-        <tr>
-            <th>Account löschen:</th>
-            <td>
-                {% if delete %}
-                    <b>Dir wurde eine Mail mit Link gesendet</b>
-                {% else %}
-                    <form action="{{ url_for('auth.send_delete_mail', user_id=current_user.id) }}">
-                        <button class="btn btn-danger" type="submit">Löschen anfragen</button>
-                    </form>
-                {% endif %}
-            </td>
-        </tr>
-    </table>
+                    {% if current_user.notifications == true %}
+                        Aktiviert
+                    {% else %}
+                        Deaktiviert
+                    {% endif %}
+
+                </td>
+            </tr>
+            {% if not current_user.email_confirmed %}
+                <tr>
+                    <th>Verifizieren:</th>
+                    <td id="profile-data">
+                        <b>Dir wurde eine Mail mit Link gesendet</b> <!--TODO option to resend mail-->
+                    </td>
+                </tr>
+            {% endif %}
+            <tr>
+                <th>Passwort zurücksetzen:</th>
+                <td id="profile-data">
+                    {% if reset %}
+                        <b>Dir wurde eine Mail mit Link gesendet</b>
+                    {% else %}
+                        <form action="{{ url_for('auth.send_reset_mail', user_id=current_user.id) }}">
+                            <button class="btn btn-primary" type="submit">Neues Passwort anfragen</button>
+                        </form>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Account löschen:</th>
+                <td id="profile-data">
+                    {% if delete %}
+                        <b>Dir wurde eine Mail mit Link gesendet</b>
+                    {% else %}
+                        <form action="{{ url_for('auth.send_delete_mail', user_id=current_user.id) }}">
+                            <button class="btn btn-danger" type="submit">Löschen anfragen</button>
+                        </form>
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
     </div>
     <br>
 
     <!--------------------------------------------------------------------------------------------------------------------------------->
     <h3>Statistiken</h3>
     <br>
-    <table class="table">
-        <tr>
-            <th>
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                        Upvoted Artikel
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                        {% for article in upvoted %}
-                        <li>
-                            <a class="dropdown-item" href="{{ url_for('articles.find_article', path='{0}.html'.format(article.id)) }}">
-                                {{ article.title }}
-                            </a>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </th>
-            <td style="vertical-align: middle;">{{ upvoted|length }}</td>
-        </tr>
-        <tr>
-            
-        </tr>
-        <tr>
-            <th>
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                        Hochgeladene Artikel
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                        {% for article in uploaded %}
-                        <li><a class="dropdown-item"
-                                href="{{ url_for('articles.find_article', path='{0}.html'.format(article.id)) }}">{{ article.title
-                                }}</a></li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </th>
-            <td style="vertical-align: middle;">{{ uploaded|length }}</td>
-        </tr>
+    <div class="table-responsive">
+        <table class="table">
+            <tr>
+                <th>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            Upvoted Artikel
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                            {% for article in upvoted %}
+                            <li>
+                                <a class="dropdown-item" href="{{ url_for('articles.find_article', path='{0}.html'.format(article.id)) }}">
+                                    {{ article.title }}
+                                </a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </th>
+                <td style="vertical-align: middle;">{{ upvoted|length }}</td>
+            </tr>
+            <tr>
+                
+            </tr>
+            <tr>
+                <th>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            Hochgeladene Artikel
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                            {% for article in uploaded %}
+                            <li><a class="dropdown-item"
+                                    href="{{ url_for('articles.find_article', path='{0}.html'.format(article.id)) }}">{{ article.title
+                                    }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </th>
+                <td style="vertical-align: middle;">{{ uploaded|length }}</td>
+            </tr>
 
-        <tr>
-            <th>
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                        Teilgenommene Umfragen
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                        {% for participation in surveys %}
-                        <li><a class="dropdown-item" href="{{ url_for('surveys.survey', id=participation[0].id) }}">{{
-                                participation[0].title }} - Antwort: {{ participation[1].value }}</a></li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </th>
-            <td style="vertical-align: middle;">{{ surveys|length }}</td>
-        </tr>
-    </table>
+            <tr>
+                <th>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            Teilgenommene Umfragen
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                            {% for participation in surveys %}
+                            <li><a class="dropdown-item" href="{{ url_for('surveys.survey', id=participation[0].id) }}">{{
+                                    participation[0].title }} - Antwort: {{ participation[1].value }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </th>
+                <td style="vertical-align: middle;">{{ surveys|length }}</td>
+            </tr>
+        </table>
+    </div>
 
     <!-- Dropdown menu -->
     <table>

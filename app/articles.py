@@ -64,12 +64,18 @@ def announcement(id):
 
 @articles.route("/all")
 def all_articles() -> None:
-    return render_template("overview/all.html", articles=Article.__validated_articles__(Article).all())
+    return render_template(
+        "overview/all.html", 
+        articles=Article.__validated_articles__(Article).all()
+    )
 
 
 @articles.route("/category/<category>")
 def by_category(category: str):
-    return render_template(f"overview/{category}.html", articles=Article.__validated_articles__(Article).filter_by(category=category).all())
+    return render_template(
+        f"overview/{category}.html", 
+        articles=Article.__validated_articles__(Article).filter_by(category=category).all()
+    )
 
 
 @articles.route("/upvote/<id>", methods=["POST"])

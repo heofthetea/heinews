@@ -3,12 +3,55 @@
 {% block title %}article overview{% endblock %}
 
 {% block content %}
-    {% for article in articles %}
-        {% if article.validated or get_user_role(current_user).can_validate %}
-        <a href="{{ url_for('articles.find_article', path='{0}.html'.format(article.id)) }}">
-            {{ article.title }}
-            <br>
-        </a>
-        {% endif %}
-    {% endfor %}
+    <div class="container mt-5 mb-5">
+        <div class="row">
+            <div class="col-8">
+                <div class="container">
+                    {% for i in range(0, articles|length, 3) %}
+                    <div class="row">
+                        {% if articles[i] %}
+                            <div class="col p-1">
+                                <div class="card" style="width: 15rem;">
+                                    <img src="{{ title_image_or_placeholder(articles[i]).replace('..', '') }}" class="card-img-top" alt="Img" width="320"
+                                        height="180">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ articles[i].title }}</h5>
+                                        <a href="{{ url_for('articles.find_article', path=articles[i].id + '.html') }}"
+                                            class="stretched-link"></a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% if articles[i + 1] %}
+                            <div class="col p-1">
+                                <div class="card" style="width: 15rem;">
+                                    <img src="{{ title_image_or_placeholder(articles[i]).replace('..', '') }}" class="card-img-top" alt="Img" width="320"
+                                        height="180">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ articles[i + 1].title }}</h5>
+                                        <a href="{{ url_for('articles.find_article', path=articles[i + 1].id + '.html') }}"
+                                            class="stretched-link"></a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% if articles[i + 2] %}
+                            <div class="col p-1">
+                                <div class="card" style="width: 15rem;">
+                                    <img src="{{ title_image_or_placeholder(articles[i]).replace('..', '') }}" class="card-img-top" alt="Img" width="320"
+                                        height="180">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ articles[i + 2].title }}</h5>
+                                        <a href="{{ url_for('articles.find_article', path=articles[i + 2].id + '.html') }}"
+                                            class="stretched-link"></a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
