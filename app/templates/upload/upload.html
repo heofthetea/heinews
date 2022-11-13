@@ -9,46 +9,49 @@
     <h1>Artikel hochladen</h1>
     <br>
     <form method="POST" enctype="multipart/form-data">
-        <table>
-            <tr>
-                <td scope="col" class="col-2">
-                    <div class="container" style="border-radius: 1rem; background-color:rgb(243, 243, 243)">
-                        <br>
-                        <div class="row">
-                            <div class="col-6" style="margin-left: 2%">
-                                <label for="num-images">Wähle aus, wie viele Bilder Dein Artikel haben soll *</label>
+        <div class="table-responsive">
+            <table>
+                <tr>
+                    <td scope="col" class="col-2">
+                        <div class="container" style="border-radius: 1rem; background-color:rgb(243, 243, 243); width: fit-content">
+                            <br>
+                            <div class="row">
+                                <div class="col-6" style="margin-left: 2%">
+                                    <label for="num-images">Wähle aus, wie viele Bilder Dein Artikel haben soll *</label>
+                                </div>
+                                <div class="col-5">
+                                    <select id="num-images" name="num-images" required>
+                                        <option value="0" selected>0</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                    </select>
+                                </div>
                             </div>
-                            <div class="col-5">
-                                <select id="num-images" name="num-images" required>
-                                    <option value="0" selected>0</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
-                                    <option value="6">6</option>
-                                    <option value="7">7</option>
-                                    <option value="8">8</option>
-                                    <option value="9">9</option>
-                                    <option value="10">10</option>
-                                </select>
+                            <hr>
+                            <div class="row">
+                                <div class="col-6" style="margin-left: 2%">
+                                    <label for="file">Lade hier Deine Artikeldatei hoch: *</label>
+                                </div>
+                                <div class="col-5">
+                                    <input type="file" name="file" style="font-weight: bold;">
+                                    <br>
+                                    <br>
+                                </div>
                             </div>
                         </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-6" style="margin-left: 2%">
-                                <label for="file">Lade hier Deine Artikeldatei hoch: *</label>
-                            </div>
-                            <div class="col-5">
-                                <input type="file" name="file" style="font-weight: bold;">
-                                <br>
-                                <br>
-                            </div>  
-                        </div>
-                    </div>
-                </td>
-            </tr>
-        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        
         <br>
         <div class="container">
             <div class="row">

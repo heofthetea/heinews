@@ -12,6 +12,7 @@ class Article(db.Model):
     description = db.Column(db.String(512))
     date_created = db.Column(db.DateTime(timezone=True), default=datetime.now())
     validated = db.Column(db.Boolean(), default=False)
+    official = db.Column(db.Boolean(), default=True) # row not anywhere in use yet
     upvotes = db.Column(db.Integer, nullable=False, default=0)
     primary_image = db.Column(db.String(128))
     category = db.Column(db.String(64), db.ForeignKey("category.name"))
@@ -46,6 +47,7 @@ class User(db.Model, UserMixin):
     email_confirmed = db.Column(db.Boolean(), default=False)
     password = db.Column(db.String(128))
     notifications = db.Column(db.Boolean())
+    anonymous = db.Column(db.Boolean(), default=False) # row not in use anywhere yet
     role = db.Column(db.String(32), db.ForeignKey("role.name"), default="user")
 
     # no this is not necessary I'm just too lazy to learn joins

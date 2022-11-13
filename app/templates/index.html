@@ -77,67 +77,52 @@
             <br>
 
 
+
+
+
+
+<!------------------------------------------------------------------------------------------------------------------------------------------>
+<!------------------------------------------------------------------------------------------------------------------------------------------>
+<!------------------------------------------------------------------------------------------------------------------------------------------>
+<!------------------------------------------------------------------------------------------------------------------------------------------>
+<!--------------------------------------------------------MOBILE VERSION-------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------------------------------------------------------>
+<!------------------------------------------------------------------------------------------------------------------------------------------>
+<!------------------------------------------------------------------------------------------------------------------------------------------>
+<!------------------------------------------------------------------------------------------------------------------------------------------>
+
+
+<!--For some absolutely ridicoulusly stupid reason, bootstrap would not have its card sliders work if there's more than one version. Thus I sacrificed the desktop version for the mobile look - I hate it.-->
+
+
+    <div class="container p-0">
         <!--Aktuelles-->
         {% if aktuelles|length > 0 %}
             <h2><a id="title-link" href="/article/category/aktuelles">Aktuelles</a></h2> <!--Alternative: 1. blue tone 4, 20, 43 2. triangle <h2>Aktuelles▼</h2>-->
             <br>
             <div id="carouselExampleControls" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); display: block; overflow: auto; background-color: rgb(255, 255, 255); border-radius: 10px;">
                 <div class="carousel-inner">
-                    {% for i in range(0, aktuelles|length, 3) %} <!--the 3 is the "step" argument, basically the equivalent of "i += 3" in a java for loop-->
+                    {% for i in range(0, aktuelles|length) %}
                         {% if i == 0 %}
                             <div class="carousel-item active" style="margin-top: 20px; margin-bottom: 20px;">
                         {% else %}
                             <div class="carousel-item" style="margin-top: 20px; margin-bottom: 20px;">
                         {% endif%}
                             <div class="card-container" style="display: flex; justify-content: center;">
-                                {# the list likely won't be dividable by three, so this if statement is needed to not get any IndexOutOfBoundsExceptions #}
-                                {% if aktuelles[i] %}
-                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/3)">
-                                        <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(aktuelles[i].id)) }}">
-                                            <img src="{{ title_image_or_placeholder(aktuelles[i]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
-                                            <div class="card-body text-center py-4">
-                                                <h4 class="card-title">{{ aktuelles[i].title }}</h4>
-                                                <p id="card-subtitle" class="lead card-subtitle">
-                                                    {{ cap_text(aktuelles[i].description) }}
-                                                </p>
-                                                <br>
-                                                <br>
-                                                <p id="card-date">{{ aktuelles[i].date_created.date().strftime("%d.%m.%Y") }}</p>
-                                            </div>
-                                        </a>    
-                                    </div>
-                                {% endif %}
-
-                                {% if aktuelles[i + 1] %}
-                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/3); margin-left: 2%;">
-                                        <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(aktuelles[i + 1].id)) }}">
-                                            <img src="{{ title_image_or_placeholder(aktuelles[i + 1]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
-                                            <div class="card-body text-center py-4">
-                                                <h4 class="card-title">{{ aktuelles[i + 1].title }}</h4>
-                                                <p class="lead card-subtitle">{{ cap_text(aktuelles[i + 1].description) }}</p>
-                                                <br>
-                                                <br>
-                                                <p id="card-date">{{ aktuelles[i].date_created.date().strftime("%d.%m.%Y") }}</p>
-                                            </div>
-                                        </a>    
-                                    </div>
-                                {% endif %}
-
-                                {% if aktuelles[i + 2] %}
-                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/3); margin-left: 2%">
-                                        <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(aktuelles[i + 2].id)) }}">
-                                            <img src="{{ title_image_or_placeholder(aktuelles[i + 2]) }}" style="height: 200px;  object-fit: cover;" class="card-img-top" alt="">
-                                            <div class="card-body text-center py-4">
-                                                <h4 class="card-title">{{ aktuelles[i + 2].title }}</h4>
-                                                <p class="lead card-subtitle">{{ cap_text(aktuelles[i + 2].description) }}</p>
-                                                <br>
-                                                <br>
-                                                <p id="card-date">{{ aktuelles[i].date_created.date().strftime("%d.%m.%Y") }}</p>
-                                            </div>
-                                        </a>    
-                                    </div>
-                                {% endif %}
-                        
+                                <div class="card card-block border-1 border-secondary" style="width: calc(100%/1.5); max-width: 400px;">
+                                    <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(aktuelles[i].id)) }}">
+                                        <img src="{{ title_image_or_placeholder(aktuelles[i]) }}" style="max-height: 300px; object-fit: cover;" class="card-img-top" alt="">
+                                        <div class="card-body text-center py-4">
+                                            <h4 class="card-title">{{ aktuelles[i].title }}</h4>
+                                            <p id="card-subtitle" class="lead card-subtitle">
+                                                {{ cap_text(aktuelles[i].description) }}
+                                            </p>
+                                            <br>
+                                            <br>
+                                            <p id="card-date">{{ aktuelles[i].date_created.date().strftime("%d.%m.%Y") }}</p>
+                                        </div>
+                                    </a>    
+                                </div>
                             </div>
                         </div>
                     {% endfor %}
@@ -147,7 +132,7 @@
                     <span class="visually-hidden">Previous</span>
                 </button>
                 <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="carousel-control-next-icon" aria-hidden="false"></span>
                     <span class="visually-hidden">Next</span>
                 </button>
             </div>
@@ -165,61 +150,27 @@
             <br>
             <div id="carouselExampleControls" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); display: block; overflow: auto; background-color: rgb(255, 255, 255); border-radius: 10px;">
                 <div class="carousel-inner">
-                    {% for i in range(0, wissen|length, 3) %} <!--the 3 is the "step" argument, basically the equivalent of "i += 3" in a java for loop-->
+                    {% for i in range(0, wissen|length) %}
                         {% if i == 0 %}
                             <div class="carousel-item active" style="margin-top: 20px; margin-bottom: 20px">
                         {% else %}
                             <div class="carousel-item" style="margin-top: 20px; margin-bottom: 20px">
                         {% endif%}
                             <div class="card-container" style="display: flex; justify-content: center;">
-                                {# the list likely won't be dividable by three, so this if statement is needed to not get any IndexOutOfBoundsExceptions #}
-                                {% if wissen[i] %}
-                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/3)">
-                                        <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(wissen[i].id)) }}">
-                                            <img src="{{ title_image_or_placeholder(wissen[i]) }}" style="height: 200px ;  object-fit: cover;" class="card-img-top" alt="">
-                                            <div class="card-body text-center py-4">
-                                                <h4 class="card-title">{{ wissen[i].title }}</h4>
-                                                <p class="lead card-subtitle">
-                                                    {{ cap_text(wissen[i].description) }}
-                                                </p>
-                                                <br>
-                                                <br>
-                                                <p id="card-date">{{ wissen[i].date_created.date().strftime("%d.%m.%Y") }}</p>
-                                            </div>
-                                        </a>    
-                                    </div>
-                                {% endif %}
-
-                                {% if wissen[i + 1] %}
-                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/3); margin-left: 2%;">
-                                        <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(wissen[i + 1].id)) }}">
-                                            <img src="{{ title_image_or_placeholder(wissen[i + 1]) }}" style="height: 200px;  object-fit: cover;" class="card-img-top" alt="">
-                                            <div class="card-body text-center py-4">
-                                                <h4 class="card-title">{{ wissen[i + 1].title }}</h4>
-                                                <p class="lead card-subtitle">{{ cap_text(wissen[i + 1].description) }}</p>
-                                                <br>
-                                                <br>
-                                                <p id="card-date">{{ wissen[i].date_created.date().strftime("%d.%m.%Y") }}</p>
-                                            </div>
-                                        </a>    
-                                    </div>
-                                {% endif %}
-
-                                {% if wissen[i + 2] %}
-                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/3); margin-left: 2%">
-                                        <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(wissen[i + 2].id)) }}">
-                                            <img src="{{ title_image_or_placeholder(wissen[i + 2]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
-                                            <div class="card-body text-center py-4">
-                                                <h4 class="card-title">{{ wissen[i + 2].title }}</h4>
-                                                <p class="lead card-subtitle">{{ cap_text(wissen[i + 2].description) }}}</p>
-                                                <br>
-                                                <br>
-                                                <p id="card-date">{{ wissen[i].date_created.date().strftime("%d.%m.%Y") }}</p>
-                                            </div>
-                                        </a>    
-                                    </div>
-                                {% endif %}
-                        
+                                <div class="card card-block border-1 border-secondary" style="width: calc(100%/1.5); max-width: 400px;">
+                                    <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(wissen[i].id)) }}">
+                                        <img src="{{ title_image_or_placeholder(wissen[i]) }}" style="max-height: 300px ;  object-fit: cover;" class="card-img-top" alt="">
+                                        <div class="card-body text-center py-4">
+                                            <h4 class="card-title">{{ wissen[i].title }}</h4>
+                                            <p class="lead card-subtitle">
+                                                {{ cap_text(wissen[i].description) }}
+                                            </p>
+                                            <br>
+                                            <br>
+                                            <p id="card-date">{{ wissen[i].date_created.date().strftime("%d.%m.%Y") }}</p>
+                                        </div>
+                                    </a>    
+                                </div>
                             </div>
                         </div>
                     {% endfor %}
@@ -247,61 +198,27 @@
             <br>
             <div id="carouselExampleControls" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); display: block; overflow: auto; background-color: rgb(255, 255, 255); border-radius: 10px;">
                 <div class="carousel-inner">
-                    {% for i in range(0, schulleben|length, 3) %} <!--the 3 is the "step" argument, basically the equivalent of "i += 3" in a java for loop-->
+                    {% for i in range(0, schulleben|length) %}
                         {% if i == 0 %}
                             <div class="carousel-item active" style="margin-top: 20px; margin-bottom: 20px">
                         {% else %}
                             <div class="carousel-item" style="margin-top: 20px; margin-bottom: 20px">
                         {% endif%}
                             <div class="card-container" style="display: flex; justify-content: center;">
-                                {# the list likely won't be dividable by three, so this if statement is needed to not get any IndexOutOfBoundsExceptions #}
-                                {% if schulleben[i] %}
-                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/3)">
-                                        <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(schulleben[i].id)) }}">
-                                            <img src="{{ title_image_or_placeholder(schulleben[i]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
-                                            <div class="card-body text-center py-4">
-                                                <h4 class="card-title">{{ schulleben[i].title }}</h4>
-                                                <p class="lead card-subtitle">
-                                                    {{ cap_text(schulleben[i].description) }}
-                                                </p>
-                                                <br>
-                                                <br>
-                                                <p id="card-date">{{ schulleben[i].date_created.date().strftime("%d.%m.%Y") }}</p>
-                                            </div>
-                                        </a>    
-                                    </div>
-                                {% endif %}
-
-                                {% if schulleben[i + 1] %}
-                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/3); margin-left: 2%;">
-                                        <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(schulleben[i + 1].id)) }}">
-                                            <img src="{{ title_image_or_placeholder(schulleben[i + 1]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
-                                            <div class="card-body text-center py-4">
-                                                <h4 class="card-title">{{ schulleben[i + 1].title }}</h4>
-                                                <p class="lead card-subtitle">{{ cap_text(schulleben[i + 1].description) }}}</p>
-                                                <br>
-                                                <br>
-                                                <p id="card-date">{{ schulleben[i].date_created.date().strftime("%d.%m.%Y") }}</p>
-                                            </div>
-                                        </a>    
-                                    </div>
-                                {% endif %}
-
-                                {% if schulleben[i + 2] %}
-                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/3); margin-left: 2%">
-                                        <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(schulleben[i + 2].id)) }}">
-                                            <img src="{{ title_image_or_placeholder(schulleben[i + 2]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
-                                            <div class="card-body text-center py-4">
-                                                <h4 class="card-title">{{ schulleben[i + 2].title }}</h4>
-                                                <p class="lead card-subtitle">{{ cap_text(schulleben[i + 2].description) }}</p>
-                                                <br>
-                                                <br>
-                                                <p id="card-date">{{ schulleben[i].date_created.date().strftime("%d.%m.%Y") }}</p>
-                                            </div>
-                                        </a>    
-                                    </div>
-                                {% endif %}
-                        
+                                <div class="card card-block border-1 border-secondary" style="width: calc(100%/1.5); max-width: 400px;">
+                                    <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(schulleben[i].id)) }}">
+                                        <img src="{{ title_image_or_placeholder(schulleben[i]) }}" style="max-height: 300px; object-fit: cover;" class="card-img-top" alt="">
+                                        <div class="card-body text-center py-4">
+                                            <h4 class="card-title">{{ schulleben[i].title }}</h4>
+                                            <p class="lead card-subtitle">
+                                                {{ cap_text(schulleben[i].description) }}
+                                            </p>
+                                            <br>
+                                            <br>
+                                            <p id="card-date">{{ schulleben[i].date_created.date().strftime("%d.%m.%Y") }}</p>
+                                        </div>
+                                    </a>    
+                                </div>
                             </div>
                         </div>
                     {% endfor %}
@@ -329,61 +246,27 @@
             <br>
             <div id="carouselExampleControls" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); display: block; overflow: auto; background-color: rgb(255, 255, 255); border-radius: 10px;">
                 <div class="carousel-inner">
-                    {% for i in range(0, lifestyle|length, 3) %} <!--the 3 is the "step" argument, basically the equivalent of "i += 3" in a java for loop-->
+                    {% for i in range(0, lifestyle|length) %}
                         {% if i == 0 %}
                             <div class="carousel-item active" style="margin-top: 20px; margin-bottom: 20px">
                         {% else %}
                             <div class="carousel-item" style="margin-top: 20px; margin-bottom: 20px">
                         {% endif%}
                             <div class="card-container" style="display: flex; justify-content: center;">
-                                {# the list likely won't be dividable by three, so this if statement is needed to not get any IndexOutOfBoundsExceptions #}
-                                {% if lifestyle[i] %}
-                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/3)">
-                                        <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(lifestyle[i].id)) }}">
-                                            <img src="{{ title_image_or_placeholder(lifestyle[i]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
-                                            <div class="card-body text-center py-4">
-                                                <h4 class="card-title">{{ lifestyle[i].title }}</h4>
-                                                <p class="lead card-subtitle">
-                                                    {{ cap_text(lifestyle[i].description) }}
-                                                </p>
-                                                <br>
-                                                <br>
-                                                <p id="card-date">{{ lifestyle[i].date_created.date().strftime("%d.%m.%Y") }}</p>
-                                            </div>
-                                        </a>    
-                                    </div>
-                                {% endif %}
-
-                                {% if lifestyle[i + 1] %}
-                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/3); margin-left: 2%;">
-                                        <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(lifestyle[i + 1].id)) }}">
-                                            <img src="{{ title_image_or_placeholder(lifestyle[i + 1]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
-                                            <div class="card-body text-center py-4">
-                                                <h4 class="card-title">{{ lifestyle[i + 1].title }}</h4>
-                                                <p class="lead card-subtitle">{{ cap_text(lifestyle[i + 1].description) }}</p>
-                                                <br>
-                                                <br>
-                                                <p id="card-date">{{ lifestyle[i].date_created.date().strftime("%d.%m.%Y") }}</p>
-                                            </div>
-                                        </a>    
-                                    </div>
-                                {% endif %}
-
-                                {% if lifestyle[i + 2] %}
-                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/3); margin-left: 2%">
-                                        <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(lifestyle[i + 2].id)) }}">
-                                            <img src="{{ title_image_or_placeholder(lifestyle[i + 2]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
-                                            <div class="card-body text-center py-4">
-                                                <h4 class="card-title">{{ lifestyle[i + 2].title }}</h4>
-                                                <p class="lead card-subtitle">{{ cap_text(lifestyle[i + 2].description) }}</p>
-                                                <br>
-                                                <br>
-                                                <p id="card-date">{{ lifestyle[i].date_created.date().strftime("%d.%m.%Y") }}</p>
-                                            </div>
-                                        </a>    
-                                    </div>
-                                {% endif %}
-                        
+                                <div class="card card-block border-1 border-secondary" style="width: calc(100%/1.5); max-width: 400px;">
+                                    <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(lifestyle[i].id)) }}">
+                                        <img src="{{ title_image_or_placeholder(lifestyle[i]) }}" style="max-height: 300px; object-fit: cover;" class="card-img-top" alt="">
+                                        <div class="card-body text-center py-4">
+                                            <h4 class="card-title">{{ lifestyle[i].title }}</h4>
+                                            <p class="lead card-subtitle">
+                                                {{ cap_text(lifestyle[i].description) }}
+                                            </p>
+                                            <br>
+                                            <br>
+                                            <p id="card-date">{{ lifestyle[i].date_created.date().strftime("%d.%m.%Y") }}</p>
+                                        </div>
+                                    </a>    
+                                </div>
                             </div>
                         </div>
                     {% endfor %}
@@ -411,61 +294,27 @@
             <br>
             <div id="carouselExampleControls" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); display: block; overflow: auto; background-color: rgb(255, 255, 255); border-radius: 10px;">
                 <div class="carousel-inner">
-                    {% for i in range(0, unterhaltung|length, 3) %} <!--the 3 is the "step" argument, basically the equivalent of "i += 3" in a java for loop-->
+                    {% for i in range(0, unterhaltung|length) %} 
                         {% if i == 0 %}
                             <div class="carousel-item active" style="margin-top: 20px; margin-bottom: 20px">
                         {% else %}
                             <div class="carousel-item" style="margin-top: 20px; margin-bottom: 20px">
                         {% endif%}
                             <div class="card-container" style="display: flex; justify-content: center;">
-                                {# the list likely won't be dividable by three, so this if statement is needed to not get any IndexOutOfBoundsExceptions #}
-                                {% if unterhaltung[i] %}
-                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/3)">
-                                        <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(unterhaltung[i].id)) }}">
-                                            <img src="{{ title_image_or_placeholder(unterhaltung[i]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
-                                            <div class="card-body text-center py-4">
-                                                <h4 class="card-title">{{ unterhaltung[i].title }}</h4>
-                                                <p class="lead card-subtitle">
-                                                    {{ cap_text(unterhaltung[i].description) }}
-                                                </p>
-                                                <br>
-                                                <br>
-                                                <p id="card-date">{{ unterhaltung[i].date_created.date().strftime("%d.%m.%Y") }}</p>
-                                            </div>
-                                        </a>    
-                                    </div>
-                                {% endif %}
-
-                                {% if unterhaltung[i + 1] %}
-                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/3); margin-left: 2%;">
-                                        <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(unterhaltung[i + 1].id)) }}">
-                                            <img src="{{ title_image_or_placeholder(unterhaltung[i + 1]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
-                                            <div class="card-body text-center py-4">
-                                                <h4 class="card-title">{{ unterhaltung[i + 1].title }}</h4>
-                                                <p class="lead card-subtitle">{{ cap_text(unterhaltung[i + 1].description) }}</p>
-                                                <br>
-                                                <br>
-                                                <p id="card-date">{{ unterhaltung[i].date_created.date().strftime("%d.%m.%Y") }}</p>
-                                            </div>
-                                        </a>    
-                                    </div>
-                                {% endif %}
-
-                                {% if unterhaltung[i + 2] %}
-                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/3); margin-left: 2%">
-                                        <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(unterhaltung[i + 2].id)) }}">
-                                            <img src="{{ title_image_or_placeholder(unterhaltung[i + 2]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
-                                            <div class="card-body text-center py-4">
-                                                <h4 class="card-title">{{ unterhaltung[i + 2].title }}</h4>
-                                                <p class="lead card-subtitle">{{ cap_text(unterhaltung[i + 2].description) }}</p>
-                                                <br>
-                                                <br>
-                                                <p id="card-date">{{ unterhaltung[i].date_created.date().strftime("%d.%m.%Y") }}</p>
-                                            </div>
-                                        </a>    
-                                    </div>
-                                {% endif %}
-                        
+                                <div class="card card-block border-1 border-secondary" style="width: calc(100%/1.5); max-width: 400px;">
+                                    <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(unterhaltung[i].id)) }}">
+                                        <img src="{{ title_image_or_placeholder(unterhaltung[i]) }}" style="max-height: 300px; object-fit: cover;" class="card-img-top" alt="">
+                                        <div class="card-body text-center py-4">
+                                            <h4 class="card-title">{{ unterhaltung[i].title }}</h4>
+                                            <p class="lead card-subtitle">
+                                                {{ cap_text(unterhaltung[i].description) }}
+                                            </p>
+                                            <br>
+                                            <br>
+                                            <p id="card-date">{{ unterhaltung[i].date_created.date().strftime("%d.%m.%Y") }}</p>
+                                        </div>
+                                    </a>    
+                                </div>
                             </div>
                         </div>
                     {% endfor %}
@@ -493,61 +342,27 @@
             <br>
             <div id="carouselExampleControls" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); display: block; overflow: auto; background-color: rgb(255, 255, 255); border-radius: 10px;">
                 <div class="carousel-inner">
-                    {% for i in range(0, kreatives|length, 3) %} <!--the 3 is the "step" argument, basically the equivalent of "i += 3" in a java for loop-->
+                    {% for i in range(0, kreatives|length) %}
                         {% if i == 0 %}
                             <div class="carousel-item active" style="margin-top: 20px; margin-bottom: 20px">
                         {% else %}
                             <div class="carousel-item" style="margin-top: 20px; margin-bottom: 20px">
                         {% endif%}
                             <div class="card-container" style="display: flex; justify-content: center;">
-                                {# the list likely won't be dividable by three, so this if statement is needed to not get any IndexOutOfBoundsExceptions #}
-                                {% if kreatives[i] %}
-                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/3)">
-                                        <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(kreatives[i].id)) }}">
-                                            <img src="{{ title_image_or_placeholder(kreatives[i]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
-                                            <div class="card-body text-center py-4">
-                                                <h4 class="card-title">{{ kreatives[i].title }}</h4>
-                                                <p class="lead card-subtitle">
-                                                    {{ cap_text(kreatives[i].description) }}
-                                                </p>
-                                                <br>
-                                                <br>
-                                                <p id="card-date">{{ kreatives[i].date_created.date().strftime("%d.%m.%Y") }}</p>
-                                            </div>
-                                        </a>    
-                                    </div>
-                                {% endif %}
-
-                                {% if kreatives[i + 1] %}
-                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/3); margin-left: 2%;">
-                                        <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(kreatives[i + 1].id)) }}">
-                                            <img src="{{ title_image_or_placeholder(kreatives[i + 1]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
-                                            <div class="card-body text-center py-4">
-                                                <h4 class="card-title">{{ kreatives[i + 1].title }}</h4>
-                                                <p class="lead card-subtitle">{{ cap_text(kreatives[i + 1].description) }}</p>
-                                                <br>
-                                                <br>
-                                                <p id="card-date">{{ kreatives[i].date_created.date().strftime("%d.%m.%Y") }}</p>
-                                            </div>
-                                        </a>    
-                                    </div>
-                                {% endif %}
-
-                                {% if kreatives[i + 2] %}
-                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/3); margin-left: 2%">
-                                        <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(kreatives[i + 2].id)) }}">
-                                            <img src="{{ title_image_or_placeholder(kreatives[i + 2]) }}" style="height: 200px; object-fit: cover;" class="card-img-top" alt="">
-                                            <div class="card-body text-center py-4">
-                                                <h4 class="card-title">{{ kreatives[i + 2].title }}</h4>
-                                                <p class="lead card-subtitle">{{ cap_text(kreatives[i + 2].description) }}</p>
-                                                <br>
-                                                <br>
-                                                <p id="card-date">{{ kreatives[i].date_created.date().strftime("%d.%m.%Y") }}</p>
-                                            </div>
-                                        </a>    
-                                    </div>
-                                {% endif %}
-                        
+                                <div class="card card-block border-1 border-secondary" style="width: calc(100%/1.5); max-width: 400px;">
+                                    <a style="text-decoration: none;" href="{{ url_for('articles.find_article', path='{0}.html'.format(kreatives[i].id)) }}">
+                                        <img src="{{ title_image_or_placeholder(kreatives[i]) }}" style="max-height: 300px; object-fit: cover;" class="card-img-top" alt="">
+                                        <div class="card-body text-center py-4">
+                                            <h4 class="card-title">{{ kreatives[i].title }}</h4>
+                                            <p class="lead card-subtitle">
+                                                {{ cap_text(kreatives[i].description) }}
+                                            </p>
+                                            <br>
+                                            <br>
+                                            <p id="card-date">{{ kreatives[i].date_created.date().strftime("%d.%m.%Y") }}</p>
+                                        </div>
+                                    </a>    
+                                </div>
                             </div>
                         </div>
                     {% endfor %}
@@ -575,52 +390,24 @@
             <br>
             <div id="carouselExampleControls" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); display: block; overflow: auto; background-color: rgb(255, 255, 255); border-radius: 10px;">
                 <div class="carousel-inner">
-                    {% for i in range(0, surveys|length, 3) %} <!--the 3 is the "step" argument, basically the equivalent of "i += 3" in a java for loop-->
+                    {% for i in range(0, surveys|length) %}
                         {% if i == 0 %}
                             <div class="carousel-item active" style="margin-top: 20px; margin-bottom: 20px;">
                         {% else %}
                             <div class="carousel-item" style="margin-top: 20px; margin-bottom: 20px;">
                         {% endif%}
                             <div class="card-container" style="display: flex; justify-content: center;">
-                                {# the list likely won't be dividable by three, so this if statement is needed to not get any IndexOutOfBoundsExceptions #}
-                                {% if surveys[i] %}
-                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/3)">
-                                        <a style="text-decoration: none;" href="{{ url_for('surveys.survey', id=surveys[i].id) }}">
-                                            <img src="../static/img/placeholder.png" style="height: 210px; object-fit: cover;" class="card-img-top" alt="">
-                                            <div class="card-body text-center py-4">
-                                                <h4 class="card-title">{{ surveys[i].title }}</h4>
-                                                <p class="lead card-subtitle">
-                                                    {{ cap_text(surveys[i].description) }}
-                                                </p>
-                                            </div>
-                                        </a>    
-                                    </div>
-                                {% endif %}
-
-                                {% if surveys[i + 1] %}
-                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/3); margin-left: 2%;">
-                                        <a style="text-decoration: none;" href="{{ url_for('surveys.survey', id=surveys[i + 1].id) }}">
-                                            <img src="../static/img/placeholder.png" style="height: 210px; object-fit: cover;" class="card-img-top" alt="">
-                                            <div class="card-body text-center py-4">
-                                                <h4 class="card-title">{{ surveys[i + 1].title }}</h4>
-                                                <p class="lead card-subtitle">{{ cap_text(surveys[i + 1].description) }}</p>
-                                            </div>
-                                        </a>    
-                                    </div>
-                                {% endif %}
-
-                                {% if surveys[i + 2] %}
-                                    <div class="card card-block border-1 border-secondary" style="width: calc(100%/3); margin-left: 2%">
-                                        <a style="text-decoration: none;" href="{{ url_for('surveys.survey', id=surveys[i + 2].id) }}">
-                                            <img src="../static/img/placeholder.png" style="height: 210px; object-fit: cover;" class="card-img-top" alt="">
-                                            <div class="card-body text-center py-4">
-                                                <h4 class="card-title">{{ surveys[i + 2].title }}</h4>
-                                                <p class="lead card-subtitle">{{ cap_text(surveys[i + 2].description) }}</p>
-                                            </div>
-                                        </a>    
-                                    </div>
-                                {% endif %}
-                        
+                                <div class="card card-block border-1 border-secondary" style="width: calc(100%/1.5); max-width: 400px;">
+                                    <a style="text-decoration: none;" href="{{ url_for('surveys.survey', id=surveys[i].id) }}">
+                                        <img src="../static/img/placeholder.png" style="max-height: 300px; object-fit: cover;" class="card-img-top" alt="">
+                                        <div class="card-body text-center py-4">
+                                            <h4 class="card-title">{{ surveys[i].title }}</h4>
+                                            <p class="lead card-subtitle">
+                                                {{ cap_text(surveys[i].description) }}
+                                            </p>
+                                        </div>
+                                    </a>    
+                                </div>
                             </div>
                         </div>
                     {% endfor %}
@@ -640,12 +427,15 @@
             <br>
         {% endif %}
 
+    </div>
+
     {% else %}
         <h5>Aktuell gibt es noch keine Artikel auf dieser Website</h5>
         <br>
         <h4> Wenn du das ändern willst dann werde Teil der Schülerzeitung. Wir freuen uns auf dich! <br>
             Unsere Kontaktdaten findest du unten im Impressum.
         </h4>
+    
     </div>
     {% endif %}
 {% endblock %}

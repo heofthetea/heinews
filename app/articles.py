@@ -41,7 +41,8 @@ def find_article(path: str) -> None:
 
 
         return render_template(
-            f"articles/{path}", db_entry=db_entry,
+            f"articles/{path}", 
+            db_entry=db_entry,
             created_by=User.query.filter_by(email=db_entry.creator_email).first().name,
             tags=get_tags(db_entry),
             upvoted=user_upvoted

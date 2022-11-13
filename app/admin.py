@@ -10,8 +10,6 @@ from sqlalchemy import asc
 from os import path, mkdir
 from werkzeug.utils import secure_filename
 
-from glob import glob
-
 
 #TODO! find places in articles for images
 
@@ -177,6 +175,7 @@ def edit_article(article_id):
         title = request.form.get("title")
         category = request.form.get("category")
         description = request.form.get("description")
+        submitted = request.form.get("submitted")
 
         primary_image = request.form.get("primary-img")
         title_image = None # declared as None so that if no primary image is given it will be None in the database
@@ -220,6 +219,7 @@ def edit_article(article_id):
             title=title,
             description=description,
             date_created=datetime.utcnow(),
+            official=not(get_checkbutton(submitted)),
             primary_image=title_image,
             category=category,
             creator_email=current_user.email,

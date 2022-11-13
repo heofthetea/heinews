@@ -16,41 +16,76 @@
         {{ db_entry.title }}
     </h1>
     <br>
-    <table class="table">
-        <tr>
-            <td>
-                <i>Kategorie: 
-                    <a style="text-decoration: none" href="{{ url_for('articles.by_category', category=db_entry.category) }}"><b>{{ db_entry.category }}</b></a>
-                </i>
-            </td>
-            <!--
-                That date_created query might be a little confusing, so to divide it up here:
-                1. db_entry.date_created.date() gets ONLY the date of when the article was created
-                2. strftime("%d.%m.%Y") formats it from yyyy-mm-dd to dd-mm-yyyy
-            -->
-            <td>
-                <i style="margin-left: 50px">Hochgeladen am {{ db_entry.date_created.date().strftime("%d.%m.%Y") }} von {{ created_by }}</i>
-            </td>
-            <td>
-                <i style="margin-left: 50px">tags: 
-                    {% for tag in tags %}
-                        <a style="text-decoration: none;" href="{{ url_for('tag.articles_by_tag', tag=tag.tag.replace('#', '')) }}"><b>{{ tag.tag }}</b></a>
-                    {% endfor %}
-                </i>
-            </td>
-            <td>
-                <!--TODO: remove once tested-->
-                <i style="margin-left: 50px">validated:
-                    {{ db_entry.validated }}
-                </i>
-            </td>
-        </tr>
-    </table>
+    <div class="container-lg d-none d-lg-block p-0">
+        <table class="table">
+            <tr>
+                <td>
+                    <i>Kategorie: 
+                        <a style="text-decoration: none" href="{{ url_for('articles.by_category', category=db_entry.category) }}"><b>{{ db_entry.category }}</b></a>
+                    </i>
+                </td>
+                <!--
+                    That date_created query might be a little confusing, so to divide it up here:
+                    1. db_entry.date_created.date() gets ONLY the date of when the article was created
+                    2. strftime("%d.%m.%Y") formats it from yyyy-mm-dd to dd-mm-yyyy
+                -->
+                <td>
+                    <i style="margin-left: 50px">Hochgeladen am {{ db_entry.date_created.date().strftime("%d.%m.%Y") }}</i>
+                </td>
+                <td>
+                    <i style="margin-left: 50px">tags: 
+                        {% for tag in tags %}
+                            <a style="text-decoration: none;" href="{{ url_for('tag.articles_by_tag', tag=tag.tag.replace('#', '')) }}"><b>{{ tag.tag }}</b></a>
+                        {% endfor %}
+                    </i>
+                </td>
+
+                <td>
+                    {% if db_entry.official %}
+                    <abbr title="Dieser Artikel wurde von Redakteuren der Schülerzeitung geschrieben." tabindex="0" style="margin-left: 0">
+                        <img src="/static/img/checkmark.png" alt="cooler Verifizierungs-Haken"
+                            style="max-width: 40px; max-height: 40px; margin-left: 0">
+                    </abbr>
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="container-lg d-lg-none p-0">
+        <i>Kategorie:
+            <a style="text-decoration: none" href="{{ url_for('articles.by_category', category=db_entry.category) }}">
+                <b>{{db_entry.category }}</b>
+            </a>
+        </i>
+
+        <br>
+    
+        <i>
+            Hochgeladen am {{ db_entry.date_created.date().strftime("%d.%m.%Y") }}
+        </i>
+        <br>
+        <i>tags:
+            {% for tag in tags %}
+            <a style="text-decoration: none;"
+                href="{{ url_for('tag.articles_by_tag', tag=tag.tag.replace('#', '')) }}"><b>{{ tag.tag }}</b></a>
+            {% endfor %}
+        </i>
+
+        <br>
+        {% if db_entry.official %}
+            <abbr title="Dieser Artikel wurde von Redakteuren der Schülerzeitung geschrieben." tabindex="0" style="margin-left: 0">
+            <img src="/static/img/checkmark.png" alt="cooler Verifizierungs-Haken" style="max-width: 40px; max-height: 40px; margin-left: 0">
+            </abbr>
+        {% endif %}
+        
+    </div>
     <br>
     
     {% if db_entry.description != none %}
         <h4>{{ db_entry.description }}</h4>
     {% endif %}
+
+    <hr>
 
     {% block article %}
     <!-- override this with child file -->
