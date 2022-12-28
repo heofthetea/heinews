@@ -136,7 +136,9 @@ def generate_key(len=256, bounds=(32, 126)) -> str:
 # creates database if it does not exist
 def create_database(app : Flask) -> None:
     if not path.exists("app/" + DB_NAME):
-        db.create_all(app=app)
+        with app.app_context():
+            db.create_all()
+        #db.create_all(app=app)
         print("Created Database!")
 
 

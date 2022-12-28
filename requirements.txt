@@ -1,4 +1,4 @@
 flask
-Flask-sqlalchemy
+Flask-sqlalchemy>=2.0.0,<3.0
 flask-login
 python-docx
