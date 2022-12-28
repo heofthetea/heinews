@@ -8,7 +8,7 @@ from os import getcwd
 
 # declare database for usage
 db = SQLAlchemy()
-DB_NAME = "test.db" # TODO rename this to something cool on production
+DB_NAME = "heinews.db"
 
 
 def send_database() -> SQLAlchemy:
@@ -27,9 +27,9 @@ with open("__devs__.txt", "r") as f:
     __DEVELOPERS__ = f.read().splitlines()
 
 __MAIL_ACCOUNT__  = {
-    "email": "emil.schlaeger@gmx.de",
-    "password": "",
-    "smtp": ("mail.gmx.net", 587)
+    "email": "zeitung@hhg-ostfildern.de",
+    "password": "Pulv3r!Fass",
+    "smtp": ("mbox1.belwue.de", 465)
 }
 
 
