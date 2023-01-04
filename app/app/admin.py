@@ -9,6 +9,7 @@ from datetime import datetime, timedelta
 from sqlalchemy import asc
 from os import path, mkdir
 from werkzeug.utils import secure_filename
+from typing import List, Tuple
 
 
 #TODO! find places in articles for images
@@ -179,7 +180,7 @@ def edit_article(article_id):
 
         primary_image = request.form.get("primary-img")
         title_image = None # declared as None so that if no primary image is given it will be None in the database
-        image_data: list[tuple[str, str]] = []
+        image_data: List[Tuple[str, str]] = []
         # loops over uploaded images
         for image in cache[f"{article_id}-images"]:
 

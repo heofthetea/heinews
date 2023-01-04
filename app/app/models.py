@@ -3,6 +3,7 @@ from sqlalchemy import asc, desc
 from . import db, user_loggedin
 from flask_login import UserMixin
 from datetime import timedelta, datetime
+from typing import List
 
 # is it necessary to give everything a power of 2 as a length? No. Do I do it anyway? Yes, why not.
 
@@ -229,7 +230,7 @@ corresponding SQL query of this function:
     AND article_tag_connection.tag = tag.tag
     AND article_tag_connection.article_id = article.id;
 """
-def get_articles(tag: Tag, limit=None) -> list[Article]:
+def get_articles(tag: Tag, limit=None) -> List[Article]:
     if limit:
         connections = Article_Tag.query.filter_by(tag=tag.tag).limit(limit).all()
     else:
@@ -239,7 +240,7 @@ def get_articles(tag: Tag, limit=None) -> list[Article]:
 """
 functions in the exact same way as `get_articles(tag: Tag)`, but the other way around
 """
-def get_tags(article: Article) -> list[Tag]:
+def get_tags(article: Article) -> List[Tag]:
     connections = Article_Tag.query.filter_by(article_id=article.id).all()
     return [Tag.query.get(connection.tag) for connection in connections]
 

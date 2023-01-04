@@ -6,6 +6,7 @@ from . import db
 from sqlalchemy import desc, or_
 from random import choice
 from datetime import datetime
+from typing import List, Tuple
 
 views = Blueprint("views", __name__)
 
@@ -107,14 +108,14 @@ def search():
     while ' ' in terms:
         terms.remove(' ')
 
-    tags: list[str] = []
+    tags: List[str] = []
     five_articles_for_tag: dict = {} # yes that is a stupid name
     # list of (article.id, article.title) (title is needed for frontend display - more efficient than storing entire objects)
-    titles: list[list[str, str]] = [] 
-    descriptions: list[list[str, str]] = []
-    surveys: list[list[str, str]] = [] # (Survey.id, Survey.title)
-    announcements: list[list[str, str]] = [] # is actually list[list[str, str, datetime]], for the date created is stored as well
-    pages: list[str] = []
+    titles: List[List[str, str]] = [] 
+    descriptions: List[List[str, str]] = []
+    surveys: List[List[str, str]] = [] # (Survey.id, Survey.title)
+    announcements: List[List[str, str]] = [] # is actually List[List[str, str, datetime]], for the date created is stored as well
+    pages: List[str] = []
 
     for term in terms:
         tags.extend(
@@ -187,7 +188,7 @@ def profile():
     upvoted = [Article.query.get(article.article_id) for article in upvote_connections]
 
     # tuple: (survey_id, answer_id)
-    surveys: list[tuple[str, int]] = []
+    surveys: List[Tuple[str, int]] = []
     user_answers = User_Answer.query.filter_by(user_id=current_user.id).all()
     for user_answer in user_answers:
         surveys.append((

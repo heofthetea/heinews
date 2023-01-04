@@ -3,6 +3,8 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx import Document
 import os
 from math import ceil, floor
+from typing import List, Tuple
+
 WORKING_DIR = os.getcwd()
 #using Pt(font.size)px as font size is way too small. Tweak this value to increase it.
 _FONT_SCALING = 2
@@ -311,7 +313,7 @@ def create_image_placeholders(html : str) -> str:
 @return: parameter text with placeholders replaced through Tag.image 
     -> TODO replace with figure and correct id to make this integratable with articles.css
 """
-def fill_image_placeholders(text: str, sources: list[tuple[str, str]]) -> str:
+def fill_image_placeholders(text: str, sources: List[Tuple[str, str]]) -> str:
     all_placeholders = create_placeholder_list(text)
     
     to_replace = get_placeholders_to_replace(all_placeholders, num_to_replace=len(sources))
@@ -334,7 +336,7 @@ def fill_image_placeholders(text: str, sources: list[tuple[str, str]]) -> str:
 goes through a text and represents every placeholder found as an integer (index) in a seperate list, since working with an integer list 
 is a lot easier than with a huge string.
 """
-def create_placeholder_list(text: str) -> list[int]:
+def create_placeholder_list(text: str) -> List[int]:
     counter = 0
     placeholders = []
     while _PLACEHOLDER_IMAGE(counter) in text:
