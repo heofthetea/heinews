@@ -73,7 +73,7 @@ def all_articles() -> None:
 @articles.route("/category/<category>")
 def by_category(category: str):
     return render_template(
-        f"overview/{category}.html", 
+        "overview.html", 
         articles=Article.__validated_articles__(Article).filter_by(category=category).all()
     )
 

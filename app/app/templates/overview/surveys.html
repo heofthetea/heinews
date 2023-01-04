@@ -1,18 +1,63 @@
 {% extends "overview.html" %}
 
-<div class="container-xl">
 {% block title %}Tags{% endblock %}
 
 {% block content %}
-<!--#TODO sort by "active" and "over"-->
-    {% for survey in surveys %}
-        <a href="{{ url_for('surveys.survey', id=survey.id) }}">
-            {{ survey.title }}
-            <br>
-        </a>
-    {% endfor %}
+    <div class="container mt-5 mb-5">
+        <div class="row">
+            <div class="col-8">
+                <div class="container">
+                    {% for i in range(0, surveys|length, 3) %}
+                    <div class="row">
+                        {% if surveys[i] %}
+                            <div class="col p-1">
+                                <div class="card" style="width: 15rem;">
+                                    <img src="/static/img/placeholder.png" class="card-img-top" alt="Img" width="320"
+                                        height="180">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ surveys[i].title }}</h5>
+                                        <p id="card-date">{{ surveys[i].expiry_date.date().strftime("Umfrageschluss: %d.%m.%Y") }}</p>
+                                        <a href="{{ url_for('surveys.survey', id=surveys[i].id) }}"
+                                            class="stretched-link"></a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% if surveys[i + 1] %}
+                            <div class="col p-1">
+                                <div class="card" style="width: 15rem;">
+                                    <img src="/static/img/placeholder.png" class="card-img-top" alt="Img" width="320"
+                                        height="180">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ surveys[i + 1].title }}</h5>
+                                        <p id="card-date">{{ surveys[i + 1].expiry_date.date().strftime("Umfrageschluss: %d.%m.%Y") }}</p>
+                                        <a href="{{ url_for('surveys.survey', id=surveys[i + 1].id) }}"
+                                            class="stretched-link"></a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% if surveys[i + 2] %}
+                            <div class="col p-1">
+                                <div class="card" style="width: 15rem;">
+                                    <img src="/static/img/placeholder.png" class="card-img-top" alt="Img" width="320"
+                                        height="180">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ surveys[i + 2].title }}</h5>
+                                        <p id="card-date">{{ surveys[i + 2].expiry_date.date().strftime("Umfrageschluss: %d.%m.%Y") }}</p>
+                                        <a href="{{ url_for('surveys.survey', id=surveys[i + 2].id) }}"
+                                            class="stretched-link"></a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
-</div>
 
 {% block umfragen %}
     <li class="nav-item">
@@ -22,5 +67,5 @@
 
 
 {% block umfragen_mobile %}
-    <li><a href="{{ url_for('surveys.all_surveys') }}" class="dropdown-item fw-bold">Umfragen</a></li>
+    <li><a href="{{ url_for('surveys.all_surveys') }}" class="nav-link active">Umfragen</a></li>
 {% endblock %}

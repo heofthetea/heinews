@@ -100,7 +100,7 @@
         {% if aktuelles|length > 0 %}
             <h2><a id="title-link" href="/article/category/aktuelles">Aktuelles</a></h2> <!--Alternative: 1. blue tone 4, 20, 43 2. triangle <h2>Aktuelles▼</h2>-->
             <br>
-            <div id="carouselExampleControls" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); display: block; overflow: auto; background-color: rgb(255, 255, 255); border-radius: 10px;">
+            <div id="carouselAktuelles" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); display: block; overflow: auto; background-color: rgb(255, 255, 255); border-radius: 10px;">
                 <div class="carousel-inner">
                     {% for i in range(0, aktuelles|length) %}
                         {% if i == 0 %}
@@ -127,11 +127,11 @@
                         </div>
                     {% endfor %}
                 </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselAktuelles" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                     <span class="visually-hidden">Previous</span>
                 </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselAktuelles" data-bs-slide="next">
                     <span class="carousel-control-next-icon" aria-hidden="false"></span>
                     <span class="visually-hidden">Next</span>
                 </button>
@@ -148,7 +148,7 @@
         {% if wissen|length > 0 %}
             <h2><a id="title-link" href="/article/category/wissen">Wissen</a></h2>
             <br>
-            <div id="carouselExampleControls" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); display: block; overflow: auto; background-color: rgb(255, 255, 255); border-radius: 10px;">
+            <div id="carouselWissen" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); display: block; overflow: auto; background-color: rgb(255, 255, 255); border-radius: 10px;">
                 <div class="carousel-inner">
                     {% for i in range(0, wissen|length) %}
                         {% if i == 0 %}
@@ -175,11 +175,11 @@
                         </div>
                     {% endfor %}
                 </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselWissen" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                     <span class="visually-hidden">Previous</span>
                 </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselWissen" data-bs-slide="next">
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                     <span class="visually-hidden">Next</span>
                 </button>
@@ -196,7 +196,7 @@
         {% if schulleben|length > 0 %}
             <h2><a id="title-link" href="/article/category/schulleben">Schulleben</a></h2>
             <br>
-            <div id="carouselExampleControls" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); display: block; overflow: auto; background-color: rgb(255, 255, 255); border-radius: 10px;">
+            <div id="carouselSchulleben" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); display: block; overflow: auto; background-color: rgb(255, 255, 255); border-radius: 10px;">
                 <div class="carousel-inner">
                     {% for i in range(0, schulleben|length) %}
                         {% if i == 0 %}
@@ -223,11 +223,11 @@
                         </div>
                     {% endfor %}
                 </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselSchulleben" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                     <span class="visually-hidden">Previous</span>
                 </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselSchulleben" data-bs-slide="next">
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                     <span class="visually-hidden">Next</span>
                 </button>
@@ -244,7 +244,7 @@
         {% if lifestyle|length > 0 %}
             <h2><a id="title-link" href="/article/category/lifestyle">Lifestyle</a></h2>
             <br>
-            <div id="carouselExampleControls" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); display: block; overflow: auto; background-color: rgb(255, 255, 255); border-radius: 10px;">
+            <div id="carouselLifestyle" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); display: block; overflow: auto; background-color: rgb(255, 255, 255); border-radius: 10px;">
                 <div class="carousel-inner">
                     {% for i in range(0, lifestyle|length) %}
                         {% if i == 0 %}
@@ -271,11 +271,11 @@
                         </div>
                     {% endfor %}
                 </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselLifestyle" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                     <span class="visually-hidden">Previous</span>
                 </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselLifestyle" data-bs-slide="next">
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                     <span class="visually-hidden">Next</span>
                 </button>
@@ -292,7 +292,7 @@
         {% if unterhaltung|length > 0 %}
             <h2><a id="title-link" href="/article/category/unterhaltung">Unterhaltung</a></h2>
             <br>
-            <div id="carouselExampleControls" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); display: block; overflow: auto; background-color: rgb(255, 255, 255); border-radius: 10px;">
+            <div id="carouselUnterhaltung" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); display: block; overflow: auto; background-color: rgb(255, 255, 255); border-radius: 10px;">
                 <div class="carousel-inner">
                     {% for i in range(0, unterhaltung|length) %} 
                         {% if i == 0 %}
@@ -319,11 +319,11 @@
                         </div>
                     {% endfor %}
                 </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselUnterhaltung" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                     <span class="visually-hidden">Previous</span>
                 </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselUnterhaltung" data-bs-slide="next">
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                     <span class="visually-hidden">Next</span>
                 </button>
@@ -340,7 +340,7 @@
         {% if kreatives|length > 0 %}
             <h2><a id="title-link" href="/article/category/kreatives">Kreatives</a></h2>
             <br>
-            <div id="carouselExampleControls" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); display: block; overflow: auto; background-color: rgb(255, 255, 255); border-radius: 10px;">
+            <div id="carouselKreatives" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); display: block; overflow: auto; background-color: rgb(255, 255, 255); border-radius: 10px;">
                 <div class="carousel-inner">
                     {% for i in range(0, kreatives|length) %}
                         {% if i == 0 %}
@@ -367,11 +367,11 @@
                         </div>
                     {% endfor %}
                 </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselKreatives" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                     <span class="visually-hidden">Previous</span>
                 </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselKreatives" data-bs-slide="next">
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                     <span class="visually-hidden">Next</span>
                 </button>
@@ -388,23 +388,26 @@
         {% if surveys|length > 0 %}
             <h2><a id="title-link" href="{{ url_for('surveys.all_surveys') }}">Umfragen</a></h2>
             <br>
-            <div id="carouselExampleControls" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); display: block; overflow: auto; background-color: rgb(255, 255, 255); border-radius: 10px;">
+            <div id="carouselSurveys" class="carousel carousel-dark slide" data-interval="false" style="border: 2px solid; border-color:rgb(12, 12, 90); display: block; overflow: auto; background-color: rgb(255, 255, 255); border-radius: 10px;">
                 <div class="carousel-inner">
                     {% for i in range(0, surveys|length) %}
                         {% if i == 0 %}
-                            <div class="carousel-item active" style="margin-top: 20px; margin-bottom: 20px;">
+                            <div class="carousel-item active" style="margin-top: 20px; margin-bottom: 20px">
                         {% else %}
-                            <div class="carousel-item" style="margin-top: 20px; margin-bottom: 20px;">
+                            <div class="carousel-item" style="margin-top: 20px; margin-bottom: 20px">
                         {% endif%}
                             <div class="card-container" style="display: flex; justify-content: center;">
                                 <div class="card card-block border-1 border-secondary" style="width: calc(100%/1.5); max-width: 400px;">
                                     <a style="text-decoration: none;" href="{{ url_for('surveys.survey', id=surveys[i].id) }}">
-                                        <img src="../static/img/placeholder.png" style="max-height: 300px; object-fit: cover;" class="card-img-top" alt="">
+                                        <img src="/static/img/placeholder.png" style="max-height: 300px; object-fit: cover;" class="card-img-top" alt="">
                                         <div class="card-body text-center py-4">
                                             <h4 class="card-title">{{ surveys[i].title }}</h4>
                                             <p class="lead card-subtitle">
                                                 {{ cap_text(surveys[i].description) }}
                                             </p>
+                                            <br>
+                                            <br>
+                                            <p id="card-date">{{ surveys[i].expiry_date.date().strftime("Umfrageschluss: %d.%m.%Y") }}</p>
                                         </div>
                                     </a>    
                                 </div>
@@ -412,12 +415,12 @@
                         </div>
                     {% endfor %}
                 </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselSurveys" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                     <span class="visually-hidden">Previous</span>
                 </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselSurveys" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="false"></span>
                     <span class="visually-hidden">Next</span>
                 </button>
             </div>

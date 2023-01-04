@@ -27,9 +27,9 @@ with open("__devs__.txt", "r") as f:
     __DEVELOPERS__ = f.read().splitlines()
 
 __MAIL_ACCOUNT__  = {
-    "email": "zeitung@hhg-ostfildern.de",
-    "password": "Pulv3r!Fass",
-    "smtp": ("mbox1.belwue.de", 465)
+    "email": "dev.heinews@gmx.de",
+    "password": "H31n3w$^w^3",
+    "smtp": ("mail.gmx.net", 587)
 }
 
 

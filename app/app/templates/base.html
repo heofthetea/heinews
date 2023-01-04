@@ -23,7 +23,7 @@
     <nav class="navbar navbar-expand-md navbar-dark bg-dark d-none d-lg-block">
       <div class="container-fluid">
         <a href="/" class="navbar-brand">
-          <img src="{{ url_for('static', filename='img/logo.png') }}" alt="HEINEWS" width="60" height="50" class="d-inline-block">
+          <img src="{{ url_for('static', filename='img/Logo.png') }}" alt="HEINEWS" width="60" height="50" class="d-inline-block">
         </a>
 
         <!-- navbar links -->
@@ -35,47 +35,33 @@
               </li>
             {% endblock %}
 
-            {% block aktuelles %}
-              <li class="nav-item">
-                <a href="/article/category/aktuelles" class="nav-link">Aktuelles</a>
-              </li>
-            {% endblock %}
-
-            {% block wissen %}
-              <li class="nav-item">
-                <a href="/article/category/wissen" class="nav-link">Wissen</a>
-              </li>
-            {% endblock %}
-
-            {% block schulleben %}
-              <li class="nav-item">
-                <a href="/article/category/schulleben" class="nav-link">Schulleben</a>
-              </li>
-            {% endblock %}
-
-            {% block lifestyle %}
-              <li class="nav-item">
-                <a href="/article/category/lifestyle" class="nav-link">Lifestyle</a>
-              </li>
-            {% endblock %}
-
-            {% block unterhaltung %}
-              <li class="nav-item">
-                <a href="/article/category/unterhaltung" class="nav-link">Unterhaltung</a>
-              </li>
-            {% endblock %}
-
-            {% block kreatives %}
-              <li class="nav-item">
-                <a href="/article/category/kreatives" class="nav-link">Kreatives</a>
-              </li>
-            {% endblock %}
-
             {% block umfragen %}
               <li class="nav-item">
-                <a href="{{ url_for('surveys.all_surveys') }}" class="nav-link">Umfragen</a>
+                <a href="{{ url_for('surveys.all_surveys') }}" class="nav-link">Alle Umfragen</a>
               </li>
             {% endblock %}
+            
+            {% block tags %}
+              <li class="nav-item">
+                <a href="{{ url_for('tag.all_tags') }}" class="nav-link">Alle Tags</a>
+              </li>
+            {% endblock %}
+
+            {% if get_user_role(current_user).can_upload %}
+              {% block upload %}
+                <li class="nav-item">
+                  <a href="{{ url_for('admin.new_article') }}" class="nav-link">Upload</a>
+                </li>
+                {% endblock %}
+              {% endif %}
+
+              {% if get_user_role(current_user).can_validate %}
+                {% block admin_panel %}
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('admin.admin_index') }}">Admin-Panel</a>
+                  </li>
+                {% endblock %}
+              {% endif %}
           </ul>
 
           <form class="d-flex nav-item me-2" action="{{ url_for('views.search') }}" method="POST">
@@ -112,14 +98,7 @@
                   {% if current_user.role == "developer" %}
                     <li><a class="dropdown-item" href="{{ url_for('dev.dev_panel') }}">Dev-Panel</a></li>
                   {% endif %}
-                  {% if get_user_role(current_user).can_validate %}
-                    <li><a class="dropdown-item" href="{{ url_for('admin.admin_index') }}">Admin-Panel</a></li>
-                  {% endif %}
-                  {% if get_user_role(current_user).can_upload %}
-                    <li><a class="dropdown-item" href="{{ url_for('admin.new_article') }}">Upload</a></li>
-                  {% endif %}
                 {% endif %}
-                <li><a class="dropdown-item" href="{{ url_for('tag.all_tags') }}">View All Tags</a></li>
               </ul>
             </li>
           </ul>
@@ -133,7 +112,7 @@
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark d-lg-none">
     <div class="container-fluid">
         <a href="/" class="navbar-brand active">
-            <img src="/static/img/Logo.png" alt="HEINEWS" width="50" height="50" class="d-inline-block">
+            <img src="/static/img/Logo.png" alt="HEINEWS" width="60" height="50" class="d-inline-block">
         </a>
         <!-- toggle button for mobile nav -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-nav"
@@ -163,32 +142,40 @@
                 </a>
                   <ul class="dropdown-menu dropdown-menu-dark">
                     {% block alle_artikel_mobile %}
-                      <li><a href="{{ url_for('articles.all_articles') }}" class="dropdown-item">Alle Artikel</a></li>
+                    <li class="nav-item">
+                      <a href="{{ url_for('articles.all_articles') }}" class="nav-link">Alle Artikel</a>
+                    </li>
                     {% endblock %}
-                    {% block aktuelles_mobile %}
-                      <li><a href="/article/category/aktuelles" class="dropdown-item">Aktuelles</a></li>
-                    {% endblock %}
-                    {% block wissen_mobile %}
-                      <li><a href="/article/category/wissen" class="dropdown-item">Wissen</a></li>
-                    {% endblock %}
-                    {% block schulleben_mobile %}
-                      <li><a href="/article/category/schulleben" class="dropdown-item">Schulleben</a></li>
-                    {% endblock %}
-                    {% block lifestyle_mobile %}
-                      <li><a href="/article/category/lifestyle" class="dropdown-item">Lifestyle</a></li>
-                    {% endblock %}
-                    {% block unterhaltung_mobile %}
-                      <li><a href="/article/category/unterhaltung" class="dropdown-item">Unterhaltung</a></li>
-                    {% endblock %}
-                    {% block kreatives_mobile %}
-                      <li><a href="/article/category/kreatives" class="dropdown-item">Kreatives</a></li>
-                    {% endblock %}
-                    <hr class="dropdown-divider">
+                    
                     {% block umfragen_mobile %}
-                      <li><a href="{{ url_for('surveys.all_surveys') }}" class="dropdown-item">Umfragen</a></li>
+                    <li class="nav-item">
+                      <a href="{{ url_for('surveys.all_surveys') }}" class="nav-link">Alle Umfragen</a>
+                    </li>
+                    {% endblock %}
+                    
+                    {% block tags_mobile %}
+                    <li class="nav-item">
+                      <a href="{{ url_for('tag.all_tags') }}" class="nav-link">Alle Tags</a>
+                    </li>
                     {% endblock %}
                   </ul>
               </li>
+              <hr class="dropdown-divider" style="border-top: 1px solid var(--bs-gray-700)">
+              {% if get_user_role(current_user).can_upload %}
+              {% block upload_mobile %}
+                <li class="nav-item">
+                  <a href="{{ url_for('admin.new_article') }}" class="nav-link">Upload</a>
+                </li>
+                {% endblock %}
+              {% endif %}
+
+              {% if get_user_role(current_user).can_validate %}
+                {% block admin_panel_mobile %}
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('admin.admin_index') }}">Admin-Panel</a>
+                  </li>
+                {% endblock %}
+              {% endif %}
 
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -216,20 +203,7 @@
                             <li><a class="dropdown-item" href="{{ url_for('dev.dev_panel') }}">Dev-Panel</a></li>
                           {% endblock %}
                         {% endif %}
-                        {% if get_user_role(current_user).can_validate %}
-                          {% block admin_panel %}
-                            <li><a class="dropdown-item" href="{{ url_for('admin.admin_index') }}">Admin-Panel</a></li>
-                          {% endblock %}
-                        {% endif %}
-                        {% if get_user_role(current_user).can_upload %}
-                          {% block upload %}
-                            <li><a class="dropdown-item" href="{{ url_for('admin.new_article') }}">Upload</a></li>
-                          {% endblock %}
-                        {% endif %}
                     {% endif %}
-                      {% block tags %}
-                        <li><a class="dropdown-item" href="{{ url_for('tag.all_tags') }}">View All Tags</a></li>
-                      {% endblock %}
                 </ul>
               </li>
         </div>

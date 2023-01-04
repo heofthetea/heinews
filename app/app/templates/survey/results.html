@@ -75,12 +75,14 @@
                         </thead>
                     </tr>
                     {% for answer in answers %}
+                    <tr>
                         <td>
                             {{ answer.date_submitted.strftime("%d.%m.%Y um %H:%M") }}
                         </td>
                         <td>
                             {{ answer.value }}
                         </td>
+                    </tr>
                     {% endfor %}
             
             </table>

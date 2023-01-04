@@ -2,6 +2,10 @@
 
 {% block title %}Upload{% endblock %}
 
+
+
+
+
 {% block content %}
 {% if get_user_role(current_user).can_upload %}
 <div class="container-xl">
@@ -129,5 +133,14 @@
 {% endblock %}
 
 {% block upload %}
-    <li><a class="dropdown-item fw-bold" href="{{ url_for('admin.new_article') }}">Hochladen</a></li>
+    <li class="nav-item">
+        <a href="{{ url_for('admin.new_article') }}" class="nav-link active">Upload</a>
+    </li>
 {% endblock %}
+
+{% block upload_mobile %}
+    <li class="nav-item">
+        <a href="{{ url_for('admin.new_article') }}" class="nav-link active">Upload</a>
+    </li>
+{% endblock %}
+

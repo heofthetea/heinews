@@ -15,6 +15,8 @@ from typing import Tuple
 """
 def send_mail(*, from_email: str, password: str, recipients: (str or Tuple[str]), subject: str, content: str, smtp: str="smtp.gmail.com", port: int=587) -> bool:
     try:
+        print(content)
+        return True
         add_charset('utf-8', SHORTEST, QP, 'utf-8')
         message = MIMEText(content, "plain", _charset="utf-8")
         message["Subject"] = subject

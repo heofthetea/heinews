@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, abort, request
 from flask_login import current_user, login_required
+from sqlalchemy import asc
 from .models import Survey, Answer, User_Answer, Text_Answer, get_user_role
 from . import db, user_loggedin
 
@@ -8,7 +9,13 @@ surveys = Blueprint("surveys", __name__)
 
 @surveys.route("/all")
 def all_surveys():
-    return render_template("overview/surveys.html", surveys=Survey.query.all())
+    return render_template(
+        "overview/surveys.html", 
+        surveys=Survey.query
+            .filter_by(validated=True)
+            .order_by(asc(Survey.expiry_date)
+        ).all()
+    )
 
 
 @surveys.route("/<id>")
