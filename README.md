@@ -4,7 +4,7 @@
 
 * * *
 Now the thing is actually on the server. To understand and remember how tf I actually did that:
-#### i. make sure file system is setup correctly:
+#### i. make sure file system and certain files are setup correctly:
 everything is located in /var/www/heinews (this is also where the git repo is setup in)
 ```
 heinews
@@ -12,11 +12,15 @@ heinews
     |_ app
         - uwsgi.ini
         - main.py
-        THIS IS THE WORKING DIRECTORY BY DEFAULT - MAKE SURE THAT IN `main.py` THIS DIRECTORY IS NOT CHANGED
         |_ app
             - the actual application (templates and python files)
         |_ static
 ```
+
+#### Certain code has to be changed in order to suit production:
+This includes:
+> - `main.py`: For development, the working directory needs to be explicitly stated in order for it to work. This code needs to be removed on the server.<br>
+> - `_lib/send_mail.py`: For development purposes, mails should not actually be sent - rather, their content is printed out. This is achieved via a print statement and an early return in `send_mail()`, which again should be removed for production.
 
 #### ii. build docker image 
 `sudo docker build -t heinews .`
