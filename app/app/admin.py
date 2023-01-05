@@ -44,7 +44,9 @@ def replace_dangerous_characters(text: str) -> str:
     return text
 
 # I don't like putting this explicitly into my code, but using the built-in `session` dictionary failed handling big enough texts for some reason
-cache : dict = {}
+cache : dict = {
+    "this-is-a-test": 42
+}
 
 admin = Blueprint("admin", __name__)
 
@@ -68,6 +70,7 @@ def admin_index():
 @admin.route('/upload', methods=["GET", "POST"])
 @login_required
 def new_article() -> None:
+    global cache
     log = lambda msg : print(f"admin.new_article -> {msg}")
 
     try: # yeah this is absoutely ugly but there's no better way of logging what actually happened - Flask only throws 500's without context
@@ -130,7 +133,7 @@ def new_article() -> None:
                     cache[f"{session_id}-uploaded_content"] = file_content
                     log("cached file content")
                     cache[f"{session_id}-num_images"] = int(request.form.get("num-images"))
-                    log(f"cached number of images @{session_id}-num-images: {cache.get(f'{session_id}-num_images')}")
+                    log(f"cached number of images @{session_id}-num_images: {cache.get(f'{session_id}-num_images')}")
                     cache[f"{session_id}-images"] = []
                     log(f"created image cache @{session_id}-images")
                     if cache[f"{session_id}-num_images"] == 0:
@@ -145,7 +148,9 @@ def new_article() -> None:
 @admin.route("/addimage/<article_id>", methods=["GET", "POST"])
 @login_required
 def add_images(article_id):
+    global cache
     log = lambda msg : print(f"admin.add_images -> {msg}")
+
     log(f"received article_id: {article_id}")
     try:
         num_images = cache.get(f"{article_id}-num_images")
@@ -218,6 +223,7 @@ def add_images(article_id):
 @admin.route("/upload/<article_id>", methods=["GET", "POST"])
 @login_required
 def edit_article(article_id):
+    global cache
     log = lambda msg : print(f"admin.edit_article -> {msg}")
     # contains all necessary operations when article is completely finished (all needed additional arguments are given)
     try:
@@ -318,7 +324,9 @@ def edit_article(article_id):
 @admin.route("/newsurvey/<session_id>", methods=["GET", "POST"])
 @login_required
 def create_survey(session_id):
+    global cache
     log = lambda msg : print(f"admin.create_survey -> {msg}")
+    
     try:
         if Survey.query.get(session_id):
             log(f"survey id already in use: {session_id}")
@@ -365,6 +373,7 @@ def create_survey(session_id):
 @admin.route("/newannouncement", methods=["GET", "POST"])
 @login_required
 def create_announcement():
+    global cache
     log = lambda msg : print(f"admin.create_announcement -> {msg}")
 
     try:
