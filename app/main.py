@@ -7,6 +7,7 @@ print(getcwd())
 chdir("C:\\Coding Stuff\\GAP\\hhg-news\\heiNEws\\app")
 """
 
+
 #---------------------------------------------------------------------------------
 from app import create_app
 # specifies application host as (domain, port)

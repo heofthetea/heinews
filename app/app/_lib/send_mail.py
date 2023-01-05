@@ -6,6 +6,8 @@ from email.mime.text import MIMEText
 from email.charset import add_charset, QP, SHORTEST
 from typing import Tuple
 
+log = lambda msg : print(f"send_mail.send_mail -> {msg}")
+
 """
 (tries to) send a mail from the specified email over the specified smtp server.
 
@@ -29,9 +31,10 @@ def send_mail(*, from_email: str, password: str, recipients: (str or Tuple[str])
         server.login(from_email, password)
 
         server.send_message(message)
+        log("mail sent successfully")
         server.close()
         return True
 
     except Exception as e:
-        print(str(e))
+        log(e)
         return False

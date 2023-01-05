@@ -113,8 +113,7 @@ def text_answer(survey_id):
 @surveys.route("/approve/<id>")
 @login_required
 def approve(id):
-    if not current_user.email_confirmed:
-        flash("Hierfür musst Du erst Deine Email verifizieren! Schau mal in Deinem Email-Postfach nach :)", category="error")
+    if not current_user.email_confirmed or (not get_user_role(current_user).can_validate):
         abort(403)
     Survey.query.get(id).validated = True
     db.session.commit()

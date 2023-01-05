@@ -15,7 +15,7 @@ def index() -> str:
     most_upvoted = Article.__validated_articles__(Article).order_by(desc(Article.upvotes)).first()
     most_recent = Article.__validated_articles__(Article).order_by(desc(Article.date_created)).first()
     announcements: list = Announcement.query.filter_by(validated=True).order_by(desc(Announcement.date_created)).all()
-    surveys = Survey.query.all()
+    surveys = Survey.query.filter_by(validated=True).all()
 
     aktuelles = Article.__validated_articles__(Article).filter_by(category="aktuelles").order_by(desc(Article.date_created)).all()
     wissen = Article.__validated_articles__(Article).filter_by(category="wissen").order_by(desc(Article.date_created)).all()
