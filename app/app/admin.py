@@ -73,8 +73,8 @@ def admin_index():
 def new_article() -> None:
     global cache
     log = lambda msg : print(f"admin.new_article -> {msg}")
-    print(cache.keys())
-    print(cache.values())
+    log(cache.keys())
+    log(cache.values())
 
     try: # yeah this is absoutely ugly but there's no better way of logging what actually happened - Flask only throws 500's without context
     #prevents unauthorized users from reaching the upload section
@@ -153,8 +153,8 @@ def new_article() -> None:
 def add_images(article_id):
     global cache
     log = lambda msg : print(f"admin.add_images -> {msg}")
-    print(cache.keys())
-    print(cache.values())
+    log(cache.keys())
+    log(cache.values())
 
     log(f"received article_id: {article_id}")
     try:
@@ -208,7 +208,7 @@ def add_images(article_id):
                         filename = secure_filename(image.filename)
                         img_location = path.join(relative_img_folder, filename)
                         log(f"established image location: {img_location}")
-                        image.save(img_location)
+                        image.save(f"/{img_location}") # please just don't ask why the slash has to be there it just has to
                         log(f"saved image to established location")
                         cache[f"{article_id}-images"].append(img_location)
 
@@ -217,6 +217,9 @@ def add_images(article_id):
             return redirect(url_for("admin.edit_article", article_id=article_id))
 
         log("rendering template: upload/upload_images.html")
+        for key in cache.keys():
+            print(key, end="|")
+            cache[key] = cache.get(key)
         return render_template(
             "upload/upload_images.html",
             num_images=num_images
@@ -230,8 +233,8 @@ def add_images(article_id):
 def edit_article(article_id):
     global cache
     log = lambda msg : print(f"admin.edit_article -> {msg}")
-    print(cache.keys())
-    print(cache.values())
+    log(cache.keys())
+    log(cache.values())
     # contains all necessary operations when article is completely finished (all needed additional arguments are given)
     try:
         if request.method == "POST":
@@ -333,6 +336,8 @@ def edit_article(article_id):
 def create_survey(session_id):
     global cache
     log = lambda msg : print(f"admin.create_survey -> {msg}")
+    log(cache.keys())
+    log(cache.values())
     
     try:
         if Survey.query.get(session_id):
@@ -382,6 +387,8 @@ def create_survey(session_id):
 def create_announcement():
     global cache
     log = lambda msg : print(f"admin.create_announcement -> {msg}")
+    log(cache.keys())
+    log(cache.values())
 
     try:
         if request.method == "POST":
