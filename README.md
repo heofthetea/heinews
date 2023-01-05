@@ -19,7 +19,7 @@ heinews
 
 #### Certain code has to be changed in order to suit production:
 This includes:
-> - `main.py`: For development, the working directory needs to be explicitly stated in order for it to work. This code needs to be removed on the server.<br>
+> - `main.py`: For development, the working directory needs to be explicitly stated in order for it to work. This code needs to be removed on the server. Furthermore, the `__HOST__` tuple needs to represent the correct ip or domain.
 > - `_lib/send_mail.py`: For development purposes, mails should not actually be sent - rather, their content is printed out. This is achieved via a print statement and an early return in `send_mail()`, which again should be removed for production.
 
 #### ii. build docker image 
