@@ -26,6 +26,9 @@ Why am I caring so much about keeping the addresses hashed and hidden? I don't k
 with open("__devs__.txt", "r") as f:
     __DEVELOPERS__ = f.read().splitlines()
 
+with open("__machine__.txt", "r") as f:
+    __IN_PRODUCTION__ = f.readline() == "production"
+
 __MAIL_ACCOUNT__  = {
     "email": "dev.heinews@gmx.de",
     "password": "H31n3w$^w^3",

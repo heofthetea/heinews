@@ -1,5 +1,6 @@
 _todo.txt
 _done.txt
+__machine__.txt
 /__pycache__
 /app/__pycache__/*.pyc
 /app/_lib/__pycache__/*.pyc

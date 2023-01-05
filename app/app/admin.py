@@ -4,7 +4,7 @@ from ._lib.docx_to_html import Tag, __IMAGE__, convert, htmlify, replace_links, 
 from .models import Article, Role, Category, Tag, Article_Tag, Survey, Answer, User_Answer, Announcement, generate_id
 from .articles import get_article_location
 from .auth import get_checkbutton
-from . import db, IMAGE_FOLDER, WORKING_DIR
+from . import db, IMAGE_FOLDER, WORKING_DIR, __IN_PRODUCTION__
 from datetime import datetime, timedelta
 from sqlalchemy import asc
 from os import path, mkdir
@@ -152,7 +152,7 @@ def add_images(article_id):
         log(f"loaded @{article_id}-num_images from cache: {num_images}")
         
         if request.method == "POST":
-            relative_img_folder = path.join(f"/{'/'.join(IMAGE_FOLDER)}", article_id)
+            relative_img_folder = path.join(f"{'/'.join(IMAGE_FOLDER)}", article_id)
             log(f"established relative image folder: {relative_img_folder}")
             for i in range(num_images):
                 if f"image-{i}" not in request.files:
@@ -165,21 +165,44 @@ def add_images(article_id):
                     flash("Dateityp nicht unterstützt (Unterstützt wird: .png, .jpg)")
                 if image and allowed_file(image.filename, ext_dict=ALLOWED_IMAGES):
 
-                    if not path.isdir(path.join(WORKING_DIR, f"app/{'/'.join(IMAGE_FOLDER)}")):
-                        mkdir(path.join(WORKING_DIR, f"app/{'/'.join(IMAGE_FOLDER)}"))
+                    # FUCK IT. Since on the server, the static folder is in a different place, this entire shit has to be rewritten. 
+                    # HOWEVERRRRRR that then would not work locally so FUCK IT I'm just saving every image twice. FUCK YOU FLASK.
+                    # and yes these two blocks LITERALLY ONLY DIFFERENTIATE BY ONE `app` THIS IS SO RIDICULOUSLYS STUPID
+                    if not __IN_PRODUCTION__:
+                        if not path.isdir(path.join(WORKING_DIR, f"app/{'/'.join(IMAGE_FOLDER)}")):
+                            mkdir(path.join(WORKING_DIR, f"app/{'/'.join(IMAGE_FOLDER)}"))
 
-                    absoulute_img_folder = path.join(WORKING_DIR, f"app/{'/'.join(IMAGE_FOLDER)}/{article_id}")
-                    if not path.isdir(absoulute_img_folder):
-                        mkdir(absoulute_img_folder)
-                        log(f"created image folder at: {absoulute_img_folder}")
+                        absoulute_img_folder = path.join(WORKING_DIR, f"app/{'/'.join(IMAGE_FOLDER)}/{article_id}")
+                        if not path.isdir(absoulute_img_folder):
+                            mkdir(absoulute_img_folder)
+                            log(f"created image folder at: {absoulute_img_folder}")
 
-                    image.filename = f"{generate_id(8)}.{image.filename.rsplit('.', 1)[1].lower()}"
-                    filename = secure_filename(image.filename)
-                    img_location = path.join(relative_img_folder, filename)
-                    log(f"established image location: {'app/' + img_location}")
-                    image.save("app/" + img_location)
-                    log(f"saved image to established location")
-                    cache[f"{article_id}-images"].append(img_location)
+                        image.filename = f"{generate_id(8)}.{image.filename.rsplit('.', 1)[1].lower()}"
+                        filename = secure_filename(image.filename)
+                        img_location = path.join(relative_img_folder, filename)
+                        log(f"established image location: {'app/' + img_location}")
+                        image.save("app/" + img_location)
+                        log(f"saved image to established location")
+                        cache[f"{article_id}-images"].append(img_location)
+
+                    elif __IN_PRODUCTION__:
+                        if not path.isdir(path.join(WORKING_DIR, f"{'/'.join(IMAGE_FOLDER)}")):
+                            mkdir(path.join(WORKING_DIR, f"{'/'.join(IMAGE_FOLDER)}"))
+
+                        absoulute_img_folder = path.join(WORKING_DIR, f"{'/'.join(IMAGE_FOLDER)}/{article_id}")
+                        if not path.isdir(absoulute_img_folder):
+                            mkdir(absoulute_img_folder)
+                            log(f"created image folder at: {absoulute_img_folder}")
+
+                        image.filename = f"{generate_id(8)}.{image.filename.rsplit('.', 1)[1].lower()}"
+                        filename = secure_filename(image.filename)
+                        img_location = path.join(relative_img_folder, filename)
+                        log(f"established image location: {img_location}")
+                        image.save(img_location)
+                        log(f"saved image to established location")
+                        cache[f"{article_id}-images"].append(img_location)
+
+
 
             return redirect(url_for("admin.edit_article", article_id=article_id))
 
