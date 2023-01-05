@@ -130,9 +130,9 @@ def new_article() -> None:
                     cache[f"{session_id}-uploaded_content"] = file_content
                     log("cached file content")
                     cache[f"{session_id}-num_images"] = int(request.form.get("num-images"))
-                    log("cached num-images")
+                    log(f"cached number of images @{session_id}-num-images: {cache.get(f'{session_id}-num_images')}")
                     cache[f"{session_id}-images"] = []
-                    log("created image cache")
+                    log(f"created image cache @{session_id}-images")
                     if cache[f"{session_id}-num_images"] == 0:
                         return redirect(url_for("admin.edit_article", article_id=session_id))
                     return redirect(url_for("admin.add_images", article_id=session_id))
@@ -148,9 +148,13 @@ def add_images(article_id):
     log = lambda msg : print(f"admin.add_images -> {msg}")
     log(f"received article_id: {article_id}")
     try:
+        num_images = cache.get(f"{article_id}-num_images")
+        log(f"loaded @{article_id}-num_images from cache: {num_images}")
+        
         if request.method == "POST":
             relative_img_folder = path.join(f"/{'/'.join(IMAGE_FOLDER)}", article_id)
-            for i in range(cache.get(f"{article_id}-num_images")):
+            log(f"established relative image folder: {relative_img_folder}")
+            for i in range(num_images):
                 if f"image-{i}" not in request.files:
                     flash("Bitte wähle für jedes Feld ein Bild aus", category="error")
                     return redirect(request.url)
@@ -180,8 +184,6 @@ def add_images(article_id):
             return redirect(url_for("admin.edit_article", article_id=article_id))
 
         log("rendering template: upload/upload_images.html")
-        num_images = cache.get(f"{article_id}-num_images")
-        log(f"loaded num_images from cache: {num_images}")
         return render_template(
             "upload/upload_images.html",
             num_images=num_images
