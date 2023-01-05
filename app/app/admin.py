@@ -44,6 +44,7 @@ def replace_dangerous_characters(text: str) -> str:
     return text
 
 # I don't like putting this explicitly into my code, but using the built-in `session` dictionary failed handling big enough texts for some reason
+# AND FOR SOME FUCKING REASON THIS ALSO DOESN'T SOMEHOW PYTHON MANAGES TO JUST ALWAYS SET VALUES TO NONE WHY THE FUCK 
 cache : dict = {
     "this-is-a-test": 42
 }
@@ -72,6 +73,8 @@ def admin_index():
 def new_article() -> None:
     global cache
     log = lambda msg : print(f"admin.new_article -> {msg}")
+    print(cache.keys())
+    print(cache.values())
 
     try: # yeah this is absoutely ugly but there's no better way of logging what actually happened - Flask only throws 500's without context
     #prevents unauthorized users from reaching the upload section
@@ -150,6 +153,8 @@ def new_article() -> None:
 def add_images(article_id):
     global cache
     log = lambda msg : print(f"admin.add_images -> {msg}")
+    print(cache.keys())
+    print(cache.values())
 
     log(f"received article_id: {article_id}")
     try:
@@ -225,6 +230,8 @@ def add_images(article_id):
 def edit_article(article_id):
     global cache
     log = lambda msg : print(f"admin.edit_article -> {msg}")
+    print(cache.keys())
+    print(cache.values())
     # contains all necessary operations when article is completely finished (all needed additional arguments are given)
     try:
         if request.method == "POST":
