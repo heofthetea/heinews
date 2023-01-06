@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, url_for, redirect, flash, abort, request
 from flask_login import current_user, login_required
 from ._lib.docx_to_html import Tag, __IMAGE__, convert, htmlify, replace_links, create_image_placeholders, fill_image_placeholders
+from ._lib.cache import Cache
 from .models import Article, Role, Category, Tag, Article_Tag, Survey, Answer, User_Answer, Announcement, generate_id
 from .articles import get_article_location
 from .auth import get_checkbutton
@@ -11,8 +12,6 @@ from os import path, mkdir
 from werkzeug.utils import secure_filename
 from typing import List, Tuple
 
-
-#TODO! find places in articles for images
 
 ALLOWED_EXTENSIONS = {"txt", "docx", "doc"}
 ALLOWED_IMAGES = {"png", "jpg"}
@@ -45,9 +44,8 @@ def replace_dangerous_characters(text: str) -> str:
 
 # I don't like putting this explicitly into my code, but using the built-in `session` dictionary failed handling big enough texts for some reason
 # AND FOR SOME FUCKING REASON THIS ALSO DOESN'T SOMEHOW PYTHON MANAGES TO JUST ALWAYS SET VALUES TO NONE WHY THE FUCK 
-cache : dict = {
-    "this-is-a-test": 42
-}
+cache = Cache("admin")
+
 
 admin = Blueprint("admin", __name__)
 
@@ -71,7 +69,6 @@ def admin_index():
 @admin.route('/upload', methods=["GET", "POST"])
 @login_required
 def new_article() -> None:
-    global cache
     log = lambda msg : print(f"admin.new_article -> {msg}")
     log(cache.keys())
     log(cache.values())
@@ -89,9 +86,9 @@ def new_article() -> None:
             if "create-survey" in request.form:
                 session_id = generate_id(6, table=Survey)
                 if get_checkbutton(request.form.get("text-answer")):
-                    cache[f"{session_id}-num_answers"] = 1
+                    cache.set(key=f"{session_id}-num_answers", value=1)
                 else:
-                    cache[f"{session_id}-num_answers"] = request.form.get("num-answers")
+                    cache.set(key=f"{session_id}-num_answers", value=request.form.get("num-answers"))
                 return redirect(url_for("admin.create_survey", session_id=session_id))
 
             if "create-announcement" in request.form:
@@ -133,13 +130,13 @@ def new_article() -> None:
                     file_content : str = replace_links(file_content)
                     log("converted links in file content to HTML")
                     # caching all data necessary to use in next step (and setting up image cache)
-                    cache[f"{session_id}-uploaded_content"] = file_content
+                    cache.set(key=f"{session_id}-uploaded_content",value= file_content)
                     log("cached file content")
-                    cache[f"{session_id}-num_images"] = int(request.form.get("num-images"))
+                    cache.set(key=f"{session_id}-num_images", value=int(request.form.get("num-images")))
                     log(f"cached number of images @{session_id}-num_images: {cache.get(f'{session_id}-num_images')}")
-                    cache[f"{session_id}-images"] = []
+                    cache.set(key=f"{session_id}-images", value=[])
                     log(f"created image cache @{session_id}-images")
-                    if cache[f"{session_id}-num_images"] == 0:
+                    if cache.get(f"{session_id}-num_images") == 0:
                         return redirect(url_for("admin.edit_article", article_id=session_id))
                     return redirect(url_for("admin.add_images", article_id=session_id))
                 
@@ -151,7 +148,6 @@ def new_article() -> None:
 @admin.route("/addimage/<article_id>", methods=["GET", "POST"])
 @login_required
 def add_images(article_id):
-    global cache
     log = lambda msg : print(f"admin.add_images -> {msg}")
     log(cache.keys())
     log(cache.values())
@@ -193,7 +189,9 @@ def add_images(article_id):
                         log(f"established image location: {'app/' + img_location}")
                         image.save("app/" + img_location)
                         log(f"saved image to established location")
-                        cache[f"{article_id}-images"].append(img_location)
+                        images = cache.get(f"{article_id}-images")
+                        images.append(img_location)
+                        cache.set(key=f"{article_id}-images", value=images)
 
                     elif __IN_PRODUCTION__:
                         if not path.isdir(path.join(WORKING_DIR, f"{'/'.join(IMAGE_FOLDER)}")):
@@ -210,16 +208,13 @@ def add_images(article_id):
                         log(f"established image location: {img_location}")
                         image.save(f"/{img_location}") # please just don't ask why the slash has to be there it just has to
                         log(f"saved image to established location")
-                        cache[f"{article_id}-images"].append(img_location)
-
-
+                        images = cache.get(f"{article_id}-images")
+                        images.append(img_location)
+                        cache.set(key=f"{article_id}-images", value=images)
 
             return redirect(url_for("admin.edit_article", article_id=article_id))
 
         log("rendering template: upload/upload_images.html")
-        for key in cache.keys():
-            print(key, end="|")
-            cache[key] = cache.get(key)
         return render_template(
             "upload/upload_images.html",
             num_images=num_images
@@ -231,14 +226,15 @@ def add_images(article_id):
 @admin.route("/upload/<article_id>", methods=["GET", "POST"])
 @login_required
 def edit_article(article_id):
-    global cache
     log = lambda msg : print(f"admin.edit_article -> {msg}")
     log(cache.keys())
     log(cache.values())
     # contains all necessary operations when article is completely finished (all needed additional arguments are given)
     try:
         if request.method == "POST":
-            content = create_image_placeholders(cache[f"{article_id}-uploaded_content"])
+            content = cache.get(f"{article_id}-uploaded_content")
+            log(f"successfully loaded content from cache: {content[:8]}...")
+            content = create_image_placeholders(content)
             log("successfully created image placeholders")
 
 
@@ -253,7 +249,7 @@ def edit_article(article_id):
             title_image = None # declared as None so that if no primary image is given it will be None in the database
             image_data: List[Tuple[str, str]] = []
             # loops over uploaded images
-            for image in cache[f"{article_id}-images"]:
+            for image in cache.get(f"{article_id}-images"):
                 if image == primary_image:
                     content = __IMAGE__(
                         image, request.form.get(f"{image}_source"), 
@@ -261,7 +257,10 @@ def edit_article(article_id):
                         id="primary-image") \
                     + content
                     title_image = image
-                    cache[f"{article_id}-num_images"] -= 1 # necessary to not place title image twice in article
+                    cache.set(
+                        key=f"{article_id}-num_images", 
+                        value=cache.get(f"{article_id}-num_images") -1
+                    )  # necessary to not place title image twice in article
                     log("successfully appended title image to cache")
                 else:
                     image_data.append((
@@ -322,7 +321,7 @@ def edit_article(article_id):
             "upload/upload_panel.html", 
             categories=Category.query.all(), 
             article_id=article_id,
-            images=cache[f"{article_id}-images"]
+            images=cache.get(f"{article_id}-images")
         )
     except Exception as e:
         log(e)
@@ -334,7 +333,6 @@ def edit_article(article_id):
 @admin.route("/newsurvey/<session_id>", methods=["GET", "POST"])
 @login_required
 def create_survey(session_id):
-    global cache
     log = lambda msg : print(f"admin.create_survey -> {msg}")
     log(cache.keys())
     log(cache.values())
@@ -343,7 +341,7 @@ def create_survey(session_id):
         if Survey.query.get(session_id):
             log(f"survey id already in use: {session_id}")
             abort(409)
-        num_answers = int(cache[f"{session_id}-num_answers"])
+        num_answers = int(cache.get(f"{session_id}-num_answers"))
         if request.method == "POST":
             correct_answer = request.form.get("correct-answer")
             
@@ -385,10 +383,7 @@ def create_survey(session_id):
 @admin.route("/newannouncement", methods=["GET", "POST"])
 @login_required
 def create_announcement():
-    global cache
     log = lambda msg : print(f"admin.create_announcement -> {msg}")
-    log(cache.keys())
-    log(cache.values())
 
     try:
         if request.method == "POST":

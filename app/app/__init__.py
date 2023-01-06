@@ -1,3 +1,4 @@
+from os import getcwd, chdir
 from flask import Flask, abort, send_file
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, current_user, AnonymousUserMixin
@@ -14,6 +15,16 @@ DB_NAME = "heinews.db"
 def send_database() -> SQLAlchemy:
     return send_file(DB_NAME)
 
+try:
+    with open("__machine__.txt", "r") as f:
+        __IN_PRODUCTION__ = f.read().splitlines()[0] == "production" #idk why the splitlines()[0] but server wants it that way
+except FileNotFoundError:
+    with open("app/__machine__.txt", "r") as f:
+        __IN_PRODUCTION__ = f.read().splitlines()[0] == "production" #idk why the splitlines()[0] but server wants it that way
+
+if not __IN_PRODUCTION__:
+    #set this path to the directory `main.py` is in
+    chdir("C:\\Coding Stuff\\GAP\\hhg-news\\heiNEws\\app")
 
 WORKING_DIR = getcwd()
 IMAGE_FOLDER = ("static", "img", "articles")
@@ -26,8 +37,8 @@ Why am I caring so much about keeping the addresses hashed and hidden? I don't k
 with open("__devs__.txt", "r") as f:
     __DEVELOPERS__ = f.read().splitlines()
 
-with open("__machine__.txt", "r") as f:
-    __IN_PRODUCTION__ = f.readline() == "production"
+
+
 
 __MAIL_ACCOUNT__  = {
     "email": "dev.heinews@gmx.de",

@@ -1,14 +1,3 @@
-
-# uncomment this to run on your own machine 
-from os import getcwd, chdir
-print(getcwd())
-
-#set this path to the directory `main.py` is in
-chdir("C:\\Coding Stuff\\GAP\\hhg-news\\heiNEws\\app")
-
-
-
-#---------------------------------------------------------------------------------
 from app import create_app
 # specifies application host as (domain, port)
 #__HOST__ = ("217.78.162.125", 80)
