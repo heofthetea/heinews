@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, url_for, redirect, flash, abort, request
 from flask_login import current_user, login_required
 from ._lib.docx_to_html import Tag, __IMAGE__, convert, htmlify, replace_links, create_image_placeholders, fill_image_placeholders
-from ._lib.cache import Cache
+from ._lib.cache import Cache, CacheDistribution
 from .models import Article, Role, Category, Tag, Article_Tag, Survey, Answer, User_Answer, Announcement, generate_id
 from .articles import get_article_location
 from .auth import get_checkbutton
@@ -42,12 +42,8 @@ def replace_dangerous_characters(text: str) -> str:
         text = text.replace(char, __DANGEROUS_CHARACTERS__[char])
     return text
 
-# I don't like putting this explicitly into my code, but using the built-in `session` dictionary failed handling big enough texts for some reason
-# AND FOR SOME FUCKING REASON THIS ALSO DOESN'T SOMEHOW PYTHON MANAGES TO JUST ALWAYS SET VALUES TO NONE WHY THE FUCK 
-cache = Cache("admin")
-
-
 admin = Blueprint("admin", __name__)
+cache_distr = CacheDistribution()
 
 
 @admin.route("/")
@@ -70,8 +66,6 @@ def admin_index():
 @login_required
 def new_article() -> None:
     log = lambda msg : print(f"admin.new_article -> {msg}")
-    log(cache.keys())
-    log(cache.values())
 
     try: # yeah this is absoutely ugly but there's no better way of logging what actually happened - Flask only throws 500's without context
     #prevents unauthorized users from reaching the upload section
@@ -85,10 +79,12 @@ def new_article() -> None:
         if request.method == 'POST':
             if "create-survey" in request.form:
                 session_id = generate_id(6, table=Survey)
+                cache = cache_distr.create_cache(session_id)
                 if get_checkbutton(request.form.get("text-answer")):
-                    cache.set(key=f"{session_id}-num_answers", value=1)
+                    cache.set_num_answers(1)
                 else:
-                    cache.set(key=f"{session_id}-num_answers", value=request.form.get("num-answers"))
+                    cache.set_num_answers(request.form.get("num-answers"))
+                log(f"created Cache: {cache.__repr__()}")
                 return redirect(url_for("admin.create_survey", session_id=session_id))
 
             if "create-announcement" in request.form:
@@ -99,7 +95,8 @@ def new_article() -> None:
             # id already has to be declared here, because the cache needs its unique key - otherwise, there won't be more than one person able to 
             # upload anything
             session_id = generate_id(6)
-            log(f"generated session id: {session_id}")
+            cache = cache_distr.create_cache(session_id)
+            log(f"created Cache: {cache.__repr__()}")
             if "upload-article" in request.form:
                 # check if the post request has the file part
                 if 'file' not in request.files:
@@ -130,13 +127,10 @@ def new_article() -> None:
                     file_content : str = replace_links(file_content)
                     log("converted links in file content to HTML")
                     # caching all data necessary to use in next step (and setting up image cache)
-                    cache.set(key=f"{session_id}-uploaded_content",value= file_content)
-                    log("cached file content")
-                    cache.set(key=f"{session_id}-num_images", value=int(request.form.get("num-images")))
-                    log(f"cached number of images @{session_id}-num_images: {cache.get(f'{session_id}-num_images')}")
-                    cache.set(key=f"{session_id}-images", value=[])
-                    log(f"created image cache @{session_id}-images")
-                    if cache.get(f"{session_id}-num_images") == 0:
+                    cache.set_article_content(file_content)
+                    cache.set_num_images(int(request.form.get("num-images")))
+                    log(f"updated cache: {cache.__repr__()}")
+                    if cache.get_num_images() == 0:
                         return redirect(url_for("admin.edit_article", article_id=session_id))
                     return redirect(url_for("admin.add_images", article_id=session_id))
                 
@@ -149,12 +143,11 @@ def new_article() -> None:
 @login_required
 def add_images(article_id):
     log = lambda msg : print(f"admin.add_images -> {msg}")
-    log(cache.keys())
-    log(cache.values())
+    cache: Cache = cache_distr.get_cache(article_id)
 
-    log(f"received article_id: {article_id}")
+    log(f"loaded cache: {cache.__repr__()}")
     try:
-        num_images = cache.get(f"{article_id}-num_images")
+        num_images = cache.get_num_images()
         log(f"loaded @{article_id}-num_images from cache: {num_images}")
         
         if request.method == "POST":
@@ -189,9 +182,8 @@ def add_images(article_id):
                         log(f"established image location: {'app/' + img_location}")
                         image.save("app/" + img_location)
                         log(f"saved image to established location")
-                        images = cache.get(f"{article_id}-images")
-                        images.append(img_location)
-                        cache.set(key=f"{article_id}-images", value=images)
+                        cache.add_image(img_location)
+                        log(f"added image location to cache: {cache.get_images()}")
 
                     elif __IN_PRODUCTION__:
                         if not path.isdir(path.join(WORKING_DIR, f"{'/'.join(IMAGE_FOLDER)}")):
@@ -208,9 +200,8 @@ def add_images(article_id):
                         log(f"established image location: {img_location}")
                         image.save(f"/{img_location}") # please just don't ask why the slash has to be there it just has to
                         log(f"saved image to established location")
-                        images = cache.get(f"{article_id}-images")
-                        images.append(img_location)
-                        cache.set(key=f"{article_id}-images", value=images)
+                        cache.add_image(img_location)
+                        log(f"added image location to cache: {cache.get_images()}")
 
             return redirect(url_for("admin.edit_article", article_id=article_id))
 
@@ -227,12 +218,12 @@ def add_images(article_id):
 @login_required
 def edit_article(article_id):
     log = lambda msg : print(f"admin.edit_article -> {msg}")
-    log(cache.keys())
-    log(cache.values())
+    cache: Cache = cache_distr.get_cache(article_id)
+    
     # contains all necessary operations when article is completely finished (all needed additional arguments are given)
     try:
         if request.method == "POST":
-            content = cache.get(f"{article_id}-uploaded_content")
+            content = cache.get_article_content()
             log(f"successfully loaded content from cache: {content[:8]}...")
             content = create_image_placeholders(content)
             log("successfully created image placeholders")
@@ -249,7 +240,7 @@ def edit_article(article_id):
             title_image = None # declared as None so that if no primary image is given it will be None in the database
             image_data: List[Tuple[str, str]] = []
             # loops over uploaded images
-            for image in cache.get(f"{article_id}-images"):
+            for image in cache.get_images():
                 if image == primary_image:
                     content = __IMAGE__(
                         image, request.form.get(f"{image}_source"), 
@@ -257,18 +248,15 @@ def edit_article(article_id):
                         id="primary-image") \
                     + content
                     title_image = image
-                    cache.set(
-                        key=f"{article_id}-num_images", 
-                        value=cache.get(f"{article_id}-num_images") -1
-                    )  # necessary to not place title image twice in article
-                    log("successfully appended title image to cache")
+                    cache.set_num_images(cache.get_num_images() - 1)  # necessary to not place title image twice in article
+                    log(f"successfully appended title image to cache: {image_data}")
                 else:
                     image_data.append((
                         image,
                         request.form.get(f"{image}_source"), 
                         request.form.get(f"{image}_description"))
                     )
-                    log("successfully appended regular image to cache")
+                    log(f"successfully appended regular image to cache: {image_data}")
 
             content = fill_image_placeholders(content, image_data)
             log("successfully placed images in HTML")
@@ -309,19 +297,16 @@ def edit_article(article_id):
                 log("successfully created template")
 
             flash("Artikel wurde erfolgreich hochgeladen!", category="success")
-
-            # removing now unecessary cache
-            cache.pop(f"{article_id}-uploaded_content")
-            cache.pop(f"{article_id}-num_images")
-            cache.pop(f"{article_id}-images")
+            cache_distr.remove_cache(article_id)
             return redirect(url_for("articles.find_article", path=f"{article_id}.html"))
+            
 
         log("rendering template: upload/upload_panel.html")
         return render_template(
             "upload/upload_panel.html", 
             categories=Category.query.all(), 
             article_id=article_id,
-            images=cache.get(f"{article_id}-images")
+            images=cache.get_images()
         )
     except Exception as e:
         log(e)
@@ -334,14 +319,14 @@ def edit_article(article_id):
 @login_required
 def create_survey(session_id):
     log = lambda msg : print(f"admin.create_survey -> {msg}")
-    log(cache.keys())
-    log(cache.values())
+    cache: Cache = cache_distr.get_cache(session_id)
+    log(f"loaded cache: {cache.__repr__()}")
     
     try:
         if Survey.query.get(session_id):
             log(f"survey id already in use: {session_id}")
             abort(409)
-        num_answers = int(cache.get(f"{session_id}-num_answers"))
+        num_answers = int(cache.get_num_answers())
         if request.method == "POST":
             correct_answer = request.form.get("correct-answer")
             
@@ -373,7 +358,7 @@ def create_survey(session_id):
 
             db.session.commit()
             log("successfully commited to database")
-            cache.pop(f"{session_id}-num_answers")
+            cache_distr.remove_cache(new_survey.id)
             return redirect(url_for("surveys.survey", id=new_survey.id))
         return render_template("upload/upload_survey.html", num_answers=num_answers, text_answer=num_answers == 1)
     except Exception as e:
