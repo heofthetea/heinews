@@ -1,20 +1,72 @@
 
 # This class can only be used to cache data from the upload process in admin.py
-class Cache:
+import csv
+import io
+from ast import literal_eval
+from os import remove
 
+
+def read_cache(file) -> list:
+    file_content = []
+    with io.open(file, "r", encoding='utf-8') as rf:
+        reader = csv.reader(
+            rf, 
+            delimiter=';',
+            quotechar='"', 
+            quoting=csv.QUOTE_MINIMAL, 
+            skipinitialspace=True
+        )
+        for row in reader:
+            if(row):
+                file_content.append(row)
+    return file_content
+
+
+def write_cache(file, new_content: list) -> None:
+    with open(file, "w", newline='', encoding="utf-8") as wf:
+        writer = csv.writer(
+            wf, 
+            delimiter=';', 
+            quotechar='"',
+            quoting=csv.QUOTE_MINIMAL
+        )
+        writer.writerow(new_content)
+
+#--------------------------------------------------------------------------------------------------------------
+
+# creates an object dedicated to accessing one cache file
+class Cache:
     def __init__(self, id):
         self.id = id
-        self.article_content = None
-        self.num_images = None
-        self.images = []
-        self.num_answers = None
+        self.file = f"static/temp/{id}.csv"
+        self.cache = read_cache(file=self.file)
+
+        self.article_content = str(self.cache[0][0])
+        try:
+            self.num_images = int(self.cache[0][1])
+        except ValueError:
+            self.num_images = None
+
+        self.images = [n.strip() for n in literal_eval(self.cache[0][2])]
+
+        try:
+            self.num_answers = int(self.cache[0][3])
+        except ValueError:
+            self.num_answers = None
+        
 
     def __repr__(self):
-        return f"id: {self.id} \
+        return f"\n\tid: {self.id} \
         \n\tarticle_content: {self.article_content} \
         \n\tnum_images: {self.num_images} \
         \n\timages: {self.images} \
         \n\tnum_answers: {self.num_answers}"
+
+    def commit(self) -> None:
+        write_cache(
+            self.file,
+            [self.article_content, self.num_images, self.images, self.num_answers]
+        )
 
 
     def set_article_content(self, value) -> None:
@@ -46,27 +98,26 @@ class Cache:
 
 
 class CacheDistribution:
+    global read_cache
+    global write_cache
+
     def __init__(self):
         self.log = lambda msg: print(f"cache.CacheDistribution -> {msg}")
-        self.caches = []
 
-    def create_cache(self, id: str=None) -> Cache:
-        temp_cache = Cache(id)
-        self.caches.append(temp_cache)
-        self.log(f"found cache: {temp_cache}")
-        return temp_cache
-
-    def get_cache(self, id) -> Cache:
-        for cache in self.caches:
-            if cache.id == id:
-                return cache
-        return None
+    # saves cache to csv as [content, num_images, images:list, num_answers]
+    def create_cache(self, id: str=None):
+        write_cache(
+            file=f"static/temp/{id}.csv",
+            new_content=[None, None, [], None]
+        )
+        self.log(f"created cache: {id}.csv")
 
     def remove_cache(self, id: str=None) -> None:
-        temp_cache = self.get_cache(id)
-        self.caches.remove(temp_cache)
-        self.log([c.id for c in self.caches])
+        remove(f"static/temp/{id}.csv")
         
+
+
+
 
 
 

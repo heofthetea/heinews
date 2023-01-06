@@ -79,12 +79,15 @@ def new_article() -> None:
         if request.method == 'POST':
             if "create-survey" in request.form:
                 session_id = generate_id(6, table=Survey)
-                cache = cache_distr.create_cache(session_id)
+                cache_distr.create_cache(session_id)
+                cache = Cache(session_id)
+
                 if get_checkbutton(request.form.get("text-answer")):
                     cache.set_num_answers(1)
                 else:
                     cache.set_num_answers(request.form.get("num-answers"))
                 log(f"created Cache: {cache.__repr__()}")
+                cache.commit()
                 return redirect(url_for("admin.create_survey", session_id=session_id))
 
             if "create-announcement" in request.form:
@@ -95,7 +98,9 @@ def new_article() -> None:
             # id already has to be declared here, because the cache needs its unique key - otherwise, there won't be more than one person able to 
             # upload anything
             session_id = generate_id(6)
-            cache = cache_distr.create_cache(session_id)
+            cache_distr.create_cache(session_id)
+            cache = Cache(session_id)
+
             log(f"created Cache: {cache.__repr__()}")
             if "upload-article" in request.form:
                 # check if the post request has the file part
@@ -130,6 +135,7 @@ def new_article() -> None:
                     cache.set_article_content(file_content)
                     cache.set_num_images(int(request.form.get("num-images")))
                     log(f"updated cache: {cache.__repr__()}")
+                    cache.commit()
                     if cache.get_num_images() == 0:
                         return redirect(url_for("admin.edit_article", article_id=session_id))
                     return redirect(url_for("admin.add_images", article_id=session_id))
@@ -143,7 +149,7 @@ def new_article() -> None:
 @login_required
 def add_images(article_id):
     log = lambda msg : print(f"admin.add_images -> {msg}")
-    cache: Cache = cache_distr.get_cache(article_id)
+    cache: Cache = Cache(article_id)
 
     log(f"loaded cache: {cache.__repr__()}")
     try:
@@ -198,11 +204,12 @@ def add_images(article_id):
                         filename = secure_filename(image.filename)
                         img_location = path.join(relative_img_folder, filename)
                         log(f"established image location: {img_location}")
-                        image.save(f"/{img_location}") # please just don't ask why the slash has to be there it just has to
+                        image.save(img_location) 
                         log(f"saved image to established location")
-                        cache.add_image(img_location)
+                        cache.add_image(f"/{img_location}") # please just don't ask why the slash has to be there it just has to
                         log(f"added image location to cache: {cache.get_images()}")
-
+            cache.commit()
+            log(f"commited cache: {cache.__repr__()}")
             return redirect(url_for("admin.edit_article", article_id=article_id))
 
         log("rendering template: upload/upload_images.html")
@@ -218,7 +225,7 @@ def add_images(article_id):
 @login_required
 def edit_article(article_id):
     log = lambda msg : print(f"admin.edit_article -> {msg}")
-    cache: Cache = cache_distr.get_cache(article_id)
+    cache: Cache = Cache(article_id)
     
     # contains all necessary operations when article is completely finished (all needed additional arguments are given)
     try:
@@ -298,6 +305,7 @@ def edit_article(article_id):
 
             flash("Artikel wurde erfolgreich hochgeladen!", category="success")
             cache_distr.remove_cache(article_id)
+            log("successfully deleted cache")
             return redirect(url_for("articles.find_article", path=f"{article_id}.html"))
             
 
@@ -319,7 +327,7 @@ def edit_article(article_id):
 @login_required
 def create_survey(session_id):
     log = lambda msg : print(f"admin.create_survey -> {msg}")
-    cache: Cache = cache_distr.get_cache(session_id)
+    cache: Cache = Cache(session_id)
     log(f"loaded cache: {cache.__repr__()}")
     
     try:
@@ -359,6 +367,7 @@ def create_survey(session_id):
             db.session.commit()
             log("successfully commited to database")
             cache_distr.remove_cache(new_survey.id)
+            log("successfully deleted cache")
             return redirect(url_for("surveys.survey", id=new_survey.id))
         return render_template("upload/upload_survey.html", num_answers=num_answers, text_answer=num_answers == 1)
     except Exception as e:
