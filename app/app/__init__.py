@@ -12,6 +12,7 @@ db = SQLAlchemy()
 DB_NAME = "heinews.db"
 
 
+
 def send_database() -> SQLAlchemy:
     return send_file(DB_NAME)
 
@@ -24,7 +25,11 @@ except FileNotFoundError:
 
 if not __IN_PRODUCTION__:
     #set this path to the directory `main.py` is in
-    chdir("C:\\Coding Stuff\\GAP\\hhg-news\\heiNEws\\app")
+    chdir("/home/ccdr574/projects/heinews/app")
+
+
+def get_host() -> tuple:
+    return ("217.78.162.125", 80) if __IN_PRODUCTION__ else ("127.0.0.1", 80)
 
 WORKING_DIR = getcwd()
 IMAGE_FOLDER = ("static", "img", "articles")

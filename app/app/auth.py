@@ -102,21 +102,26 @@ def is_eternal_dev(email):
 # -> IF PIPELINE WORKS: test with this on, then,
 # future me: then what??
 
-# TODO! add option to cancel process
 def reset_password(reset_id):
+    log = lambda msg : print(f"auth.dreset_password -> {msg}")
+
     reset_token = Password_Reset.query.get(reset_id)
+    log(f"found reset token:\n\tuser_id: {reset_token.user_id}\n\texpiry date: {reset_token.expiry_date}")
     Password_Reset.query.filter_by(id=reset_id).delete()
 
     if datetime.now() > reset_token.expiry_date:
         flash("Dein Reset Token ist abgelaufen! Auf Deinem Profil kannst Du einen neuen anfordern!", category="error")
         db.session.commit()
+        log("successfully deleted expired token")
         return redirect(url_for("views.profile"))
 
     if request.method == "POST":
         user = User.query.get(reset_token.user_id)
+        log(f"found user to reset password: {user.id}")
 
         if "cancel" in request.form:
             db.session.commit()
+            log("successfully cancelled password reset")
             flash("Vorgang erfolgreich abgebrochen", category="success")
             return redirect(url_for("views.profile"))
 
@@ -130,6 +135,7 @@ def reset_password(reset_id):
         else:
             user.password = generate_password_hash(password1, method="sha256")
             db.session.commit()
+            log(f"successfully changed password of user: {user.id}")
             
             flash("Passwort wurde erforlgreich geändert!", category="success")
             return(redirect(url_for("views.profile")))
@@ -139,19 +145,25 @@ def reset_password(reset_id):
 @auth.route("/deleteacc/<delete_id>", methods=["GET", "POST"])
 #@login_required # TODO keep this or not??
 def delete_account(delete_id):
-    delete_token = Delete_Account.query.get(delete_id)
-    Delete_Account.query.filter_by(id=delete_id).delete()
+    log = lambda msg : print(f"auth.delete_account -> {msg}")
 
+    delete_token = Delete_Account.query.get(delete_id)
+
+    log(f"found deletion token:\n\tuser_id: {delete_token.user_id}\n\texpiry date: {delete_token.expiry_date}")
     if datetime.now() > delete_token.expiry_date:
         flash("Dein Deletion Token ist abgelaufen! Auf Deinem Profil kannst Du einen neuen anfordern!", category="error")
+        Delete_Account.query.filter_by(id=delete_id).delete()
         db.session.commit()
+        log("deleted expired token")
         return redirect(url_for("views.profile"))
 
     elif request.method == "POST":
         user = User.query.get(delete_token.user_id)
+        log(f"found user to delete: {user.id}")
 
         if "cancel" in request.form:
             db.session.commit()
+            log("successfully cancelled deletion")
             flash("Vorgang erfolgreich abgebrochen", category="success")
             return redirect(url_for("views.profile"))
 
@@ -166,7 +178,9 @@ def delete_account(delete_id):
             User_Upvote.query.filter_by(user_id=user.id).delete()
             Verify_Email.query.filter_by(user_id=user.id).delete()
             Password_Reset.query.filter_by(user_id=user.id).delete()
+            log(f"successfully deleted user: {user.id}")
 
+            Delete_Account.query.filter_by(id=delete_id).delete()
             db.session.commit()
             flash("Dein Account wurde erfolgreich gelöscht!", category="success")
             return(redirect(url_for("auth.signup")))
@@ -178,21 +192,27 @@ def delete_account(delete_id):
 
 @auth.route("/verify/<verify_id>")
 def verify_email(verify_id):
+    log = lambda msg : print(f"auth.verify_email -> {msg}")
+
     verification_token = Verify_Email.query.get(verify_id)
+    log(f"found verification token:\n\tuser_id: {verification_token.user_id}\n\texpiry date: {verification_token.expiry_date}")
 
     if datetime.now() > verification_token.expiry_date:
         flash("Dein Verification Token ist abgelaufen! Auf Deinem Profil kannst Du einen neuen anfordern!", category="error")
         Verify_Email.query.filter_by(id=verify_id).delete()
         db.session.commit()
+        log("deleted expired verification token")
         return redirect(url_for("views.profile"))
     
     user = User.query.get(verification_token.user_id)
+    log(f"found user to verify: {user.id}")
     user.email_confirmed = True
 
     Verify_Email.query.filter_by(id=verify_id).delete()
     db.session.commit()
 
     flash("Deine Email wurde erfolgreich verifiziert! Jetzt verfügst Du über alle dir zustehenden Freiheiten!", category="success")
+    log(f"successfully verified user: {user.id}")
     return redirect(url_for("views.profile"))
 
 
@@ -226,12 +246,24 @@ def change_notification_settings():
     return redirect(url_for("views.profile"))
 
 
+@auth.route("resend-verification")
+def resend_verification_mail(user_id):
+    user = User.query.get(user_id)
+    send_verification_email(user.email)
+    return redirect(url_for("views.profile"))
+
+
 #----------------------------------------------------------------------------------------------------------------------------
 # @REGION sending links per mail
 
 # check comment on send_reset_mail for explanation
 def send_verification_email(email: str) -> None:
+    log = lambda msg : print(f"auth.verify_email -> {msg}")
+
     user = User.query.filter_by(email=email).first()
+    if Verify_Email.query.filter_by(user_id=user.id).first():
+        log(f"user {user.id} already has a verification token")
+        Verify_Email.query.filter_by(user_id=user.id).delete()
     temp_id = generate_id(256, table=Verify_Email)
     
     link = f"{__HOST__}{url_for('auth.verify_email', verify_id=temp_id)}"

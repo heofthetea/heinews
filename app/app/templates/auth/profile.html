@@ -68,7 +68,11 @@
                 <tr>
                     <th>Verifizieren:</th>
                     <td id="profile-data">
-                        <b>Dir wurde eine Mail mit Link gesendet</b> <!--TODO option to resend mail-->
+                        <form action="{{ url_for('auth.resend_verification_mail', user_id=current_user.id) }}">
+                            <b>Dir wurde eine Mail mit Link gesendet</b>
+                            <br>
+                            <button class="btn btn-primary" type="submit">Mail erneut senden</button>
+                        </form>
                     </td>
                 </tr>
             {% endif %}
