@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section>
+    <div class="container-xl">
+        <h1 style="text-align: center">So, und... wie genau funktioniert das jetzt mit dem Artikel hochladen??</h1>
+        Das möchte ich versuchen, Dir hier zu erklären. Ich bin übrigens Emil, der Typ, der das ganze hier geschreiben hat. Du darfst mich gerne dafür hassen, dass manches hier so umständlich ist und trotzdem nicht so funktional, wie man es 
+        sich vielleicht wünscht. Aber immerhin habe ich <i>etwas</i> Arbeit rein gesteckt, zu erklären, welche Vorgaben dein Artikel befolgen muss, damit die Website ihn akzeptiert und er
+        am Ende auch halbwegs schön aussieht. Also, here we go:
+        <br><br>
+        <b>Zuallererst: Die Website unterstützt folgende Dateiformate: <u>.docx .doc .txt</u></b> (wobei die ersten beiden eigentlich dasselbe sind - aber es sieht beeindruckender aus, wenn ich sage,
+        dass drei Formate akzeptiert werden als nur zwei ;) Vermutlich wirst Du vor allem mit .docx (oder auch "Word-") Dateien arbeiten, weil Du von der  Schule einen kostenlosen Office-365-Account 
+        bekommen hast und den natürlich auch nutzen willst. (Ich persönlich verabscheue Word ja zutiefst - zu viel unnütze Funktionen. Deswegen habe ich auch überhaupt erst .txt Dateien unterstüzt.)
+        <br><br>
+        <i>
+            Falls es dich interessiert: Die Datei, die du hochlädst, wird von einem Programm von z.B. .docx in ein Format namens "HTML" gebracht. Das darfst Du natürlich googlen, aber im Prinzip ist HTML 
+            für alles verantwortlich, was Du im Internet siehst - Alle Websiten (und teilweise auch Mobile Apps) nutzen diese sogenannte "Skriptsprache", um ihr Aussehen zu formattieren. Auch diese Website 
+            funktioniert so: Du siehst das zum Beispiel in der URL von einem Artikel - Dieser ist in einer Datei gespeichert, die nach der einzigartigen ID des Artikels benannt ist und auf ".html" endet.
+        </i>
+        <br>
+        <b>Bevor ich Dir ein paar spezifische Hinweise gebe, hier erstmal ein paar allgemeine Dinge:</b>
+        <br><br>
+        <h4>I. Titel und Beschreibung</h4>
+        Du solltest in deinen Artikel keine Hauptüberschrift schreiben. Warum? Ganz einfach: Du benennst den Artikel, nachdem Du ihn hochgeladen hast. Dieser Titel wird dann überall verwendet, wo der 
+        Titel des Artikels benötigt wird - In der Vorschau zum Beispiel. Genauso verhält es sich auch mit der sog. Beschreibung: Du kannst eine kurze Beschreibung verfassen, die sich, unter uns, hervorragend
+        für Clickbait eignet ;)
+        <br><br>
+        <h4>II. BILDER <i>müssen</i> manuell hochgeladen werden</h4>
+        Das hat den einfachen Grund, dass für jedes Bild in einer HTML-Datei angegeben werden muss, wo dieses gespeichert ist. Da der Server aber nicht einfach auf den Speicherplatz deines Computers 
+        zugreifen kann, muss er eine Kopie des verwendeten Bildes auf sich speichern - Deswegen musst Du jedes Bild, dass du verwenden willst, hochladen. Das hat aber leider auch zur Folge, dass Du 
+        das Bild nicht schön in deinem Artikel platzieren kannst - Dies geschieht automatisch, indem das Programm zur Konversion sich Leerzeilen in Deinem Programm sucht und sie als "mögliche Bildposition"
+        markiert. Zunächst scheint das zumindest so, als hättest Du gar keine Kontrolle darüber, wo ein Bild landet - Stimmt aber nicht. Wenn du mehrere Bilder hochlädst, werden diese in der Reihenfolge
+        verteilt, in der sie hochgeladen wurden: Wenn Du also bild A als "Bild 1" hochlädst, wird dieses auch am Obersten in dem Artikel landen. Auch kannst Du zu jedem Bild eine kurze Beschreibung 
+        eingeben und somit das Bild in den Kontext Deines Atikels einbinden. Auch hast du die Option, ein Bild als "Titelbild" festzulegen - Dieses Titelbild wird dann direkt unter der Überschrift 
+        angezeigt und in jeder Vorschau deines Artikels verwendet.
+        <br><br>
+        <h4>III. Links</h4>
+        Es kann vorkommen, dass Du in Deinem Artikel auf eine externe Website verweist. Allerdings haben Links in Word das Problem, dass sie als besondere Textsorte gelten und somit von dem Konversionsprogramm 
+        nicht erkannt werden. Deswegen habe ich einen besonderen Syntax für Links eingeführt:
+        <br>
+        <i>
+            <br>
+            <i style="color:rgb(187, 22, 22)">&lt;link(</i>[Adresse/URL der Website]<i style="color:rgb(187, 22, 22)">)</i>[Hier
+            kannst Du Text rein schreiben]<i style="color:rgb(187, 22, 22)">&gt;</i>
+            <br><br>
+        </i>
+        Sieht kompliziert aus? Glaub mir, in HTML ist es schlimmer. Aber hier ein Beispiel, dann ist es eigentlich sehr einfach zu verstehen:
+        <br><br>
+        <i>&lt;link(217.78.162.125/article-formatting)Hier siehst Du, wie Du Artikel formattieren sollst.&gt;</i>
+        <br><br>
+        Der Link führt zu exakt dieser Seite hier, und sieht am Ende so aus:
+        <br>
+        <a href="217.78.162.125/article-formatting">Hier siehst Du, wie Du Artikel formattieren sollst.</a>
+
+        
+        <br><br>
+        <b>Also: Worauf genau musst du achten bei .docx-Datein spezifisch?</b>
+        <ul>
+            <li><b>Textdekorationen</b> werden erkannt. Sprich: Unterschiedliche Farben, fett/unterstrichen/kursiv, Schriftgröße etc. - Diese kannst Du ohne Probleme in Deinem Artikel nutzen.</li>
+            <li><b>Besondere Textelemente</b> werden <b>nicht</b> erkannt. Das heißt zum Beispiel: Word-Überschriften. Statt diesen kannst du aber einfach einen normalen Text nehmen, fett und größer
+            machen und unterstreichen. Sieht im Endeffekt genau gleich aus.</li>
+            <li>(gehört eigentlich noch zum vorherigen Punkt) <b>Textfelder</b> werden auch nicht erkannt. </li>
+            <li>Falls Du dein Dokument mit Google Docs geschrieben haben solltest und die dort eingebaute Funktion genutzt hast, es zu Word zu konvertieren, muss ich Dich vorwarnen: Ich habe das ausprobiert, 
+                und es sieht wirklich schrecklich aus. Alles oben beschriebene wird einfach nicht übernommen, stattdessen hast Du unformattierten, rohen Text - Also mache das lieber nicht.
+            </li>
+        </ul>
+        <br><br>
+        So - Jetzt solltest Du alles wissen, was Du wissen musst. Also fang einfach an - Lade deine Datei hoch (natürlich erst, wenn Du sicher gestellt hast, dass sie den Vorgaben entspricht), dann lade Bilder hoch 
+        und gebe im dritten Schritt die Informationen zu Deinem Artikel ein. Wenn Du damit fertig bist, landest Du vermutlich auf einer Fehlermeldung - Das liegt daran, dass Dein Artikel erst noch von jemandem 
+        validiert werden muss, der dazu berechtigt ist (also entweder ein Lehrer, oder ein Chefredakteur). Ist dies geschehen, ist er für jeden zugänglich!
+    </div>
+
+</section>
+{% endblock %}

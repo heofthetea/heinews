@@ -3,13 +3,25 @@
 {% block title %}Tags{% endblock %}
 
 {% block content %}
+<h1>Alle Tags, zu denen es Artikel gibt:</h1>
+
     {% for tag in tags %}
-        {% if tag != '' %}
-            <a href="{{ url_for('tag.articles_by_tag', tag=tag.tag.replace('#', '')) }}">
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                 {{ tag.tag }}
-                <br>
-            </a>
-        {% endif %}
+            </button>
+
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                {% for article in five_articles_for_tag[tag.tag] %}
+                    {% if article.validated or get_user_role(current_user).can_validate %}
+                        <li><a href="{{ url_for('articles.find_article', path=article.id + '.html') }}"><b>{{ article.title }}</b></a></li>
+                    {% endif %}
+                {% endfor %}
+                <hr>
+                <li><a href="{{ url_for('tag.articles_by_tag', tag=tag.tag.replace('#', '')) }}">alle</a></li>
+            </ul>
+        </div>
+        <br>
     {% endfor %}
 {% endblock %}
 

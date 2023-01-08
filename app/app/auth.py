@@ -74,8 +74,9 @@ def signup():
             )
             db.session.add(new_user)
             db.session.commit()
+            user_id = User.query.filter_by(email=new_user.email).first().id
 
-            send_verification_email(new_user.email)
+            send_verification_email(user_id)
 
             login_user(new_user, remember=get_checkbutton(loggedin))
             return redirect(url_for("views.profile"))
@@ -248,8 +249,7 @@ def change_notification_settings():
 
 @auth.route("resend-verification")
 def resend_verification_mail(user_id):
-    user = User.query.get(user_id)
-    send_verification_email(user.email)
+    send_verification_email(user_id)
     return redirect(url_for("views.profile"))
 
 
@@ -257,23 +257,23 @@ def resend_verification_mail(user_id):
 # @REGION sending links per mail
 
 # check comment on send_reset_mail for explanation
-def send_verification_email(email: str) -> None:
+def send_verification_email(id: int) -> None:
     log = lambda msg : print(f"auth.verify_email -> {msg}")
 
-    user = User.query.filter_by(email=email).first()
+    user = User.query.get(int(id))
     if Verify_Email.query.filter_by(user_id=user.id).first():
         log(f"user {user.id} already has a verification token")
         Verify_Email.query.filter_by(user_id=user.id).delete()
     temp_id = generate_id(256, table=Verify_Email)
     
     link = f"{__HOST__}{url_for('auth.verify_email', verify_id=temp_id)}"
-    content = verification(link)
+    content = verification(link, user.name)
     # sending mail before adding database entry because that is much more likely to go wrong and in that case won't create
     # a DB entry that cannot be accessed in any way
     if send_mail(
         from_email=__MAIL_ACCOUNT__["email"],
         password=__MAIL_ACCOUNT__["password"],
-        recipients=email,
+        recipients=user.email,
         subject=content["head"],
         content=content["body"],
         smtp=__MAIL_ACCOUNT__["smtp"][0],
@@ -323,7 +323,7 @@ def send_reset_mail(user_id):
                 )
             )
             db.session.commit()
-            flash("Dir wurde eine Mail mit einem Link gesendet, unter dem Du Dein Passwort zurücksetzen kannst.", category="info")
+            flash("Dir wurde eine Mail mit einem Link gesendet, unter dem Du Dein Passwort zurücksetzen kannst. Schau auch im Spam-Ordner nach, Tests haben gezeigt dass diese Mails dort gerne landen :)", category="info")
         else:
             flash("Whoops... Da ist wohl was schief gelaufen! Wir konnten dir keine Mail senden :/", category="error")
 
@@ -355,7 +355,7 @@ def send_delete_mail(user_id):
                 )
             )
             db.session.commit()
-            flash("Dir wurde eine Mail mit einem Link gesendet, unter dem Du Deinen Account löschen kannst.", category="info")
+            flash("Dir wurde eine Mail mit einem Link gesendet, unter dem Du Deinen Account löschen kannst. Schau auch im Spam-Ordner nach, Tests haben gezeigt dass diese Mails dort gerne landen :)", category="info")
         else:
             flash("Whoops... Da ist wohl was schief gelaufen! Wir konnten dir keine Mail senden :/", category="error")
     return redirect(url_for('views.profile'))

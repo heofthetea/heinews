@@ -50,6 +50,10 @@ def index() -> str:
 def imprint():
     return render_template("imprint.html")
 
+@views.route("/article-formatting")
+def article_formatting():
+    return render_template("article_formatting.html")
+
 
 
 """

@@ -161,4 +161,13 @@ def articles_by_tag(tag: str):
 
 @tag.route("/")
 def all_tags():
-    return render_template("overview/tags.html", tags=Tag.query.all())
+    five_articles_for_tag = {}
+    tags = Tag.query.all()
+    for tag in tags:
+        five_articles_for_tag[tag.tag] = get_articles(tag=tag, limit=10)
+
+    return render_template(
+        "overview/tags.html", 
+        tags=tags,
+        five_articles_for_tag=five_articles_for_tag
+    )
