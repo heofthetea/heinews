@@ -249,6 +249,7 @@ def change_notification_settings():
 
 @auth.route("resend-verification")
 def resend_verification_mail(user_id):
+    print(f"auth.resend_verification_mail -> {user_id}")
     send_verification_email(user_id)
     return redirect(url_for("views.profile"))
 
@@ -258,38 +259,41 @@ def resend_verification_mail(user_id):
 
 # check comment on send_reset_mail for explanation
 def send_verification_email(id: int) -> None:
-    log = lambda msg : print(f"auth.verify_email -> {msg}")
-
-    user = User.query.get(int(id))
-    if Verify_Email.query.filter_by(user_id=user.id).first():
-        log(f"user {user.id} already has a verification token")
-        Verify_Email.query.filter_by(user_id=user.id).delete()
-    temp_id = generate_id(256, table=Verify_Email)
-    
-    link = f"{__HOST__}{url_for('auth.verify_email', verify_id=temp_id)}"
-    content = verification(link, user.name)
-    # sending mail before adding database entry because that is much more likely to go wrong and in that case won't create
-    # a DB entry that cannot be accessed in any way
-    if send_mail(
-        from_email=__MAIL_ACCOUNT__["email"],
-        password=__MAIL_ACCOUNT__["password"],
-        recipients=user.email,
-        subject=content["head"],
-        content=content["body"],
-        smtp=__MAIL_ACCOUNT__["smtp"][0],
-        port=__MAIL_ACCOUNT__["smtp"][1]
-    ):
-        db.session.add(
-            Verify_Email(
-                id=temp_id,
-                user_id=user.id
+    log = lambda msg : print(f"auth.send_verification_email -> {msg}")
+    try:
+        user = User.query.get(int(id))
+        if Verify_Email.query.filter_by(user_id=user.id).first():
+            log(f"user {user.id} already has a verification token")
+            Verify_Email.query.filter_by(user_id=user.id).delete()
+        temp_id = generate_id(256, table=Verify_Email)
+        
+        link = f"{__HOST__}{url_for('auth.verify_email', verify_id=temp_id)}"
+        log("established link")
+        content = verification(link, user.name)
+        # sending mail before adding database entry because that is much more likely to go wrong and in that case won't create
+        # a DB entry that cannot be accessed in any way
+        if send_mail(
+            from_email=__MAIL_ACCOUNT__["email"],
+            password=__MAIL_ACCOUNT__["password"],
+            recipients=user.email,
+            subject=content["head"],
+            content=content["body"],
+            smtp=__MAIL_ACCOUNT__["smtp"][0],
+            port=__MAIL_ACCOUNT__["smtp"][1]
+        ):
+            db.session.add(
+                Verify_Email(
+                    id=temp_id,
+                    user_id=user.id
+                )
             )
-        )
-        db.session.commit()
-        flash("Du erhältst demnächst eine Email mit Verifizierungscode. Sobald wir Deine Email-Addresse verifiziert haben, hast Du \
-                Zugriff auf Aktionen wie Upvoten.", category="info")
-    else:
-        flash("Whoops... Da ist wohl was schief gelaufen! Wir konnten dir keine Mail senden :/", category="error")
+            db.session.commit()
+            flash("Du erhältst demnächst eine Email mit Verifizierungscode. Sobald wir Deine Email-Addresse verifiziert haben, hast Du \
+                    Zugriff auf Aktionen wie Upvoten.", category="info")
+        else:
+            flash("Whoops... Da ist wohl was schief gelaufen! Wir konnten dir keine Mail senden :/", category="error")
+    except Exception as e:
+        log(e)
 
 
 """
@@ -299,13 +303,16 @@ wrong, there would exist a reset token which a) cannot be accessed from anywhere
 """
 @auth.route("/reset_link/<int:user_id>")
 def send_reset_mail(user_id):
-    # if the user already has a reset token, he should not request another
-    if Password_Reset.query.filter_by(user_id=user_id).first():
-        flash("Du hast bereits einen Link zum Zurücksetzen!!", category="error")
-    else:
+    log = lambda msg : print(f"auth.send_reset_mail -> {msg}")
+    try:
+        # if the user already has a reset token, he should not request another
+        if Password_Reset.query.filter_by(user_id=user_id).first():
+            log(f"user {user_id} already has a password reset token")
+            Password_Reset.query.filter_by(user_id=user_id).delete()
         temp_id = generate_id(256, table=Password_Reset) # id is created here because it is used in both the DB entry and the link
 
         link = f"{__HOST__}{url_for('auth.reset_password', reset_id=temp_id)}"
+        log("established link")
         content = reset(link)
         if send_mail(
             from_email=__MAIL_ACCOUNT__["email"],
@@ -323,21 +330,27 @@ def send_reset_mail(user_id):
                 )
             )
             db.session.commit()
+            log("successfully created Password Reset token")
             flash("Dir wurde eine Mail mit einem Link gesendet, unter dem Du Dein Passwort zurücksetzen kannst. Schau auch im Spam-Ordner nach, Tests haben gezeigt dass diese Mails dort gerne landen :)", category="info")
         else:
             flash("Whoops... Da ist wohl was schief gelaufen! Wir konnten dir keine Mail senden :/", category="error")
 
-    return redirect(url_for('views.profile'))
+        return redirect(url_for('views.profile'))
+    except Exception as e:
+        log(e)
 
 
 @auth.route("/delete_link/<int:user_id>")
 def send_delete_mail(user_id):
-    if Delete_Account.query.filter_by(user_id=user_id).first():
-        flash("Du hast bereits einen Link zum Löschen!!", category="error")
-    else:
+    log = lambda msg : print(f"auth.send_delete_mail -> {msg}")
+    try:
+        if Delete_Account.query.filter_by(user_id=user_id).first():
+            log(f"user {user_id} already has a deletion token")
+            Delete_Account.query.filter_by(user_id=user_id).delete()
         temp_id = generate_id(256, table=Delete_Account)
 
         link = f"{__HOST__}{url_for('auth.delete_account', delete_id=temp_id)}"
+        log("established link")
         content = delete(link)
         if send_mail(
             from_email=__MAIL_ACCOUNT__["email"],
@@ -355,10 +368,14 @@ def send_delete_mail(user_id):
                 )
             )
             db.session.commit()
+            log("successfully creted Deletion token")
             flash("Dir wurde eine Mail mit einem Link gesendet, unter dem Du Deinen Account löschen kannst. Schau auch im Spam-Ordner nach, Tests haben gezeigt dass diese Mails dort gerne landen :)", category="info")
         else:
             flash("Whoops... Da ist wohl was schief gelaufen! Wir konnten dir keine Mail senden :/", category="error")
-    return redirect(url_for('views.profile'))
+
+        return redirect(url_for('views.profile'))
+    except Exception as e:
+        log(e)
     
 
 #----------------------------------------------------------------------------------------------------------------------------

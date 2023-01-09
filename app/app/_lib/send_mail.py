@@ -26,15 +26,19 @@ def send_mail(*, from_email: str, password: str, recipients: (str or Tuple[str])
         message["Subject"] = subject
         message["From"] = from_email
         message["Bcc"] = recipients if isinstance(recipients, str) else ','.join(recipients)
+        log("created mail content")
         
 
         server = SMTP(smtp, port)
+        log(f"successfully logged in to server: {smtp}:{port}")
         server.starttls()
         server.login(from_email, password)
+        log(f"successfully logged in to {from_email}")
 
         server.send_message(message)
         log("mail sent successfully")
         server.close()
+        log("closed server")
         return True
 
     except Exception as e:
