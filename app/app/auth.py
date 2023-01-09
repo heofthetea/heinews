@@ -99,7 +99,7 @@ def is_eternal_dev(email):
 #----------------------------------------------------------------------------------------------------------------------------
 
 @auth.route("/resetpw/<reset_id>", methods=["GET", "POST"])
-#@login_required # TODO keep this or not??
+@login_required # TODO keep this or not??
 # -> IF PIPELINE WORKS: test with this on, then,
 # future me: then what??
 
@@ -144,7 +144,7 @@ def reset_password(reset_id):
 
 
 @auth.route("/deleteacc/<delete_id>", methods=["GET", "POST"])
-#@login_required # TODO keep this or not??
+@login_required # TODO keep this or not??
 def delete_account(delete_id):
     log = lambda msg : print(f"auth.delete_account -> {msg}")
 
