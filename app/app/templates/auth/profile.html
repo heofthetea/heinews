@@ -79,7 +79,7 @@
             <tr>
                 <th>Passwort zurücksetzen:</th>
                 <td id="profile-data">
-                    <form action="{{ url_for('auth.send_resete_mail', user_id=current_user.id) }}">
+                    <form action="{{ url_for('auth.send_reset_mail', user_id=current_user.id) }}">
                     {% if reset %}
                         <b>Dir wurde bereits eine Mail mit Link gesendet - Schau auch in den Spam-Ordner</b>
                         <br>
@@ -93,7 +93,7 @@
             <tr>
                 <th>Account löschen:</th>
                 <td id="profile-data">
-                    <form action="{{ url_for('auth.send_resete_mail', user_id=current_user.id) }}">
+                    <form action="{{ url_for('auth.send_delete_mail', user_id=current_user.id) }}">
                     {% if delete %}
                         <b>Dir wurde bereits eine Mail mit Link gesendet - Schau auch in den Spam-Ordner</b>
                         <br>
