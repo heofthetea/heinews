@@ -18,7 +18,7 @@
                 {% else %}
                     <div class="carousel-item" style="margin-top: 20px;">
                 {% endif%}
-                    <div class="card-container" style="display: flex; height: 400px; justify-content: center;">
+                    <div class="card-container" style="display: flex; height: 500px; justify-content: center;">
                         {# the list likely won't be dividable by three, so this if statement is needed to not get any IndexOutOfBoundsExceptions #}
                         {% for article in invalidated_articles %}
                             <div class="card card-block border-1 border-secondary" style="width: calc(100%/4)">
