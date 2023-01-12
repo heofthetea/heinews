@@ -46,6 +46,7 @@ admin = Blueprint("admin", __name__)
 cache_distr = CacheDistribution()
 
 
+# renders the admin-panel - An overview of all uploaded, but not yet validated articles
 @admin.route("/")
 @login_required
 def admin_index():
@@ -61,7 +62,7 @@ def admin_index():
     return render_template("admin.html", invalidated_articles=invalidated_articles.order_by(asc(Article.date_created)).all())
 
 
-#TODO split this up to 2 functions
+# starts the function chain to upload an article, a survey or an announcement.
 @admin.route('/upload', methods=["GET", "POST"])
 @login_required
 def new_article() -> None:
